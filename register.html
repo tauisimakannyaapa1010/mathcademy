@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Akun Murid | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #F7FEE7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 16px;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            padding: 38px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(54, 83, 20, 0.08);
+        }
+
+        .brand {
+            color: #65A30D;
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .register-container h1 {
+            color: #365314;
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            color: #737373;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 26px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #365314;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #D4D4D4;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #84CC16;
+            box-shadow: 0 0 0 3px #ECFCCB;
+        }
+
+        .password-note {
+            color: #737373;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 7px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #84CC16;
+            color: #365314;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            background: #A3E635;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #65A30D;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 500px) {
+            .register-container {
+                padding: 26px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="register-container">
+
+        <div class="brand">Mathcademy</div>
+
+        <h1>Tambah Akun Murid</h1>
+
+        <p class="description">
+            Lengkapi informasi berikut untuk membuat akun
+            murid baru di Mathcademy.
+        </p>
+
+        <form id="registerForm">
+
+            <div class="form-group">
+                <label for="nama">Nama Lengkap Murid</label>
+                <input
+                    type="text"
+                    id="nama"
+                    placeholder="Masukkan nama lengkap"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Murid</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="contoh@email.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Kata Sandi Sementara</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Buat kata sandi sementara"
+                    minlength="8"
+                    required
+                >
+
+                <p class="password-note">
+                    Minimal 8 karakter. Murid dapat mengganti
+                    kata sandi setelah berhasil masuk.
+                </p>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Buat Akun Murid
+            </button>
+
+        </form>
+
+        <a href="teacher.html" class="back-link">
+            ← Kembali ke Dashboard Guru
+        </a>
+
+    </div>
+
+    <script>
+        document.getElementById("registerForm")
+            .addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                alert(
+                    "Tampilan registrasi berhasil! " +
+                    "Fitur pembuatan akun akan dihubungkan " +
+                    "ke Supabase pada tahap berikutnya."
+                );
+            });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mengerjakan Kuis | Mathcademy</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/mathlive"></script>
+</head>
+<body>
+
+    <main class="quiz-player-container">
+        <header class="quiz-header">
+            <a href="student-quizzes.html">← Kembali ke Latihan & Kuis</a>
+            <h1 id="quizTitle">Memuat kuis...</h1>
+            <p id="quizDescription"></p>
+        </header>
+
+        <section id="quizContent">
+            <p id="quizLoading">Memuat soal kuis...</p>
+            <div id="questionList"></div>
+
+<div class="quiz-submit-section">
+    <p id="answerProgress">0 soal terjawab</p>
+
+    <button id="submitQuizBtn" type="button" disabled>
+        Selesaikan Kuis
+    </button>
+</div>
+
+<section id="quizResult" hidden></section>
+        </section>
+
+    </main>
+<script type="module">
+    import { supabase } from './supabase.js';
+
+    let quizId = null;
+    let currentUser = null;
+    let quizQuestions = [];
+
+function updateAnswerProgress() {
+    const answeredCount = quizQuestions.filter(question => {
+        const answerInputs = document.querySelectorAll(
+            `[name="answer-${question.id}"]`
+        );
+
+        if (answerInputs.length === 0) return false;
+
+        if (answerInputs[0].type === 'radio') {
+            return Array.from(answerInputs).some(input => input.checked);
+        }
+
+        return answerInputs[0].value.trim() !== '';
+    }).length;
+
+    const totalQuestions = quizQuestions.length;
+
+    document.getElementById('answerProgress').textContent =
+        `${answeredCount} dari ${totalQuestions} soal terjawab`;
+
+    document.getElementById('submitQuizBtn').disabled =
+        answeredCount !== totalQuestions || totalQuestions === 0;
+}
+
+    // 1. Memeriksa akun yang sedang login
+async function checkStudentAccess() {
+    const { data: { session }, error: sessionError } =
+        await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+        window.location.href = 'login.html';
+        return false;
+    }
+
+    currentUser = session.user;
+
+    // 2. Memeriksa peran akun
+    const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', currentUser.id)
+        .single();
+
+    if (profileError || !profile || profile.role !== 'student') {
+        alert('Halaman ini hanya dapat diakses oleh siswa.');
+        window.location.href = 'index.html';
+        return false;
+    }
+
+    return true;
+}
+// Menampilkan teks dan rumus matematika
+// Membuat tampilan rumus menggunakan MathLive
+function appendMathField(container, latex) {
+    const mathField = document.createElement('math-field');
+
+    mathField.value = String(latex ?? '');
+    mathField.readOnly = true;
+    mathField.virtualKeyboardMode = 'off';
+    mathField.classList.add('review-math-field');
+
+    container.appendChild(mathField);
+}
+
+// Menampilkan teks yang mungkin mengandung rumus
+function renderTextWithMath(container, text) {
+    const value = String(text ?? '');
+
+    // Mengenali rumus yang ditulis dengan \( ... \) atau $ ... $
+    const pattern = /\\\(([\s\S]*?)\\\)|\$([^$]+)\$/g;
+
+    let lastIndex = 0;
+    let match;
+
+    while ((match = pattern.exec(value)) !== null) {
+        if (match.index > lastIndex) {
+            container.appendChild(
+                document.createTextNode(value.slice(lastIndex, match.index))
+            );
+        }
+
+        appendMathField(container, match[1] ?? match[2]);
+        lastIndex = pattern.lastIndex;
+    }
+
+    if (lastIndex < value.length) {
+        container.appendChild(
+            document.createTextNode(value.slice(lastIndex))
+        );
+    }
+}
+
+// Menampilkan konten teks dan rumus terstruktur
+function renderQuestionContent(container, content, fallbackText = '') {
+    container.innerHTML = '';
+
+    if (!Array.isArray(content) || content.length === 0) {
+        renderTextWithMath(container, fallbackText);
+        return;
+    }
+
+    content.forEach(item => {
+        if (item.type === 'equation') {
+            appendMathField(container, item.value || '');
+        } else {
+            renderTextWithMath(container, item.value || '');
+        }
+    });
+}
+
+// Menampilkan jawaban benar dalam format yang sesuai
+function renderReviewAnswer(container, answer) {
+    container.innerHTML = '';
+
+    if (answer === true || answer === 'true') {
+        container.textContent = 'Benar';
+        return;
+    }
+
+    if (answer === false || answer === 'false') {
+        container.textContent = 'Salah';
+        return;
+    }
+
+    if (Array.isArray(answer)) {
+        answer.forEach(item => {
+            if (Array.isArray(item.content)) {
+                const itemContainer = document.createElement('div');
+                renderQuestionContent(itemContainer, item.content, item.text || '');
+                container.appendChild(itemContainer);
+            } else {
+                const itemContainer = document.createElement('div');
+                renderTextWithMath(
+                    itemContainer,
+                    item.text || item.content || ''
+                );
+                container.appendChild(itemContainer);
+            }
+        });
+        return;
+    }
+
+    if (answer && typeof answer === 'object') {
+        if (Array.isArray(answer.content)) {
+            renderQuestionContent(container, answer.content, answer.text || '');
+        } else if (answer.type === 'equation') {
+            appendMathField(container, answer.value || '');
+        } else {
+            renderTextWithMath(
+                container,
+                answer.text || answer.value || '-'
+            );
+        }
+        return;
+    }
+
+    renderTextWithMath(container, answer ?? '-');
+}
+function normalizeText(value) {
+    return String(value ?? '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+}
+function sameJson(a, b) {
+    return JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+}
+
+// Menampilkan susunan kartu drag-and-drop saat review
+function renderDragDropReview(container, result, question) {
+    container.innerHTML = '';
+
+    const options = question.options || {};
+    const cards = options.cards || [];
+    const targets = options.targets || [];
+
+    let studentMapping = {};
+
+    try {
+        studentMapping = typeof result.answer === 'string'
+            ? JSON.parse(result.answer || '{}')
+            : (result.answer || {});
+    } catch {
+        studentMapping = {};
+    }
+
+    let correctAnswer = [];
+
+try {
+    correctAnswer = typeof result.correct_answer === 'string'
+        ? JSON.parse(result.correct_answer || '[]')
+        : (result.correct_answer || []);
+
+    if (!Array.isArray(correctAnswer)) {
+        correctAnswer = [];
+    }
+} catch (error) {
+    console.error('Gagal membaca kunci jawaban Drag and Drop:', error);
+    correctAnswer = [];
+}
+
+        console.log('DATA REVIEW DRAG DROP:', {
+    cards,
+    targets,
+    correctAnswer,
+    studentAnswer: result.answer
+});
+
+    function createArrangement(title, mapping, isCorrectArrangement) {
+        const section = document.createElement('div');
+        section.className = 'drag-review-section';
+
+        const heading = document.createElement('h4');
+        heading.textContent = title;
+        section.appendChild(heading);
+
+        const groups = document.createElement('div');
+        groups.className = 'quiz-drag-drop-groups drag-review-groups';
+
+        targets.forEach(target => {
+            const group = document.createElement('div');
+            group.className = 'quiz-drop-group';
+
+            const groupTitle = document.createElement('div');
+            groupTitle.className = 'quiz-drop-group-title';
+
+            renderQuestionContent(
+                groupTitle,
+                target.content,
+                target.label || 'Kelompok'
+            );
+
+            const zone = document.createElement('div');
+            zone.className = 'quiz-drop-zone drag-review-zone';
+
+            cards.forEach((card, index) => {
+                const targetId = mapping[String(index)];
+
+                if (String(targetId ?? '') !== String(target.id)) return;
+
+                const cardElement = document.createElement('div');
+                cardElement.className = 'quiz-drag-card';
+
+                renderQuestionContent(
+                    cardElement,
+                    card.content,
+                    card.text || ''
+                );
+
+                zone.appendChild(cardElement);
+            });
+
+            if (!zone.children.length) {
+                zone.textContent = 'Tidak ada kartu';
+                zone.classList.add('empty');
+            }
+
+            group.appendChild(groupTitle);
+            group.appendChild(zone);
+            groups.appendChild(group);
+        });
+
+        section.appendChild(groups);
+        container.appendChild(section);
+    }
+
+    // Susunan yang dipilih murid
+    createArrangement('Susunan jawabanmu', studentMapping, false);
+
+    // Mengubah kunci jawaban menjadi mapping indeks kartu → target
+    const correctMapping = {};
+
+cards.forEach((card, index) => {
+    const keyItem = correctAnswer.find(item => {
+        // Cocokkan berdasarkan teks kartu
+        const sameText =
+            item.text &&
+            card.text &&
+            normalizeText(item.text) === normalizeText(card.text);
+
+        // Cocokkan berdasarkan isi kartu, termasuk rumus
+        const sameContent =
+            Array.isArray(item.content) &&
+            Array.isArray(card.content) &&
+            sameJson(item.content, card.content);
+
+        return sameText || sameContent;
+    });
+
+    if (keyItem?.targetId != null) {
+        correctMapping[String(index)] = String(keyItem.targetId);
+    }
+});
+
+    createArrangement('Susunan jawaban yang benar', correctMapping, true);
+}
+// Menampilkan hasil koreksi setiap soal setelah kuis dikumpulkan
+function renderQuizReview(results) {
+    const questionCards = document.querySelectorAll('.quiz-question-card');
+
+    results.forEach((result, index) => {
+        const card = questionCards[index];
+        const question = quizQuestions.find(
+            item => item.id === result.question_id
+        );
+
+        if (!card || !question) return;
+
+        const answerArea = card.querySelector('.quiz-answer-area');
+
+        // Tandai pilihan murid dan jawaban benar
+        if (
+            result.question_type === 'multiple_choice' ||
+            result.question_type === 'true_false'
+        ) {
+            const radios = answerArea.querySelectorAll('input[type="radio"]');
+
+            radios.forEach(radio => {
+                const label = radio.closest('.quiz-option');
+                if (!label) return;
+
+                const isSelected =
+                    radio.value === String(result.answer);
+
+                const isCorrect =
+                    radio.value === String(result.correct_answer);
+
+                radio.disabled = true;
+
+                if (isSelected) {
+                    radio.checked = true;
+                }
+
+                if (isCorrect) {
+                    label.classList.add('answer-correct');
+                }
+
+                if (isSelected && !result.is_correct) {
+                    label.classList.add('answer-wrong');
+                }
+            });
+        }
+
+        // Kartu khusus untuk drag-and-drop
+        if (result.question_type === 'drag_drop') {
+            const dragReview = document.createElement('div');
+            dragReview.className = 'quiz-drag-drop-review';
+
+            renderDragDropReview(dragReview, result, question);
+
+            answerArea.appendChild(dragReview);
+        } else {
+            // Kunci jawaban untuk jenis soal lainnya
+            const correctAnswer = document.createElement('div');
+            correctAnswer.className = 'quiz-review-answer';
+
+            const answerTitle = document.createElement('strong');
+            answerTitle.textContent = 'Jawaban benar:';
+
+            const answerContent = document.createElement('div');
+            answerContent.className = 'quiz-review-answer-content';
+
+            let correctAnswerDisplay = result.correct_answer;
+
+if (result.question_type === 'multiple_choice') {
+    const optionData = question.options || {};
+
+    if (
+        Object.prototype.hasOwnProperty.call(
+            optionData,
+            String(result.correct_answer)
+        )
+    ) {
+        correctAnswerDisplay = optionData[String(result.correct_answer)];
+    }
+}
+
+renderReviewAnswer(answerContent, correctAnswerDisplay);
+
+            correctAnswer.appendChild(answerTitle);
+            correctAnswer.appendChild(answerContent);
+
+            answerArea.appendChild(correctAnswer);
+        }
+
+        // Pembahasan
+        const review = document.createElement('div');
+        review.className = 'quiz-question-review';
+
+        const status = document.createElement('h4');
+        status.className = result.is_correct
+            ? 'review-correct'
+            : 'review-wrong';
+
+        status.textContent = result.is_correct
+            ? '✓ Jawaban Benar'
+            : '✕ Jawaban Belum Tepat';
+
+        const explanation = document.createElement('div');
+        explanation.className = 'quiz-review-explanation';
+
+        renderTextWithMath(
+            explanation,
+            result.explanation || 'Belum ada pembahasan untuk soal ini.'
+        );
+
+        review.appendChild(status);
+        review.appendChild(explanation);
+
+        answerArea.appendChild(review);
+
+        // Nonaktifkan semua input setelah kuis selesai
+        answerArea.querySelectorAll('textarea, input').forEach(input => {
+            input.disabled = true;
+        });
+
+        // Nonaktifkan drag-and-drop
+        answerArea.querySelectorAll('.quiz-drag-card').forEach(element => {
+            element.draggable = false;
+        });
+    });
+}
+
+function formatAnswerForReview(answer) {
+    if (answer === true || answer === 'true') return 'Benar';
+    if (answer === false || answer === 'false') return 'Salah';
+
+    if (Array.isArray(answer)) {
+        return answer.map(item =>
+            item.text || item.content || JSON.stringify(item)
+        ).join(', ');
+    }
+
+    if (answer && typeof answer === 'object') {
+        return JSON.stringify(answer);
+    }
+
+    return String(answer ?? '-');
+}
+async function loadExistingQuizResult() {
+    const { data, error } = await supabase.functions.invoke('submit-quiz', {
+        body: {
+            quiz_id: quizId,
+            action: 'get_result'
+        }
+    });
+
+    if (error) {
+    let detail = '';
+
+    try {
+        detail = await error.context.json();
+    } catch (e) {
+        detail = error.message;
+    }
+
+    console.error('Detail error hasil kuis:', detail);
+    alert('Hasil kuis gagal dimuat: ' + JSON.stringify(detail));
+    return false;
+}
+
+if (data?.error) {
+    console.error('Gagal memuat hasil kuis:', data.error);
+    return false;
+}
+
+if (data?.has_attempt === false) {
+    return false;
+}
+
+    if (data?.has_attempt === false) {
+        return false;
+    }
+
+    const submitButton = document.getElementById('submitQuizBtn');
+    const resultContainer = document.getElementById('quizResult');
+
+    submitButton.textContent = 'Kuis Selesai';
+    submitButton.disabled = true;
+
+    document.getElementById('answerProgress').textContent =
+        `${quizQuestions.length} dari ${quizQuestions.length} soal selesai`;
+
+    resultContainer.hidden = false;
+    resultContainer.style.display = 'block';
+
+    resultContainer.innerHTML = `
+    <div class="quiz-result-summary">
+        <h2>Kuis Sudah Dikerjakan</h2>
+
+        <div class="quiz-result-cards">
+            <div class="quiz-result-card score-card">
+                <span class="result-card-label">Nilai Kamu</span>
+                <strong>${data.score} / ${data.total_points}</strong>
+                <span class="result-card-caption">Hasil pengerjaan kuis</span>
+            </div>
+
+            <div class="quiz-result-card correct-card">
+                <span class="result-card-label">Jawaban Benar</span>
+                <strong>${data.correct_count}</strong>
+                <span class="result-card-caption">Soal dijawab dengan tepat</span>
+            </div>
+
+            <div class="quiz-result-card wrong-card">
+                <span class="result-card-label">Jawaban Salah</span>
+                <strong>${data.wrong_count}</strong>
+                <span class="result-card-caption">Soal yang perlu dipelajari lagi</span>
+            </div>
+        </div>
+    </div>
+`;
+
+    renderQuizReview(data.results);
+
+    return true;
+}
+// 3. Mengambil ID kuis dari URL
+function getQuizIdFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+}
+
+// 4. Menjalankan pemeriksaan
+async function initializeQuizPlayer() {
+    const hasAccess = await checkStudentAccess();
+
+    if (!hasAccess) return;
+
+    quizId = getQuizIdFromURL();
+
+    if (!quizId) {
+        document.getElementById('quizContent').innerHTML =
+            '<p>ID kuis tidak ditemukan.</p>';
+        return;
+    }
+
+    console.log('ID kuis yang dipilih:', quizId);
+    // 5. Mengambil informasi kuis
+async function loadQuizInfo() {
+    const { data: quiz, error } = await supabase
+        .from('quizzes')
+        .select('id, title, description, status')
+        .eq('id', quizId)
+        .eq('status', 'published')
+        .single();
+
+    if (error || !quiz) {
+        document.getElementById('quizContent').innerHTML =
+            '<p>Kuis tidak ditemukan atau belum dipublikasikan.</p>';
+        return;
+    }
+
+    document.getElementById('quizTitle').textContent = quiz.title;
+    document.getElementById('quizDescription').textContent =
+        quiz.description || 'Kerjakan kuis berikut dengan teliti.';
+}
+
+await loadQuizInfo();
+document.getElementById('quizTitle').textContent =
+    document.getElementById('quizTitle').textContent;
+
+document.getElementById('quizLoading').hidden = true;
+// 6. Mengambil daftar soal kuis
+async function loadQuestions() {
+    const questionList = document.getElementById('questionList');
+
+    questionList.innerHTML = '<p>Memuat soal...</p>';
+
+    const { data: questions, error } = await supabase
+        .from('quiz_questions')
+        .select('id, quiz_id, question_type, question_text, content, options, points, sort_order')
+        .eq('quiz_id', quizId)
+        .order('sort_order', { ascending: true });
+
+    if (error) {
+        console.error('Gagal mengambil soal:', error);
+        questionList.innerHTML =
+            '<p>Soal gagal dimuat. Silakan coba lagi.</p>';
+        return;
+    }
+
+    if (!questions || questions.length === 0) {
+        questionList.innerHTML =
+            '<p>Belum ada soal pada kuis ini.</p>';
+        return;
+    }
+    quizQuestions = questions;
+
+    questionList.innerHTML = '';
+
+    questions.forEach((question, index) => {
+        const card = document.createElement('article');
+        card.className = 'quiz-question-card';
+
+        const number = document.createElement('h3');
+        number.textContent = `Soal ${index + 1}`;
+
+        const text = document.createElement('div');
+        text.className = 'quiz-question-text';
+
+        renderQuestionContent(
+            text,
+            question.content,
+            question.question_text || ''
+        );
+
+        const points = document.createElement('small');
+        points.textContent = `${question.points || 0} poin`;
+        const answerArea = document.createElement('div');
+answerArea.className = 'quiz-answer-area';
+
+        // Menampilkan opsi jawaban
+if (question.question_type === 'multiple_choice') {
+    const options = document.createElement('div');
+    options.className = 'quiz-options';
+
+    const optionData = question.options || {};
+
+    Object.entries(optionData).forEach(([key, content]) => {
+        const label = document.createElement('label');
+        label.className = 'quiz-option';
+
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = `answer-${question.id}`;
+        radio.value = key;
+
+        const optionContent = document.createElement('div');
+        optionContent.className = 'quiz-option-content';
+
+        renderQuestionContent(optionContent, content);
+
+        label.appendChild(radio);
+        label.appendChild(optionContent);
+        options.appendChild(label);
+    });
+
+    answerArea.appendChild(options);
+}
+// Menampilkan opsi Benar/Salah
+if (question.question_type === 'true_false') {
+    const options = document.createElement('div');
+    options.className = 'quiz-options';
+
+    const trueFalseOptions = [
+        { value: 'true', label: 'Benar' },
+        { value: 'false', label: 'Salah' }
+    ];
+
+    trueFalseOptions.forEach(option => {
+        const label = document.createElement('label');
+        label.className = 'quiz-option';
+
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = `answer-${question.id}`;
+        radio.value = option.value;
+
+        const optionText = document.createElement('span');
+        optionText.className = 'quiz-option-content';
+        optionText.textContent = option.label;
+
+        label.appendChild(radio);
+        label.appendChild(optionText);
+        options.appendChild(label);
+    });
+
+    answerArea.appendChild(options);
+}
+// Menampilkan area jawaban isian singkat
+if (question.question_type === 'short_answer') {
+    const answerBox = document.createElement('div');
+    answerBox.className = 'quiz-short-answer';
+
+    const answerHeader = document.createElement('div');
+    answerHeader.className = 'quiz-short-answer-header';
+
+    const icon = document.createElement('span');
+    icon.textContent = '✎';
+
+    const label = document.createElement('span');
+    label.textContent = 'Jawabanmu';
+
+    answerHeader.appendChild(icon);
+    answerHeader.appendChild(label);
+
+    const textarea = document.createElement('textarea');
+    textarea.name = `answer-${question.id}`;
+    textarea.placeholder = 'Tuliskan jawabanmu di sini...';
+    textarea.rows = 3;
+    textarea.className = 'quiz-short-answer-input';
+
+    answerBox.appendChild(answerHeader);
+    answerBox.appendChild(textarea);
+
+    answerArea.appendChild(answerBox);
+}
+
+// Menampilkan soal Drag and Drop
+if (question.question_type === 'drag_drop') {
+    const dragDropData = question.options || {};
+    const targets = dragDropData.targets || [];
+    const cards = dragDropData.cards || [];
+
+    const dragDropArea = document.createElement('div');
+    dragDropArea.className = 'quiz-drag-drop';
+
+    // Menyimpan jawaban murid berdasarkan indeks kartu
+    const studentMapping = {};
+
+    // Input tersembunyi untuk menyimpan jawaban sementara
+    const answerInput = document.createElement('input');
+    answerInput.type = 'hidden';
+    answerInput.name = `answer-${question.id}`;
+    answerInput.value = '';
+
+    // Area kumpulan kartu
+    const cardPool = document.createElement('div');
+    cardPool.className = 'quiz-drag-drop-cards';
+
+    const cardPoolTitle = document.createElement('h4');
+    cardPoolTitle.textContent = 'Kartu Jawaban';
+    cardPool.appendChild(cardPoolTitle);
+
+    // Membuat kartu yang dapat diseret
+    cards.forEach((cardData, index) => {
+        const card = document.createElement('div');
+        card.className = 'quiz-drag-card';
+        card.draggable = true;
+        card.dataset.cardIndex = index;
+
+        renderQuestionContent(
+            card,
+            cardData.content,
+            cardData.text || ''
+        );
+
+        card.addEventListener('dragstart', event => {
+            event.dataTransfer.setData(
+                'text/plain',
+                String(index)
+            );
+
+            event.dataTransfer.effectAllowed = 'move';
+            card.classList.add('dragging');
+        });
+
+        card.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+        });
+
+        cardPool.appendChild(card);
+    });
+
+    // Area kelompok tujuan
+    const groupsArea = document.createElement('div');
+    groupsArea.className = 'quiz-drag-drop-groups';
+
+    targets.forEach(target => {
+        const group = document.createElement('div');
+        group.className = 'quiz-drop-group';
+        group.dataset.targetId = target.id;
+
+        const groupTitle = document.createElement('div');
+        groupTitle.className = 'quiz-drop-group-title';
+
+        renderQuestionContent(
+            groupTitle,
+            target.content,
+            target.label || 'Kelompok'
+        );
+
+        const dropZone = document.createElement('div');
+        dropZone.className = 'quiz-drop-zone';
+
+        dropZone.textContent = 'Seret kartu ke sini';
+        dropZone.classList.add('empty');
+
+        dropZone.addEventListener('dragover', event => {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', event => {
+            event.preventDefault();
+            dropZone.classList.remove('drag-over');
+
+            const cardIndex = Number(
+                event.dataTransfer.getData('text/plain')
+            );
+
+            const draggedCard = questionList.querySelector(
+                `.quiz-drag-card[data-card-index="${cardIndex}"]`
+            );
+
+            if (!draggedCard) return;
+
+            dropZone.appendChild(draggedCard);
+
+            studentMapping[cardIndex] = target.id;
+            answerInput.value = JSON.stringify(studentMapping);
+
+            // Hilangkan tulisan petunjuk setelah kartu masuk
+            if (dropZone.querySelector('.quiz-drag-card')) {
+                dropZone.classList.remove('empty');
+            }
+        });
+
+        group.appendChild(groupTitle);
+        group.appendChild(dropZone);
+        groupsArea.appendChild(group);
+    });
+
+    // Mengembalikan kartu ke area kumpulan kartu
+    cardPool.addEventListener('dragover', event => {
+        event.preventDefault();
+    });
+
+    cardPool.addEventListener('drop', event => {
+        event.preventDefault();
+
+        const cardIndex = Number(
+            event.dataTransfer.getData('text/plain')
+        );
+
+        const draggedCard = questionList.querySelector(
+            `.quiz-drag-card[data-card-index="${cardIndex}"]`
+        );
+
+        if (!draggedCard) return;
+
+        cardPool.appendChild(draggedCard);
+
+        delete studentMapping[cardIndex];
+        answerInput.value = JSON.stringify(studentMapping);
+    });
+
+    dragDropArea.appendChild(cardPool);
+    dragDropArea.appendChild(groupsArea);
+    dragDropArea.appendChild(answerInput);
+
+    answerArea.appendChild(dragDropArea);
+}
+card.appendChild(number);
+card.appendChild(text);
+card.appendChild(points);
+card.appendChild(answerArea);
+
+questionList.appendChild(card);
+    });
+
+    // Memantau perubahan jawaban siswa
+questionList.addEventListener('change', updateAnswerProgress);
+questionList.addEventListener('input', updateAnswerProgress);
+
+// Perbarui jumlah jawaban setelah soal ditampilkan
+updateAnswerProgress();
+
+    console.log('Jumlah soal berhasil dimuat:', questions.length);
+}
+
+await loadQuestions();
+
+if (quizQuestions.length > 0) {
+    await loadExistingQuizResult();
+}
+}
+
+document.getElementById('submitQuizBtn').addEventListener('click', async () => {
+  const submitButton = document.getElementById('submitQuizBtn');
+  const resultContainer = document.getElementById('quizResult');
+
+  const answers = {};
+
+  quizQuestions.forEach(question => {
+    const inputs = document.querySelectorAll(
+      `[name="answer-${question.id}"]`
+    );
+
+    if (inputs.length > 0 && inputs[0].type === 'radio') {
+      const selected = Array.from(inputs).find(input => input.checked);
+      answers[question.id] = selected ? selected.value : '';
+    } else if (inputs.length > 0) {
+      answers[question.id] = inputs[0].value.trim();
+    }
+  });
+
+  submitButton.disabled = true;
+  submitButton.textContent = 'Mengumpulkan...';
+
+  try {
+    const { data, error } = await supabase.functions.invoke('submit-quiz', {
+      body: {
+        quiz_id: quizId,
+        answers
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    submitButton.textContent = 'Kuis Selesai';
+submitButton.disabled = true;
+
+resultContainer.hidden = false;
+resultContainer.style.display = 'block';
+
+resultContainer.innerHTML = `
+    <div class="quiz-result-summary">
+        <h2>Kuis Berhasil Dikumpulkan!</h2>
+
+        <div class="quiz-result-cards">
+            <div class="quiz-result-card score-card">
+                <span class="result-card-label">Nilai Kamu</span>
+                <strong>${data.score} / ${data.total_points}</strong>
+                <span class="result-card-caption">Hasil pengerjaan kuis</span>
+            </div>
+
+            <div class="quiz-result-card correct-card">
+                <span class="result-card-label">Jawaban Benar</span>
+                <strong>${data.correct_count}</strong>
+                <span class="result-card-caption">Soal dijawab dengan tepat</span>
+            </div>
+
+            <div class="quiz-result-card wrong-card">
+                <span class="result-card-label">Jawaban Salah</span>
+                <strong>${data.wrong_count}</strong>
+                <span class="result-card-caption">Soal yang perlu dipelajari lagi</span>
+            </div>
+        </div>
+    </div>
+`;
+
+renderQuizReview(data.results);
+
+console.log('Hasil kuis:', data);
+
+  } catch (error) {
+    console.error('Gagal mengumpulkan kuis:', error);
+
+    alert(error.message || 'Kuis gagal dikumpulkan.');
+
+    submitButton.disabled = false;
+    submitButton.textContent = 'Kumpulkan Jawaban';
+  }
+  
+});
+initializeQuizPlayer();
+
+</script>
+</body>
+</html>

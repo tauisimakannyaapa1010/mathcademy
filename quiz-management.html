@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Kuis | Mathcademy</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .quiz-management {
+            padding: 30px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-header h1 {
+            color: #365314;
+            margin-bottom: 8px;
+        }
+
+        .quiz-header p {
+            color: #64748b;
+        }
+
+        .create-quiz-button {
+            background: #4d7c0f;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .quiz-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .quiz-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+        }
+
+        .quiz-card h3 {
+            color: #365314;
+            margin-bottom: 10px;
+        }
+
+        .quiz-card p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .quiz-status {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #ecfccb;
+            color: #365314;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .empty-quiz {
+            background: white;
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 45px 20px;
+            text-align: center;
+            color: #64748b;
+            grid-column: 1 / -1;
+        }
+
+        
+.quiz-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.quiz-modal.active {
+    display: flex;
+}
+
+.quiz-modal-content {
+    background: white;
+    width: 100%;
+    max-width: 520px;
+    padding: 28px;
+    border-radius: 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.quiz-modal-content h2 {
+    color: #365314;
+    margin-bottom: 8px;
+}
+
+.quiz-modal-content > p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+.quiz-form-group {
+    margin-bottom: 17px;
+}
+
+.quiz-form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 7px;
+    color: #334155;
+}
+
+.quiz-form-group input,
+.quiz-form-group textarea,
+.quiz-form-group select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    font: inherit;
+    box-sizing: border-box;
+}
+
+.quiz-form-group textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.quiz-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.quiz-modal-actions button {
+    padding: 11px 18px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.cancel-quiz-button {
+    background: white;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+}
+
+.save-quiz-button {
+    background: #4d7c0f;
+    border: none;
+    color: white;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <main class="quiz-management">
+        <div class="quiz-header">
+            <div>
+                <h1>Kelola Kuis</h1>
+                <p>Buat dan kelola kuis untuk mengukur pemahaman murid.</p>
+            </div>
+
+            <button class="create-quiz-button" id="createQuizBtn">
+                + Buat Kuis
+            </button>
+        </div>
+
+        <div class="quiz-list" id="quizList">
+            <div class="empty-quiz">
+                <h3>Belum Ada Kuis</h3>
+                <p>Kuis yang kamu buat akan ditampilkan di sini.</p>
+            </div>
+        </div>
+    </main>
+    
+<div class="quiz-modal" id="quizModal">
+    <div class="quiz-modal-content">
+        <h2>Buat Kuis Baru</h2>
+        <p>Lengkapi informasi kuis yang ingin dibuat.</p>
+
+        <form id="quizForm">
+            <div class="quiz-form-group">
+                <label for="quizTitle">Judul Kuis</label>
+                <input
+                    type="text"
+                    id="quizTitle"
+                    placeholder="Contoh: Evaluasi Bentuk Aljabar"
+                    required
+                >
+            </div>
+
+            <div class="quiz-form-group">
+                <label for="quizDescription">Deskripsi</label>
+                <textarea
+                    id="quizDescription"
+                    placeholder="Tuliskan deskripsi singkat kuis..."
+                ></textarea>
+            </div>
+
+            <div class="quiz-form-group">
+                <label for="quizMaterial">Materi Terkait (Opsional)</label>
+                <select id="quizMaterial">
+                    <option value="">Tidak terikat pada materi tertentu</option>
+                </select>
+            </div>
+
+            <div class="quiz-form-group">
+                <label for="quizStatus">Status Kuis</label>
+                <select id="quizStatus">
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                </select>
+            </div>
+
+            <div class="quiz-modal-actions">
+                <button
+                    type="button"
+                    class="cancel-quiz-button"
+                    id="cancelQuizBtn"
+                >
+                    Batal
+                </button>
+
+                <button
+                    type="submit"
+                    class="save-quiz-button"
+                >
+                    Simpan Kuis
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module">
+    import { supabase } from './supabase.js';
+
+    const quizList = document.getElementById('quizList');
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+if (userError || !user) {
+    alert('Silakan login kembali.');
+    window.location.href = 'login.html';
+}
+    const quizMaterial = document.getElementById('quizMaterial');
+
+async function loadMaterials() {
+    const { data: materials, error } = await supabase
+        .from('materials')
+        .select('id, title')
+        .order('title', { ascending: true });
+
+    if (error) {
+        console.error('Gagal memuat materi:', error);
+        return;
+    }
+
+    quizMaterial.innerHTML = `
+        <option value="">Tidak terikat pada materi tertentu</option>
+        ${materials.map(material => `
+            <option value="${material.id}">${material.title}</option>
+        `).join('')}
+    `;
+}
+
+loadMaterials();
+    
+// Elemen modal
+const quizModal = document.getElementById('quizModal');
+const createQuizBtn = document.getElementById('createQuizBtn');
+const cancelQuizBtn = document.getElementById('cancelQuizBtn');
+const quizForm = document.getElementById('quizForm');
+
+// Membuka modal
+createQuizBtn.addEventListener('click', () => {
+    quizModal.classList.add('active');
+});
+
+// Menutup modal melalui tombol Batal
+cancelQuizBtn.addEventListener('click', () => {
+    quizModal.classList.remove('active');
+});
+
+// Menutup modal ketika area luar diklik
+quizModal.addEventListener('click', (event) => {
+    if (event.target === quizModal) {
+        quizModal.classList.remove('active');
+    }
+});
+
+    console.log('JavaScript Kelola Kuis berjalan!');
+    console.log('Elemen quizList:', quizList);
+
+    async function loadQuizzes() {
+        const { data: quizzes, error } = await supabase
+            .from('quizzes')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        console.log('Data kuis dari Supabase:', quizzes);
+        console.log('Error Supabase:', error);
+
+        if (error) {
+            console.error('Gagal mengambil data kuis:', error);
+            quizList.innerHTML = `
+                <div class="empty-quiz">
+                    Gagal memuat daftar kuis.
+                </div>
+            `;
+            return;
+        }
+
+        if (!quizzes || quizzes.length === 0) {
+            quizList.innerHTML = `
+                <div class="empty-quiz">
+                    <h3>Belum Ada Kuis</h3>
+                    <p>Kuis yang kamu buat akan ditampilkan di sini.</p>
+                </div>
+            `;
+            return;
+        }
+
+        quizList.innerHTML = quizzes.map(quiz => `
+    <div class="quiz-card">
+        <h3>${quiz.title}</h3>
+        <p>${quiz.description || 'Tidak ada deskripsi.'}</p>
+
+        <span class="quiz-status">
+            ${quiz.status || 'draft'}
+        </span>
+
+        <div style="margin-top: 20px;">
+            <a href="quiz-editor.html?id=${quiz.id}"
+               class="create-quiz-button"
+               style="display: inline-block; text-decoration: none;">
+                Kelola Soal
+            </a>
+        </div>
+    </div>
+`).join('');
+    }
+quizForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const title = document.getElementById('quizTitle').value.trim();
+    const description = document.getElementById('quizDescription').value.trim();
+    const materialId = quizMaterial.value || null;
+    const status = document.getElementById('quizStatus').value;
+
+    if (!title) {
+        alert('Judul kuis wajib diisi.');
+        return;
+    }
+
+    const { error } = await supabase
+        .from('quizzes')
+        .insert({
+            title: title,
+            description: description,
+            material_id: materialId,
+            status: status,
+            created_by: user.id
+        });
+
+    if (error) {
+        console.error('Gagal menyimpan kuis:', error);
+        alert('Kuis gagal disimpan: ' + error.message);
+        return;
+    }
+
+    alert('Kuis berhasil dibuat!');
+
+    quizForm.reset();
+    quizModal.classList.remove('active');
+
+    loadQuizzes();
+});
+    loadQuizzes();
+</script>
+</body>
+</html>

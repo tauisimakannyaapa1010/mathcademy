@@ -1,0 +1,3601 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Editor | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        body {
+            margin: 0;
+            background: #f8fafc;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 28px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .editor-header h2 {
+            margin: 0;
+            color: #365314;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #365314;
+            font-weight: bold;
+        }
+
+        .editor-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        .block-panel {
+            background: white;
+            padding: 22px;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .block-panel h3 {
+            margin-top: 0;
+        }
+
+        .block-category {
+            margin-top: 24px;
+            margin-bottom: 10px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .block-option {
+            padding: 12px;
+            margin-bottom: 9px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            cursor: pointer;
+        }
+
+        .block-option:hover {
+            background: #ecfccb;
+            border-color: #84cc16;
+        }
+
+        .block-option span {
+            display: block;
+            margin-top: 4px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .editor-workspace {
+            padding: 35px;
+        }
+
+        .activity-heading {
+            margin-bottom: 25px;
+        }
+
+        .activity-heading h1 {
+            margin-bottom: 8px;
+        }
+
+        .activity-heading p {
+            color: #64748b;
+        }
+
+        .editor-canvas {
+            max-width: 850px;
+            min-height: 500px;
+            margin: auto;
+            padding: 35px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+        }
+
+        .empty-editor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        .empty-editor h2 {
+            color: #475569;
+        }
+
+        @media (max-width: 768px) {
+            .editor-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .block-panel {
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .editor-workspace {
+                padding: 18px;
+            }
+
+            .editor-canvas {
+                padding: 20px;
+            }
+        }
+        
+/* =================================
+   TOMBOL KONTROL BLOK PEMBELAJARAN
+================================= */
+
+.activity-block > div:first-child button {
+    padding: 7px 13px;
+    border: 1px solid #dcebe7;
+    border-radius: 9px;
+    background: #f0fdfa;
+    color: #39766d;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.activity-block > div:first-child button:hover {
+    background: #ccfbf1;
+    border-color: #99d8c9;
+    transform: translateY(-1px);
+}
+
+.activity-block > div:first-child button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Tombol urutkan */
+.activity-block > div:first-child button.move-up,
+.activity-block > div:first-child button.move-down {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 9px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 16px;
+}
+
+/* Tombol edit dan selesai */
+.activity-block > div:first-child button[class*="edit-"] {
+    background: #e0f2fe;
+    border-color: #bae6fd;
+    color: #0369a1;
+}
+
+/* Tombol hapus */
+.activity-block > div:first-child button[class*="delete-"],
+.activity-block > div:first-child button.delete-block {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #e05263;
+}
+
+.activity-block > div:first-child button[class*="delete-"]:hover,
+.activity-block > div:first-child button.delete-block:hover {
+    background: #ffe4e6;
+    border-color: #fda4af;
+}
+/* =================================
+   KOLOM FOTO DAN VIDEO
+================================= */
+
+/* Input foto dan video */
+.image-file,
+.video-url,
+.image-caption,
+.activity-block input[type="text"],
+.activity-block input[type="url"],
+.activity-block textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d5e7e2;
+    border-radius: 12px;
+    padding: 11px 14px;
+    background: #fbfefd;
+    color: #334155;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+/* Efek saat kolom dipilih */
+.image-file:focus,
+.video-url:focus,
+.image-caption:focus,
+.activity-block input:focus,
+.activity-block textarea:focus {
+    outline: none;
+    border-color: #5bb8a8;
+    box-shadow: 0 0 0 3px rgba(91, 184, 168, 0.13);
+}
+
+/* Tombol pilih foto */
+.image-file::file-selector-button {
+    border: none;
+    border-radius: 8px;
+    padding: 9px 14px;
+    margin-right: 12px;
+    background: #d9f3ec;
+    color: #28796b;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.image-file::file-selector-button:hover {
+    background: #bce9dc;
+}
+
+/* Tombol preview video */
+.activity-block button.preview-video {
+    border: none;
+    border-radius: 9px;
+    padding: 10px 16px;
+    background: #d9f3ec;
+    color: #28796b;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.activity-block button.preview-video:hover {
+    background: #bce9dc;
+    transform: translateY(-1px);
+}
+
+/* Area pratinjau foto */
+.image-preview {
+    display: block;
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 12px;
+    border: 1px solid #e2eee9;
+}
+
+/* Area pratinjau video */
+.preview-video {
+    margin-top: 12px;
+}
+/* Mengatur jarak antarbagian pada blok video */
+.activity-block:has(.video-url) .block-header {
+    margin-bottom: 18px;
+}
+
+.activity-block:has(.video-url) .video-url {
+    margin-bottom: 14px;
+}
+
+.activity-block:has(.video-url) .preview-video {
+    margin-top: 18px;
+}
+/* Memperlonggar jarak pada form video */
+.activity-block:has(.video-url) label {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 9px;
+}
+
+.activity-block:has(.video-url) .video-url {
+    margin-bottom: 18px;
+}
+
+/* Jarak tombol preview dengan video */
+.activity-block:has(.video-url) button.preview-video {
+    display: block;
+    margin-top: 22px;
+    margin-bottom: 16px;
+}
+
+/* Jarak area video */
+.activity-block:has(.video-url) .preview-video {
+    margin-top: 0;
+}
+/* Jarak judul dan tombol hapus pada blok video */
+.activity-block:has(.video-url) .block-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER EDITOR -->
+    <header class="editor-header">
+        <a href="materials.html" class="back-button">
+            ← Kembali ke Materi
+        </a>
+
+        <h2>Mathcademy Editor</h2>
+
+        <button
+    id="save-activity-btn"
+    style="
+        padding: 10px 18px;
+        background: #365314;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    "
+>
+    Simpan
+</button>
+    </header>
+
+    <div class="editor-layout">
+
+        <!-- PANEL PILIHAN BLOK -->
+       
+        <aside class="block-panel">
+
+            <h3>Blok Pembelajaran</h3>
+            <p style="color: #64748b; font-size: 13px;">
+                Pilih blok untuk menyusun aktivitas.
+            </p>
+
+            <div class="block-category">Konten</div>
+
+            <div class="block-option" data-block="text">
+                📝 Text
+                <span>Judul, materi, dan penjelasan</span>
+            </div>
+
+            <div class="block-option" data-block="image">
+                🖼️ Image
+                <span>Upload gambar dan ilustrasi</span>
+            </div>
+
+            <div class="block-option" data-block="pdf">
+                📄 PDF
+                <span>Upload dan tampilkan dokumen PDF</span>
+            </div>
+
+            <div class="block-option" data-block="video">
+                🎬 Video
+                <span>Video pembelajaran</span>
+            </div>
+
+            <div class="block-category">Interaktif</div>
+
+            <div class="block-option" data-block="drag-drop">
+                ↔️ Drag and Drop
+                <span>Menyeret dan meletakkan objek</span>
+            </div>
+
+            <div class="block-option" data-block="embed">
+                🌐 Embed Code
+                <span>HTML, CSS, JavaScript, Canva, GeoGebra, dan Desmos</span>
+            </div>
+
+            <div class="block-category">Latihan</div>
+
+            <div class="block-option" data-block="multiple-choice">
+                ❓ Multiple Choice
+                <span>Pertanyaan pilihan ganda</span>
+            </div>
+
+            <div class="block-option" data-block="short-answer">
+                ✏️ Short Answer
+                <span>Jawaban singkat</span>
+            </div>
+
+            <div class="block-category">Struktur</div>
+
+            <div class="block-option" data-block="divider">
+                ━ Divider
+                <span>Pemisah konten</span>
+            </div>
+
+        </aside>
+
+        <!-- AREA KERJA EDITOR -->
+        <main class="editor-workspace">
+
+            <div class="activity-heading">
+                <h1 id="activity-title">Memuat aktivitas...</h1>
+                <p>
+                    Susun materi dan pengalaman belajar interaktif
+                    untuk siswa.
+                </p>
+            </div>
+
+            <section class="editor-canvas">
+
+                <div class="empty-editor">
+                    <div style="font-size: 48px;">✦</div>
+
+                    <h2>Mulai Susun Aktivitasmu</h2>
+
+                    <p>
+                        Pilih blok pembelajaran dari panel sebelah kiri
+                        untuk mulai membuat konten.
+                    </p>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+<script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+        fontCache: 'global'
+    }
+};
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathlive"></script>
+
+<script type="module">
+import { supabase } from './supabase.js';
+
+const params = new URLSearchParams(window.location.search);
+const activityId = params.get('activityId');
+// Menyimpan daftar blok aktivitas
+let activityBlocks = [];
+
+console.log('ID Aktivitas:', activityId);
+// Mengambil data aktivitas dari Supabase
+async function loadActivity() {
+    const { data, error } = await supabase
+        .from('material_activities')
+        .select('id, title, content, status')
+        .eq('id', activityId)
+        .single();
+
+    if (error) {
+        console.error('Gagal mengambil aktivitas:', error.message);
+        return;
+    }
+
+    console.log('Data Aktivitas:', data);
+    // Menampilkan judul aktivitas
+document.getElementById('activity-title').textContent = data.title;
+// Memuat blok yang sudah tersimpan
+if (Array.isArray(data.content)) {
+    activityBlocks = data.content;
+}
+
+console.log('Blok Aktivitas:', activityBlocks);
+// Menampilkan blok yang sudah tersimpan
+renderSavedBlocks();
+}
+
+loadActivity();
+    // Mengambil area kerja dan panel blok
+    const editorCanvas = document.querySelector('.editor-canvas');
+    const blockPanel = document.querySelector('.block-panel');
+
+// Mengamankan teks sebelum ditampilkan sebagai HTML
+function escapeHTML(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Membuat editor teks yang mendukung rumus matematika inline
+
+
+function createRichMathEditor(initialValue = '', editorMode = 'default') {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'rich-math-editor';
+
+    wrapper.style.cssText = `
+        width: 100%;
+        margin: 8px 0 14px;
+    `;
+
+    wrapper.innerHTML = `
+        <div style="margin-bottom:8px;">
+            <button type="button" class="rich-insert-math"
+                style="
+                    padding:8px 12px;
+                    background:#ecfccb;
+                    color:#365314;
+                    border:1px solid #bef264;
+                    border-radius:7px;
+                    cursor:pointer;
+                ">
+                ∑ Sisipkan Rumus
+            </button>
+        </div>
+
+        <div class="rich-math-content"
+            contenteditable="true"
+            spellcheck="false"
+            style="
+                width:100%;
+                min-height:110px;
+                box-sizing:border-box;
+                padding:12px;
+                border:1px solid #cbd5e1;
+                border-radius:8px;
+                background:white;
+                line-height:2;
+                text-align:left;
+                white-space:pre-wrap;
+                overflow-wrap:anywhere;
+                outline:none;
+                cursor:text;
+            "></div>
+    `;
+
+    const content = wrapper.querySelector('.rich-math-content');
+    const insertButton = wrapper.querySelector('.rich-insert-math');
+
+    // Memuat teks dan rumus yang sudah tersimpan
+    const template = document.createElement('template');
+    template.innerHTML = initialValue || '';
+
+    template.content.querySelectorAll('.saved-inline-math')
+        .forEach(placeholder => {
+            const field = document.createElement('math-field');
+
+            field.className = 'rich-inline-math';
+            field.value = placeholder.dataset.formula || '';
+            field.readOnly = false;
+
+            field.style.cssText = `
+                display:inline-block;
+                min-width:35px;
+                margin:0 3px;
+                padding:2px 5px;
+                border:1px solid #d9f99e;
+                border-radius:5px;
+                background:#f7fee7;
+                vertical-align:middle;
+                font-size:20px;
+            `;
+
+            placeholder.replaceWith(field);
+        });
+
+    content.appendChild(template.content);
+
+    // Menyimpan posisi kursor
+let savedRange = null;
+
+function saveCursor() {
+    const selection = window.getSelection();
+
+    if (
+        selection.rangeCount > 0 &&
+        content.contains(selection.getRangeAt(0).commonAncestorContainer)
+    ) {
+        savedRange = selection.getRangeAt(0).cloneRange();
+    }
+}
+
+content.addEventListener('keyup', saveCursor);
+content.addEventListener('mouseup', saveCursor);
+content.addEventListener('input', saveCursor);
+
+// Menyimpan posisi kursor sebelum tombol rumus diklik
+insertButton.addEventListener('mousedown', event => {
+    event.preventDefault();
+    saveCursor();
+});
+
+// Memindahkan kursor ke setelah rumus ketika area di sebelahnya diklik
+content.addEventListener('click', event => {
+
+    // Jika pengguna mengeklik kotak rumus, biarkan MathLive mengedit rumus
+    if (event.target.closest('math-field')) return;
+
+    const fields = [...content.querySelectorAll('math-field')];
+
+    const field = fields.find(item => {
+        const rect = item.getBoundingClientRect();
+
+        return (
+            event.clientY >= rect.top &&
+            event.clientY <= rect.bottom &&
+            event.clientX > rect.right &&
+            event.clientX <= rect.right + 15
+        );
+    });
+
+    if (!field) return;
+
+    let nextNode = field.nextSibling;
+
+    // Pastikan tersedia ruang teks setelah rumus
+    if (!nextNode || nextNode.nodeType !== Node.TEXT_NODE) {
+        nextNode = document.createTextNode('\u00A0');
+        field.parentNode.insertBefore(nextNode, field.nextSibling);
+    }
+
+    const range = document.createRange();
+    range.setStart(nextNode, nextNode.length);
+    range.collapse(true);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    savedRange = range.cloneRange();
+});
+
+// Menyisipkan rumus pada posisi kursor
+insertButton.addEventListener('click', () => {
+    const range = savedRange
+        ? savedRange.cloneRange()
+        : document.createRange();
+
+    if (
+        !savedRange ||
+        !content.contains(range.commonAncestorContainer)
+    ) {
+        range.selectNodeContents(content);
+        range.collapse(false);
+    }
+
+    const field = document.createElement('math-field');
+
+    field.className = 'rich-inline-math';
+    field.value = '';
+    field.readOnly = false;
+    field.mathVirtualKeyboardPolicy = 'auto';
+    field.tabIndex = 0;
+
+    field.style.cssText = `
+        display:inline-block;
+        min-width:35px;
+        margin:0 3px;
+        padding:2px 5px;
+        border:1px solid #d9f99e;
+        border-radius:5px;
+        background:#f7fee7;
+        vertical-align:middle;
+        font-size:20px;
+    `;
+
+    // Spasi biasa sebagai tempat kursor setelah rumus
+    const textAfter = document.createTextNode('\u00A0');
+
+    range.deleteContents();
+    range.insertNode(textAfter);
+    range.insertNode(field);
+
+    // Memindahkan kursor ke ujung spasi setelah rumus
+    const afterRange = document.createRange();
+    afterRange.setStart(textAfter, textAfter.length);
+    afterRange.collapse(true);
+
+    content.focus();
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(afterRange);
+
+    savedRange = afterRange.cloneRange();
+
+    // Fokus kotak rumus hanya untuk editor selain Short Answer
+if (editorMode !== 'short-answer') {
+    field.focus();
+}
+});
+
+// Menghapus kotak rumus menggunakan Backspace atau Delete
+content.addEventListener('keydown', event => {
+    if (event.key !== 'Backspace' && event.key !== 'Delete') return;
+
+    const selection = window.getSelection();
+
+    if (!selection.rangeCount || !selection.isCollapsed) return;
+
+    const range = selection.getRangeAt(0);
+    const node = range.startContainer;
+    const offset = range.startOffset;
+
+    let mathField = null;
+    let caretRange = document.createRange();
+
+    if (node.nodeType === Node.TEXT_NODE) {
+        // Backspace: kursor berada di ujung spasi setelah rumus
+        if (
+            event.key === 'Backspace' &&
+            offset === node.length &&
+            node.previousSibling?.tagName === 'MATH-FIELD'
+        ) {
+            mathField = node.previousSibling;
+            caretRange.setStart(node, 0);
+        }
+
+        // Delete: kursor berada sebelum kotak rumus
+        if (
+            event.key === 'Delete' &&
+            offset === 0 &&
+            node.nextSibling?.tagName === 'MATH-FIELD'
+        ) {
+            mathField = node.nextSibling;
+            caretRange.setStartBefore(mathField);
+        }
+    }
+
+    if (!mathField) return;
+
+    event.preventDefault();
+
+    const parent = mathField.parentNode;
+
+    mathField.remove();
+
+    // Hapus spasi penanda jika masih ada
+    if (
+        node.nodeType === Node.TEXT_NODE &&
+        node.parentNode === parent &&
+        node.textContent === '\u00A0'
+    ) {
+        node.remove();
+    }
+
+    // Kembalikan kursor ke posisi bekas rumus
+    if (!caretRange.startContainer.isConnected) {
+        caretRange = document.createRange();
+        caretRange.selectNodeContents(content);
+        caretRange.collapse(false);
+    }
+
+    const currentSelection = window.getSelection();
+    currentSelection.removeAllRanges();
+    currentSelection.addRange(caretRange);
+
+    savedRange = caretRange.cloneRange();
+});
+    // Memastikan area editor selalu mulai dari kiri atas
+    content.addEventListener('focus', () => {
+        content.style.textAlign = 'left';
+    });
+
+    return {
+        wrapper,
+        setEditing: () => {},
+        getValue: () => getRichMathEditorValue(wrapper)
+    };
+}
+
+// Mengambil isi editor teks beserta rumus matematika inline
+
+function getRichMathEditorValue(editorContainer) {
+    const content = editorContainer.querySelector('.rich-math-content');
+
+    if (!content) return '';
+
+    // Ambil rumus dari MathLive asli sebelum membuat salinan
+    const originalFields = content.querySelectorAll('math-field');
+
+    // Salin isi editor
+    const copy = content.cloneNode(true);
+    const copiedFields = copy.querySelectorAll('math-field');
+
+    // Ubah setiap MathLive menjadi penanda yang bisa disimpan
+    copiedFields.forEach((field, index) => {
+        const formula = originalFields[index]?.value || '';
+
+        const placeholder = document.createElement('span');
+        placeholder.className = 'saved-inline-math';
+        placeholder.setAttribute('data-formula', formula);
+        placeholder.textContent = formula;
+
+        field.replaceWith(placeholder);
+    });
+
+    return copy.innerHTML;
+}
+
+
+ // Membuat satu blok Text dengan editor teks dan rumus matematika
+function createTextBlock(item = {}) {
+
+    const emptyEditor = editorCanvas.querySelector('.empty-editor');
+
+    if (emptyEditor) {
+        emptyEditor.remove();
+    }
+
+    const newBlock = document.createElement('div');
+    newBlock.classList.add('activity-block');
+    newBlock.dataset.type = 'text';
+
+    newBlock.style.cssText = `
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    newBlock.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <strong style="color:#365314;">📝 Blok Text</strong>
+
+            <div style="display:flex; gap:6px;">
+                <button type="button" class="move-up">↑</button>
+                <button type="button" class="move-down">↓</button>
+                <button type="button" class="edit-text-block">Edit</button>
+                <button type="button" class="delete-text-block">Hapus</button>
+            </div>
+        </div>
+
+        <input
+            type="text"
+            class="text-title"
+            disabled
+            placeholder="Masukkan judul materi..."
+            style="width:100%; box-sizing:border-box; padding:12px; margin-bottom:12px;"
+        >
+<!-- TOOLBAR FORMAT TEKS -->
+<div class="text-toolbar" style="
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:7px;
+    padding:9px;
+    margin-bottom:10px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:9px;
+">
+
+    <button type="button" data-command="bold"
+        title="Bold"
+        style="font-weight:bold;">B</button>
+
+    <button type="button" data-command="italic"
+        title="Italic"
+        style="font-style:italic;">I</button>
+
+    <button type="button" data-command="underline"
+        title="Underline"
+        style="text-decoration:underline;">U</button>
+
+    <button type="button" data-command="justifyLeft"
+        title="Rata kiri">☰</button>
+
+    <button type="button" data-command="justifyCenter"
+        title="Rata tengah" style="text-align:center;">≡</button>
+
+    <button type="button" data-command="justifyRight"
+        title="Rata kanan" style="text-align:right;">☰</button>
+
+    <span style="width:1px; height:24px; background:#cbd5e1;"></span>
+
+    <button type="button" data-command="insertUnorderedList"
+        title="Bullet List">• ≡</button>
+
+    <button type="button" data-command="insertOrderedList"
+        title="Numbering">1. ≡</button>
+
+    <span style="width:1px; height:24px; background:#cbd5e1;"></span>
+        <span style="width:1px; height:24px; background:#cbd5e1;"></span>
+
+    <span style="width:1px; height:24px; background:#cbd5e1;"></span>
+
+    <select class="text-format-select"
+        title="Format teks"
+        style="
+            padding:7px;
+            border:1px solid #cbd5e1;
+            border-radius:6px;
+            background:white;
+            cursor:pointer;
+        ">
+
+        <option value="P">Paragraf</option>
+        <option value="H1">Heading 1</option>
+        <option value="H2">Heading 2</option>
+
+    </select>
+    <select class="text-size-select"
+    title="Ukuran font"
+    style="
+        padding:7px;
+        border:1px solid #cbd5e1;
+        border-radius:6px;
+        background:white;
+        cursor:pointer;
+    ">
+
+    <option value="">Ukuran</option>
+    <option value="12px">12 px</option>
+    <option value="14px">14 px</option>
+    <option value="16px">16 px</option>
+    <option value="18px">18 px</option>
+    <option value="20px">20 px</option>
+    <option value="24px">24 px</option>
+    <option value="28px">28 px</option>
+    <option value="32px">32 px</option>
+
+</select>
+    <select class="text-highlight-select"
+        title="Warna highlight"
+        style="
+            padding:7px;
+            border:1px solid #cbd5e1;
+            border-radius:6px;
+            background:white;
+            cursor:pointer;
+        ">
+
+        <option value="">Highlight</option>
+        <option value="#fef08a">Kuning</option>
+        <option value="#bbf7d0">Hijau</option>
+        <option value="#bfdbfe">Biru</option>
+        <option value="#fbcfe8">Merah muda</option>
+
+    </select>
+    <label style="font-size:13px; color:#64748b;">
+        Warna teks:
+    </label>
+
+    <input
+        type="color"
+        class="text-color-picker"
+        value="#1e293b"
+        title="Pilih warna teks"
+        style="width:35px; height:30px; cursor:pointer;"
+    >
+
+</div>
+        <div style="margin-bottom:10px;">
+            <button
+                type="button"
+                class="insert-math-button"
+                disabled
+                style="padding:9px 14px; background:#ecfccb; color:#365314; border:1px solid #bef264; border-radius:8px; cursor:pointer;"
+            >
+                ∑ Sisipkan Rumus
+            </button>
+        </div>
+
+        <div
+            class="text-editor"
+            contenteditable="false"
+            style="
+                min-height:130px;
+                padding:14px;
+                border:1px solid #cbd5e1;
+                border-radius:9px;
+                background:white;
+                line-height:2;
+                outline:none;
+                white-space:pre-wrap;
+            "
+        ></div>
+    `;
+
+    const titleInput = newBlock.querySelector('.text-title');
+    const textEditor = newBlock.querySelector('.text-editor');
+    const insertMathButton = newBlock.querySelector('.insert-math-button');
+    const editButton = newBlock.querySelector('.edit-text-block');
+    const textToolbar = newBlock.querySelector('.text-toolbar');
+    const colorPicker = newBlock.querySelector('.text-color-picker');
+    const formatSelect = newBlock.querySelector('.text-format-select');
+    const sizeSelect = newBlock.querySelector('.text-size-select');
+    const highlightSelect = newBlock.querySelector('.text-highlight-select');
+
+    titleInput.value = item.title || '';
+
+   
+    let isEditing = false;
+    let savedRange = null;
+
+    
+    // Membuat elemen rumus MathLive
+    function createInlineMath(formula = '') {
+
+        const mathField = document.createElement('math-field');
+
+        mathField.className = 'inline-math';
+        mathField.value = formula;
+
+        // Rumus bisa diklik dan diedit saat mode Edit aktif
+        mathField.readOnly = false;
+        mathField.tabIndex = 0;
+        mathField.mathVirtualKeyboardPolicy = 'auto';
+
+        mathField.style.cssText = `
+            display:inline-block;
+            min-width:45px;
+            padding:2px 5px;
+            margin:0 3px;
+            border:1px solid #d9f99e;
+            border-radius:6px;
+            background:#f7fee7;
+            vertical-align:middle;
+            font-size:20px;
+            pointer-events:auto;
+        `;
+   
+        return mathField;
+    }
+
+    // Memuat konten lama atau konten HTML yang sudah tersimpan
+if (Array.isArray(item.content)) {
+
+    // Mendukung format penyimpanan lama
+    item.content.forEach((part) => {
+
+        if (part.type === 'math') {
+
+            textEditor.appendChild(
+                createInlineMath(part.formula || '')
+            );
+
+            textEditor.appendChild(
+                document.createTextNode('\u00A0')
+            );
+
+        } else {
+
+            textEditor.appendChild(
+                document.createTextNode(part.value || '')
+            );
+
+        }
+
+    });
+
+} else if (item.content) {
+
+    // Memuat format HTML yang baru
+    const template = document.createElement('template');
+    template.innerHTML = item.content;
+
+    // Mengembalikan penanda rumus menjadi MathLive
+    template.content
+        .querySelectorAll('.saved-inline-math')
+        .forEach((placeholder) => {
+
+            const formula =
+                placeholder.getAttribute('data-formula') || '';
+
+            placeholder.replaceWith(
+                createInlineMath(formula)
+            );
+
+        });
+
+    textEditor.appendChild(template.content);
+
+}
+
+
+    // Menyimpan posisi kursor
+    function saveCursorPosition() {
+
+        const selection = window.getSelection();
+
+        if (
+            selection.rangeCount > 0 &&
+            textEditor.contains(
+                selection.getRangeAt(0).commonAncestorContainer
+            )
+        ) {
+            savedRange = selection.getRangeAt(0).cloneRange();
+        }
+
+    }
+
+    textEditor.addEventListener('keyup', saveCursorPosition);
+    textEditor.addEventListener('mouseup', saveCursorPosition);
+
+    // Mengaktifkan tombol format teks
+textToolbar.addEventListener('mousedown', (event) => {
+
+    // Dropdown tetap menggunakan perilaku bawaan browser
+    if (event.target.closest('select')) {
+        return;
+    }
+
+    // Mencegah kursor editor kehilangan posisi saat tombol format diklik
+    event.preventDefault();
+
+});
+
+textToolbar.addEventListener('click', (event) => {
+
+    const button = event.target.closest('[data-command]');
+
+    if (!button || !isEditing) return;
+
+    textEditor.focus();
+
+    if (savedRange) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+    }
+
+    document.execCommand(button.dataset.command, false, null);
+
+    saveCursorPosition();
+
+});
+
+// Mengubah warna teks
+colorPicker.addEventListener('input', () => {
+
+    if (!isEditing) return;
+
+    textEditor.focus();
+
+    if (savedRange) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+    }
+
+    document.execCommand(
+        'foreColor',
+        false,
+        colorPicker.value
+    );
+
+    saveCursorPosition();
+
+});
+
+// Mengatur format heading dan paragraf
+formatSelect.addEventListener('change', () => {
+
+    if (!isEditing) return;
+
+    textEditor.focus();
+
+    if (savedRange) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+    }
+
+    document.execCommand(
+        'formatBlock',
+        false,
+        formatSelect.value
+    );
+
+    saveCursorPosition();
+
+});
+
+// Mengatur ukuran font teks
+sizeSelect.addEventListener('change', () => {
+
+    if (!isEditing || !sizeSelect.value) return;
+
+    textEditor.focus();
+
+    if (savedRange) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+    }
+
+    // Mengubah ukuran teks yang dipilih
+    document.execCommand('fontSize', false, '7');
+
+    // Mengubah hasil format menjadi ukuran pixel
+    textEditor.querySelectorAll('font[size="7"]').forEach((font) => {
+
+        const span = document.createElement('span');
+
+        span.style.fontSize = sizeSelect.value;
+
+        while (font.firstChild) {
+            span.appendChild(font.firstChild);
+        }
+
+        font.replaceWith(span);
+
+    });
+
+    saveCursorPosition();
+
+    // Mengembalikan dropdown ke pilihan awal
+    sizeSelect.value = '';
+
+});
+
+// Memberikan warna highlight pada teks
+highlightSelect.addEventListener('change', () => {
+
+    if (!isEditing || !highlightSelect.value) return;
+
+    textEditor.focus();
+
+    if (savedRange) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+    }
+
+    document.execCommand(
+        'hiliteColor',
+        false,
+        highlightSelect.value
+    );
+
+    saveCursorPosition();
+
+    highlightSelect.value = '';
+
+
+});
+
+
+
+
+    // Menghapus objek rumus dengan Backspace
+textEditor.addEventListener('keydown', (event) => {
+
+    if (event.key !== 'Backspace') return;
+
+    const selection = window.getSelection();
+
+    if (!selection.rangeCount || !selection.isCollapsed) return;
+
+    const range = selection.getRangeAt(0);
+
+    if (range.startContainer.nodeType !== Node.TEXT_NODE) return;
+
+    const currentNode = range.startContainer;
+    let previousNode = null;
+
+    // Kursor berada tepat setelah spasi rumus
+    if (
+        currentNode.textContent === '\u00A0' &&
+        range.startOffset === currentNode.length
+    ) {
+        previousNode = currentNode.previousSibling;
+
+        if (previousNode && previousNode.tagName === 'MATH-FIELD') {
+
+            event.preventDefault();
+
+            const parent = previousNode.parentNode;
+            const index = Array.prototype.indexOf.call(
+                parent.childNodes,
+                previousNode
+            );
+
+            previousNode.remove();
+            currentNode.remove();
+
+            const newRange = document.createRange();
+            newRange.setStart(parent, index);
+            newRange.collapse(true);
+
+            selection.removeAllRanges();
+            selection.addRange(newRange);
+
+            savedRange = newRange.cloneRange();
+        }
+
+        return;
+    }
+
+    // Kursor berada di awal teks setelah rumus
+    if (range.startOffset === 0) {
+        previousNode = currentNode.previousSibling;
+    }
+
+    if (previousNode && previousNode.tagName === 'MATH-FIELD') {
+
+        event.preventDefault();
+        previousNode.remove();
+
+    }
+
+});
+
+    // Menyisipkan rumus pada posisi kursor
+    insertMathButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+    });
+
+    insertMathButton.addEventListener('click', () => {
+
+        if (!isEditing) return;
+
+        const mathField = createInlineMath();
+
+        const range = savedRange;
+
+        if (
+            range &&
+            textEditor.contains(range.commonAncestorContainer)
+        ) {
+
+            range.deleteContents();
+            range.insertNode(mathField);
+
+        } else {
+
+            textEditor.appendChild(mathField);
+
+        }
+
+        // Membuat ruang teks setelah rumus
+        const nextText = document.createTextNode('\u00A0');
+
+        mathField.parentNode.insertBefore(
+            nextText,
+            mathField.nextSibling
+        );
+
+        // Memindahkan kursor ke teks setelah rumus
+        textEditor.focus();
+
+        const selection = window.getSelection();
+        const newRange = document.createRange();
+
+        newRange.setStart(nextText, nextText.length);
+        newRange.collapse(true);
+
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+
+        savedRange = newRange.cloneRange();
+
+    });
+
+    // Tombol Edit
+    editButton.addEventListener('click', () => {
+
+        isEditing = !isEditing;
+
+        titleInput.disabled = !isEditing;
+        textEditor.contentEditable = String(isEditing);
+        insertMathButton.disabled = !isEditing;
+        textToolbar.querySelectorAll('button, input, select').forEach((control) => {
+            control.disabled = !isEditing;
+        });
+
+        // Rumus tetap menjadi objek yang tidak mengambil fokus
+        textEditor.querySelectorAll('math-field').forEach((field) => {
+            field.readOnly = !isEditing;
+            field.style.pointerEvents = isEditing ? 'auto' : 'none';
+            field.mathVirtualKeyboardPolicy = 'auto';
+        });
+
+        editButton.textContent = isEditing ? 'Selesai' : 'Edit';
+
+        if (isEditing) {
+            titleInput.focus();
+        }
+
+    });
+
+
+    // Tombol naik
+    newBlock.querySelector('.move-up').addEventListener('click', () => {
+
+        const previousBlock = newBlock.previousElementSibling;
+
+        if (previousBlock) {
+            editorCanvas.insertBefore(newBlock, previousBlock);
+        }
+
+    });
+
+    // Tombol turun
+    newBlock.querySelector('.move-down').addEventListener('click', () => {
+
+        const nextBlock = newBlock.nextElementSibling;
+
+        if (nextBlock) {
+            editorCanvas.insertBefore(nextBlock, newBlock);
+        }
+
+    });
+
+    // Tombol hapus
+    newBlock.querySelector('.delete-text-block').addEventListener('click', () => {
+
+        newBlock.remove();
+
+        if (editorCanvas.querySelectorAll('.activity-block').length === 0) {
+            editorCanvas.innerHTML = `
+                <div class="empty-editor">
+                    <div style="font-size:48px;">✦</div>
+                    <h2>Mulai Susun Aktivitasmu</h2>
+                    <p>Pilih blok pembelajaran dari panel sebelah kiri untuk mulai membuat konten.</p>
+                </div>
+            `;
+        }
+
+    });
+
+    editorCanvas.appendChild(newBlock);
+}
+
+// Membuat satu blok PDF
+function createPdfBlock(item = {}) {
+
+    const emptyEditor = editorCanvas.querySelector('.empty-editor');
+
+    if (emptyEditor) {
+        emptyEditor.remove();
+    }
+
+    const newBlock = document.createElement('div');
+    newBlock.classList.add('activity-block');
+    newBlock.dataset.type = 'pdf';
+    newBlock.dataset.pdfUrl = item.url || '';
+
+    newBlock.style.cssText = `
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    newBlock.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <strong style="color:#365314;">📄 Blok PDF</strong>
+
+            <div style="display:flex; gap:6px;">
+                <button type="button" class="move-up">↑</button>
+                <button type="button" class="move-down">↓</button>
+                <button type="button" class="edit-pdf-block">Edit</button>
+                <button type="button" class="delete-pdf-block">Hapus</button>
+            </div>
+        </div>
+
+        <label style="display:block; margin-bottom:9px;">
+            Pilih Dokumen PDF
+        </label>
+
+        <input
+            type="file"
+            class="pdf-file"
+            accept="application/pdf,.pdf"
+            style="width:100%; margin-bottom:15px;"
+        >
+
+        <input
+            type="text"
+            class="pdf-title"
+            placeholder="Judul dokumen PDF..."
+            style="width:100%; box-sizing:border-box; padding:11px; margin-bottom:15px;"
+        >
+
+        <div class="pdf-preview-container">
+            <iframe
+                class="pdf-preview"
+                title="Pratinjau Dokumen PDF"
+                style="
+                    display:none;
+                    width:100%;
+                    height:500px;
+                    border:1px solid #e2e8f0;
+                    border-radius:9px;
+                "
+            ></iframe>
+
+            <a
+                class="pdf-download"
+                href="#"
+                target="_blank"
+                download
+                style="
+                    display:none;
+                    margin-top:12px;
+                    color:#28796b;
+                    font-weight:bold;
+                    text-decoration:none;
+                "
+            >
+                ↓ Unduh PDF
+            </a>
+        </div>
+    `;
+
+    const fileInput = newBlock.querySelector('.pdf-file');
+    const titleInput = newBlock.querySelector('.pdf-title');
+    const preview = newBlock.querySelector('.pdf-preview');
+    const downloadLink = newBlock.querySelector('.pdf-download');
+    const editButton = newBlock.querySelector('.edit-pdf-block');
+
+    let isEditing = false;
+
+    titleInput.value = item.title || '';
+
+    fileInput.disabled = true;
+    titleInput.disabled = true;
+
+    // Menampilkan PDF yang sudah tersimpan
+    if (item.url) {
+        preview.src = item.url;
+        preview.style.display = 'block';
+
+        downloadLink.href = item.url;
+        downloadLink.style.display = 'inline-block';
+    }
+
+    // Mengaktifkan atau mengunci editor
+    editButton.addEventListener('click', () => {
+
+        isEditing = !isEditing;
+
+        fileInput.disabled = !isEditing;
+        titleInput.disabled = !isEditing;
+
+        editButton.textContent = isEditing ? 'Selesai' : 'Edit';
+
+    });
+
+    // Menampilkan PDF yang baru dipilih
+    fileInput.addEventListener('change', event => {
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        if (file.type !== 'application/pdf') {
+            alert('Silakan pilih file PDF.');
+            fileInput.value = '';
+            return;
+        }
+
+        const temporaryUrl = URL.createObjectURL(file);
+
+        preview.src = temporaryUrl;
+        preview.style.display = 'block';
+
+        downloadLink.href = temporaryUrl;
+        downloadLink.download = file.name;
+        downloadLink.style.display = 'inline-block';
+
+    });
+
+    // Tombol naik
+    newBlock.querySelector('.move-up').addEventListener('click', () => {
+
+        const previousBlock = newBlock.previousElementSibling;
+
+        if (previousBlock) {
+            editorCanvas.insertBefore(newBlock, previousBlock);
+        }
+
+    });
+
+    // Tombol turun
+    newBlock.querySelector('.move-down').addEventListener('click', () => {
+
+        const nextBlock = newBlock.nextElementSibling;
+
+        if (nextBlock) {
+            editorCanvas.insertBefore(nextBlock, newBlock);
+        }
+
+    });
+
+    // Tombol hapus
+    newBlock.querySelector('.delete-pdf-block').addEventListener('click', () => {
+
+        newBlock.remove();
+
+        if (editorCanvas.querySelectorAll('.activity-block').length === 0) {
+            editorCanvas.innerHTML = `
+                <div class="empty-editor">
+                    <div style="font-size:48px;">✦</div>
+                    <h2>Mulai Susun Aktivitasmu</h2>
+                    <p>Pilih blok pembelajaran dari panel sebelah kiri untuk mulai membuat konten.</p>
+                </div>
+            `;
+        }
+
+    });
+
+    editorCanvas.appendChild(newBlock);
+}
+
+// Membuat satu blok Math Formula
+function createImageBlock(item = {}) {
+
+    const emptyEditor = editorCanvas.querySelector('.empty-editor');
+
+    if (emptyEditor) {
+        emptyEditor.remove();
+    }
+
+    const newBlock = document.createElement('div');
+    newBlock.classList.add('activity-block');
+    newBlock.dataset.type = 'image';
+    newBlock.dataset.imageUrl = item.url || '';
+
+    newBlock.style.cssText = `
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    newBlock.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <strong style="color:#365314;">🖼️ Blok Image</strong>
+
+                <div style="display:flex; gap:6px;">
+                    <button type="button" class="move-up">↑</button>
+                    <button type="button" class="move-down">↓</button>
+                    <button type="button" class="edit-image-block"
+                        style="background:#e0f2fe; color:#0369a1; border:none; padding:7px 12px; border-radius:7px; cursor:pointer;">
+                        Edit
+                    </button>
+
+                    <button type="button" class="delete-image-block"
+                        style="background:#fee2e2; color:#b91c1c; border:none; padding:7px 12px; border-radius:7px; cursor:pointer;">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <input type="file"
+                    class="image-file"
+                    accept="image/*"
+                    style="width:100%; margin-bottom:15px;">
+
+                <img class="image-preview"
+                    style="
+                        display:none;
+                        max-width:100%;
+                        max-height:350px;
+                        object-fit:contain;
+                        border-radius:8px;
+                        margin-bottom:15px;
+                    ">
+
+                <textarea class="image-caption"
+                    rows="2"
+                    placeholder="Tambahkan keterangan gambar..."
+                    style="width:100%; box-sizing:border-box; padding:12px;"
+                ></textarea>
+            </div>
+        `;
+
+    const fileInput = newBlock.querySelector('.image-file');
+    const imagePreview = newBlock.querySelector('.image-preview');
+
+    // Tombol Edit Image
+    const editButton = newBlock.querySelector('.edit-image-block');
+    const captionInput = newBlock.querySelector('.image-caption');
+
+    let isEditing = false;
+
+    // Awalnya input dikunci
+    fileInput.disabled = true;
+    captionInput.disabled = true;
+
+    editButton.addEventListener('click', () => {
+
+        isEditing = !isEditing;
+
+        fileInput.disabled = !isEditing;
+        captionInput.disabled = !isEditing;
+
+        editButton.textContent = isEditing ? 'Selesai' : 'Edit';
+
+    });
+
+
+    // Tombol naik
+newBlock.querySelector('.move-up').addEventListener('click', () => {
+
+    const previousBlock = newBlock.previousElementSibling;
+
+    if (previousBlock) {
+        editorCanvas.insertBefore(newBlock, previousBlock);
+    }
+
+});
+
+// Tombol turun
+newBlock.querySelector('.move-down').addEventListener('click', () => {
+
+    const nextBlock = newBlock.nextElementSibling;
+
+    if (nextBlock) {
+        editorCanvas.insertBefore(nextBlock, newBlock);
+    }
+
+});
+
+// Tombol hapus
+newBlock.querySelector('.delete-image-block').addEventListener('click', () => {
+
+    newBlock.remove();
+
+    if (editorCanvas.querySelectorAll('.activity-block').length === 0) {
+        editorCanvas.innerHTML = `
+            <div class="empty-editor">
+                <div style="font-size:48px;">✦</div>
+                <h2>Mulai Susun Aktivitasmu</h2>
+                <p>Pilih blok pembelajaran dari panel sebelah kiri untuk mulai membuat konten.</p>
+            </div>
+        `;
+    }
+
+});
+
+    newBlock.querySelector('.image-caption').value =
+        item.caption || '';
+
+    if (item.url) {
+        imagePreview.src = item.url;
+        imagePreview.style.display = 'block';
+    }
+
+    fileInput.addEventListener('change', (event) => {
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            alert('Silakan pilih file gambar.');
+            return;
+        }
+
+        imagePreview.src = URL.createObjectURL(file);
+        imagePreview.style.display = 'block';
+
+    });
+
+    editorCanvas.appendChild(newBlock);
+}
+// Membuat satu blok Math Formula
+function createMathBlock(item = {}) {
+
+    const emptyEditor = editorCanvas.querySelector('.empty-editor');
+
+    if (emptyEditor) {
+        emptyEditor.remove();
+    }
+
+    const newBlock = document.createElement('div');
+    newBlock.classList.add('activity-block');
+    newBlock.dataset.type = 'math';
+
+    newBlock.style.cssText = `
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    newBlock.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <strong style="color:#365314;">∑ Blok Math Formula</strong>
+
+            <div style="display:flex; gap:6px;">
+                <button type="button" class="move-up">↑</button>
+                <button type="button" class="move-down">↓</button>
+                <button type="button" class="edit-math-block">Edit</button>
+                <button type="button" class="delete-math-block">Hapus</button>
+            </div>
+        </div>
+
+        <label style="display:block; margin-bottom:10px; font-weight:bold;">
+            Susun Rumus Matematika
+        </label>
+        <div style="
+            padding:18px;
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+        ">
+
+            <p style="
+                margin:0 0 12px;
+                font-size:13px;
+                color:#64748b;
+            ">
+                Klik area di bawah untuk menyusun rumus matematika.
+            </p>
+
+            <math-field
+                class="math-input"
+                style="
+                    display:block;
+                    width:100%;
+                    min-height:75px;
+                    box-sizing:border-box;
+                    padding:16px;
+                    border:1px solid #cbd5e1;
+                    border-radius:10px;
+                    font-size:24px;
+                    background:white;
+                "
+            ></math-field>
+
+        </div>
+
+    `;
+
+    const mathInput = newBlock.querySelector('.math-input');
+    const editButton = newBlock.querySelector('.edit-math-block');
+
+
+    // Memuat rumus yang sudah tersimpan
+    mathInput.value = item.formula || '';
+
+    // Awalnya terkunci
+    let isEditing = false;
+    mathInput.disabled = true;
+
+    // Tombol Edit
+    editButton.addEventListener('click', () => {
+
+        isEditing = !isEditing;
+
+        mathInput.disabled = !isEditing;
+        editButton.textContent = isEditing ? 'Selesai' : 'Edit';
+
+        if (isEditing) {
+            mathInput.focus();
+        }
+
+    });
+
+    // Tombol naik
+    newBlock.querySelector('.move-up').addEventListener('click', () => {
+
+        const previousBlock = newBlock.previousElementSibling;
+
+        if (previousBlock) {
+            editorCanvas.insertBefore(newBlock, previousBlock);
+        }
+
+    });
+
+    // Tombol turun
+    newBlock.querySelector('.move-down').addEventListener('click', () => {
+
+        const nextBlock = newBlock.nextElementSibling;
+
+        if (nextBlock) {
+            editorCanvas.insertBefore(nextBlock, newBlock);
+        }
+
+    });
+
+    // Tombol hapus
+    newBlock.querySelector('.delete-math-block').addEventListener('click', () => {
+
+        newBlock.remove();
+
+        if (editorCanvas.querySelectorAll('.activity-block').length === 0) {
+            editorCanvas.innerHTML = `
+                <div class="empty-editor">
+                    <div style="font-size:48px;">✦</div>
+                    <h2>Mulai Susun Aktivitasmu</h2>
+                    <p>Pilih blok pembelajaran dari panel sebelah kiri untuk mulai membuat konten.</p>
+                </div>
+            `;
+        }
+
+    });
+
+    editorCanvas.appendChild(newBlock);
+}
+
+// Membuat satu blok Multiple Choice
+function createMultipleChoiceBlock(item = {}) {
+
+    const emptyEditor = editorCanvas.querySelector('.empty-editor');
+
+    if (emptyEditor) {
+        emptyEditor.remove();
+    }
+
+    const newBlock = document.createElement('div');
+    newBlock.classList.add('activity-block');
+    newBlock.dataset.type = 'multiple-choice';
+
+    newBlock.style.cssText = `
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    newBlock.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <strong style="color:#365314;">❓ Blok Multiple Choice</strong>
+
+            <div style="display:flex; gap:6px;">
+                <button type="button" class="move-up" title="Pindah ke atas">↑</button>
+                <button type="button" class="move-down" title="Pindah ke bawah">↓</button>
+                <button type="button" class="edit-mc-block">Edit</button>
+                <button type="button" class="delete-mc-block">Hapus</button>
+            </div>
+        </div>
+
+        <label>Pertanyaan</label>
+        <div class="mc-question-editor"></div>
+
+        <label style="display:block; margin-top:18px;">
+            Pilihan Jawaban
+        </label>
+
+        <div class="mc-options"></div>
+
+        <button type="button" class="add-mc-option">
+            + Tambah Pilihan
+        </button>
+
+        <div style="margin-top:18px;">
+            <label>Kunci Jawaban</label>
+            <select class="mc-correct-answer" disabled
+                style="display:block; width:100%; padding:10px; margin-top:8px;">
+                <option value="">Pilih jawaban benar</option>
+            </select>
+        </div>
+
+        <div style="margin-top:18px;">
+            <label>Pembahasan</label>
+            <div class="mc-explanation-editor"></div>
+        </div>
+    `;
+
+    const questionEditor = createRichMathEditor(item.question || '');
+    const explanationEditor = createRichMathEditor(item.explanation || '');
+
+    newBlock.querySelector('.mc-question-editor')
+        .appendChild(questionEditor.wrapper);
+
+    newBlock.querySelector('.mc-explanation-editor')
+        .appendChild(explanationEditor.wrapper);
+
+    const optionsContainer = newBlock.querySelector('.mc-options');
+    const correctAnswer = newBlock.querySelector('.mc-correct-answer');
+    const editButton = newBlock.querySelector('.edit-mc-block');
+
+    let isEditing = false;
+    let optionEditors = [];
+
+    // Mengambil teks biasa dari konten editor untuk label kunci jawaban
+    function getPlainText(html) {
+
+        const temporary = document.createElement('div');
+        temporary.innerHTML = html;
+
+        temporary.querySelectorAll('.saved-inline-math').forEach(math => {
+            math.textContent = math.getAttribute('data-formula') || '';
+        });
+
+        return temporary.textContent.trim();
+    }
+
+    // Mengambil seluruh pilihan jawaban
+    function getOptions() {
+        return optionEditors.map(editor => editor.getValue());
+    }
+
+    // Menampilkan pilihan jawaban
+    function renderOptions(options = []) {
+
+        optionsContainer.innerHTML = '';
+        correctAnswer.innerHTML =
+            '<option value="">Pilih jawaban benar</option>';
+
+        optionEditors = [];
+
+        options.forEach((option, index) => {
+
+            const optionRow = document.createElement('div');
+
+            optionRow.style.cssText = `
+                display:flex;
+                gap:8px;
+                align-items:flex-start;
+                margin:14px 0;
+            `;
+
+            const optionLabel = document.createElement('strong');
+            optionLabel.textContent =
+                `${String.fromCharCode(65 + index)}.`;
+
+            optionLabel.style.paddingTop = '12px';
+
+            const optionEditor = createRichMathEditor(option);
+
+            optionEditor.wrapper.style.flex = '1';
+            optionEditor.wrapper.style.minWidth = '0';
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'remove-mc-option';
+            removeButton.textContent = 'Hapus';
+
+            optionRow.appendChild(optionLabel);
+            optionRow.appendChild(optionEditor.wrapper);
+            optionRow.appendChild(removeButton);
+
+            optionsContainer.appendChild(optionRow);
+
+            optionEditors.push(optionEditor);
+
+            const optionValue = document.createElement('option');
+            optionValue.value = index;
+            optionValue.textContent =
+                `${String.fromCharCode(65 + index)}. ${
+                    getPlainText(option)
+                }`;
+
+            correctAnswer.appendChild(optionValue);
+
+            removeButton.addEventListener('click', () => {
+
+                if (!isEditing) return;
+
+                const currentAnswer = correctAnswer.value;
+                const currentOptions = getOptions();
+
+                currentOptions.splice(index, 1);
+
+                renderOptions(currentOptions);
+
+                if (currentAnswer === String(index)) {
+                    correctAnswer.value = '';
+                } else if (currentAnswer !== '') {
+                    correctAnswer.value =
+                        Number(currentAnswer) > index
+                            ? String(Number(currentAnswer) - 1)
+                            : currentAnswer;
+                }
+
+            });
+
+        });
+
+        correctAnswer.value = item.correctAnswer ?? '';
+    }
+
+    // Memuat pilihan jawaban
+    renderOptions(item.options || ['', '', '', '']);
+
+    // Menambah pilihan jawaban
+    newBlock.querySelector('.add-mc-option')
+        .addEventListener('click', () => {
+
+            if (!isEditing) return;
+
+            const options = getOptions();
+
+            if (options.length >= 6) {
+                alert('Maksimal 6 pilihan jawaban.');
+                return;
+            }
+
+            options.push('');
+            renderOptions(options);
+
+        });
+
+    // Mengaktifkan atau mengunci semua editor
+    function setEditing(enabled) {
+
+        isEditing = enabled;
+
+        questionEditor.setEditing(enabled);
+        explanationEditor.setEditing(enabled);
+
+        optionEditors.forEach(editor => {
+            editor.setEditing(enabled);
+        });
+
+        correctAnswer.disabled = !enabled;
+
+        newBlock.querySelector('.add-mc-option').disabled = !enabled;
+
+        optionsContainer.querySelectorAll('.remove-mc-option')
+            .forEach(button => {
+                button.disabled = !enabled;
+            });
+
+        editButton.textContent = enabled ? 'Selesai' : 'Edit';
+    }
+
+    // Tombol Edit
+    editButton.addEventListener('click', () => {
+        setEditing(!isEditing);
+    });
+
+    // Memindahkan blok Multiple Choice ke atas
+newBlock.querySelector('.move-up').addEventListener('click', () => {
+
+    const previousBlock = newBlock.previousElementSibling;
+
+    if (previousBlock && previousBlock.classList.contains('activity-block')) {
+        editorCanvas.insertBefore(newBlock, previousBlock);
+    }
+
+});
+
+// Memindahkan blok Multiple Choice ke bawah
+newBlock.querySelector('.move-down').addEventListener('click', () => {
+
+    const nextBlock = newBlock.nextElementSibling;
+
+    if (nextBlock && nextBlock.classList.contains('activity-block')) {
+        editorCanvas.insertBefore(nextBlock, newBlock);
+    }
+
+});
+
+    // Tombol hapus blok
+    newBlock.querySelector('.delete-mc-block')
+        .addEventListener('click', () => {
+
+            newBlock.remove();
+
+            if (editorCanvas.querySelectorAll('.activity-block').length === 0) {
+                editorCanvas.innerHTML = `
+                    <div class="empty-editor">
+                        <div style="font-size:48px;">✦</div>
+                        <h2>Mulai Susun Aktivitasmu</h2>
+                        <p>Pilih blok pembelajaran dari panel sebelah kiri untuk mulai membuat konten.</p>
+                    </div>
+                `;
+            }
+
+        });
+
+    // Menampilkan blok dalam keadaan terkunci
+    setEditing(false);
+
+    editorCanvas.appendChild(newBlock);
+}
+
+// Membuat satu blok Drag and Drop
+function createDragDropBlock(item = {}) {
+
+    const emptyEditor = editorCanvas.querySelector('.empty-editor');
+
+    if (emptyEditor) {
+        emptyEditor.remove();
+    }
+
+    const newBlock = document.createElement('div');
+    newBlock.classList.add('activity-block');
+    newBlock.dataset.type = 'drag-drop';
+
+    newBlock.style.cssText = `
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    newBlock.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <strong style="color:#365314;">↔️ Blok Drag and Drop</strong>
+
+            <div style="display:flex; gap:6px;">
+                <button type="button" class="move-up">↑</button>
+                <button type="button" class="move-down">↓</button>
+                <button type="button" class="edit-dd-block">Edit</button>
+                <button type="button" class="delete-dd-block">Hapus</button>
+            </div>
+        </div>
+
+        <div class="dd-config">
+
+            <label>Judul Aktivitas</label>
+            <input type="text" class="dd-title"
+                placeholder="Contoh: Kelompokkan Suku Sejenis"
+                style="width:100%; box-sizing:border-box; padding:11px; margin:8px 0 15px;">
+
+            <label>Instruksi Aktivitas</label>
+<div class="dd-instruction-editor"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong>Kartu yang Diseret</strong>
+                <button type="button" class="dd-add-card">+ Tambah Kartu</button>
+            </div>
+
+            <div class="dd-cards" style="margin:12px 0 22px;"></div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong>Area Tujuan</strong>
+                <button type="button" class="dd-add-target">+ Tambah Area</button>
+            </div>
+
+            <div class="dd-targets" style="margin-top:12px;"></div>
+
+            <p style="font-size:12px; color:#64748b; margin-top:15px;">
+                Setiap kartu memiliki satu area tujuan yang benar.
+            </p>
+
+        </div>
+    `;
+
+    const titleInput = newBlock.querySelector('.dd-title');
+    const instructionEditor = createRichMathEditor(
+    item.instruction || ''
+    );
+
+    newBlock.querySelector('.dd-instruction-editor')
+    .appendChild(instructionEditor.wrapper);
+    const cardsContainer = newBlock.querySelector('.dd-cards');
+    const targetsContainer = newBlock.querySelector('.dd-targets');
+    const editButton = newBlock.querySelector('.edit-dd-block');
+    const config = newBlock.querySelector('.dd-config');
+
+    let isEditing = false;
+    let nextId = 1;
+
+    let targets = (item.targets || []).map((target, index) => ({
+        id: target.id || `target-${Date.now()}-${index}`,
+        label: target.label || ''
+    }));
+
+    let cards = (item.cards || []).map(card => ({
+        text: card.text || '',
+        targetId: card.targetId || ''
+    }));
+    let cardEditors = [];
+    // Mengubah isi editor menjadi teks biasa untuk dropdown
+function getPlainText(html) {
+    const temporary = document.createElement('div');
+    temporary.innerHTML = html;
+
+    temporary.querySelectorAll('.saved-inline-math').forEach(math => {
+        math.textContent = math.getAttribute('data-formula') || '';
+    });
+
+    return temporary.textContent.trim();
+}
+
+    if (targets.length === 0) {
+        targets = [{ id: 'target-' + nextId++, label: '' }];
+    }
+
+    titleInput.value = item.title || '';
+    // Nilai instruksi sekarang diambil dari Rich Math Editor
+
+    // Menampilkan kartu dan area tujuan
+    function renderRows() {
+
+    // Menyimpan perubahan terbaru sebelum baris dibuat ulang
+    cardEditors.forEach((editor, index) => {
+        if (cards[index]) {
+            cards[index].text = editor.getValue();
+        }
+    });
+
+    targetsContainer.querySelectorAll('.dd-target-label')
+        .forEach((editor, index) => {
+            if (targets[index]) {
+                targets[index].label =
+                    getRichMathEditorValue(editor);
+            }
+        });
+
+    cardEditors = [];
+
+    targetsContainer.innerHTML = '';
+    cardsContainer.innerHTML = '';
+
+        // Menampilkan area tujuan
+        targets.forEach((target, index) => {
+
+            const row = document.createElement('div');
+
+            row.style.cssText = `
+                display:flex;
+                gap:8px;
+                margin-bottom:9px;
+            `;
+
+            const targetEditor = createRichMathEditor(target.label);
+
+targetEditor.wrapper.classList.add('dd-target-label');
+targetEditor.wrapper.dataset.index = index;
+targetEditor.wrapper.dataset.targetId = target.id;
+
+targetEditor.wrapper.style.flex = '1';
+targetEditor.wrapper.style.minWidth = '0';
+
+const removeButton = document.createElement('button');
+removeButton.type = 'button';
+removeButton.className = 'dd-remove-target';
+removeButton.dataset.index = index;
+removeButton.textContent = 'Hapus';
+
+row.appendChild(targetEditor.wrapper);
+row.appendChild(removeButton);
+
+targetsContainer.appendChild(row);
+
+// Memperbarui data target saat teks atau rumus berubah
+const targetContent =
+    targetEditor.wrapper.querySelector('.rich-math-content');
+
+targetContent.addEventListener('input', () => {
+    targets[index].label = targetEditor.getValue();
+});
+
+            targetsContainer.appendChild(row);
+        });
+
+        // Menampilkan kartu yang dapat diseret
+        cards.forEach((card, index) => {
+
+            const row = document.createElement('div');
+
+            row.style.cssText = `
+                display:flex;
+                flex-wrap:wrap;
+                gap:8px;
+                margin-bottom:10px;
+                align-items:center;
+            `;
+
+            const options = targets.map(target => `
+                <option value="${escapeHTML(target.id)}"
+                    ${card.targetId === target.id ? 'selected' : ''}>
+                    ${escapeHTML(getPlainText(target.label) || 'Area belum diberi nama')}
+                </option>
+            `).join('');
+
+            const cardEditor = createRichMathEditor(card.text);
+
+cardEditor.wrapper.classList.add('dd-card-text');
+cardEditor.wrapper.dataset.index = index;
+cardEditor.wrapper.style.flex = '1';
+cardEditor.wrapper.style.minWidth = '120px';
+
+const targetSelect = document.createElement('select');
+targetSelect.className = 'dd-card-target';
+targetSelect.dataset.index = index;
+targetSelect.style.cssText = `
+    flex:1;
+    min-width:140px;
+    padding:10px;
+`;
+
+targetSelect.innerHTML = `
+    <option value="">Pilih area tujuan</option>
+    ${options}
+`;
+
+const removeButton = document.createElement('button');
+removeButton.type = 'button';
+removeButton.className = 'dd-remove-card';
+removeButton.dataset.index = index;
+removeButton.textContent = 'Hapus';
+
+row.appendChild(cardEditor.wrapper);
+row.appendChild(targetSelect);
+row.appendChild(removeButton);
+
+cardsContainer.appendChild(row);
+
+cardEditors.push(cardEditor);
+
+// Memperbarui data kartu saat teks atau rumus berubah
+const cardContent =
+    cardEditor.wrapper.querySelector('.rich-math-content');
+
+cardContent.addEventListener('input', () => {
+    cards[index].text = cardEditor.getValue();
+});
+
+            cardsContainer.appendChild(row);
+        });
+
+        setEditing(isEditing);
+    }
+
+    // Mengatur mode edit
+function setEditing(enabled) {
+
+    config.querySelectorAll('input, textarea, select, button')
+        .forEach(control => {
+            control.disabled = !enabled;
+        });
+
+    // Mengatur editor instruksi
+    const instructionContent =
+        instructionEditor.wrapper.querySelector('.rich-math-content');
+
+    const instructionMathButton =
+        instructionEditor.wrapper.querySelector('.rich-insert-math');
+
+    instructionContent.contentEditable = String(enabled);
+    instructionMathButton.disabled = !enabled;
+
+    // Mengunci atau membuka rumus MathLive
+    instructionContent.querySelectorAll('math-field').forEach(field => {
+        field.readOnly = !enabled;
+        field.style.pointerEvents = enabled ? 'auto' : 'none';
+    });
+    // Mengatur editor area tujuan
+newBlock.querySelectorAll('.dd-target-label').forEach(editor => {
+    const content = editor.querySelector('.rich-math-content');
+    const mathButton = editor.querySelector('.rich-insert-math');
+
+    if (!content || !mathButton) return;
+
+    content.contentEditable = String(enabled);
+    mathButton.disabled = !enabled;
+
+    content.querySelectorAll('math-field').forEach(field => {
+        field.readOnly = !enabled;
+        field.style.pointerEvents = enabled ? 'auto' : 'none';
+    });
+});
+// Mengatur editor kartu yang diseret
+cardEditors.forEach(editor => {
+    const content =
+        editor.wrapper.querySelector('.rich-math-content');
+
+    const mathButton =
+        editor.wrapper.querySelector('.rich-insert-math');
+
+    if (!content || !mathButton) return;
+
+    content.contentEditable = String(enabled);
+    mathButton.disabled = !enabled;
+
+    content.querySelectorAll('math-field').forEach(field => {
+        field.readOnly = !enabled;
+        field.style.pointerEvents = enabled ? 'auto' : 'none';
+    });
+});
+
+    editButton.textContent = enabled ? 'Selesai' : 'Edit';
+}
+
+    // Menambah kartu
+    newBlock.querySelector('.dd-add-card')
+        .addEventListener('click', () => {
+
+            cards.push({
+                text: '',
+                targetId: ''
+            });
+
+            renderRows();
+        });
+
+    // Menambah area tujuan
+    newBlock.querySelector('.dd-add-target')
+        .addEventListener('click', () => {
+
+            targets.push({
+                id: 'target-' + Date.now() + '-' + nextId++,
+                label: ''
+            });
+
+            renderRows();
+        });
+
+    // Menghapus kartu
+    cardsContainer.addEventListener('click', event => {
+
+        const button = event.target.closest('.dd-remove-card');
+
+        if (!button || !isEditing) return;
+
+        cards.splice(Number(button.dataset.index), 1);
+        renderRows();
+    });
+
+    // Menghapus area tujuan
+    targetsContainer.addEventListener('click', event => {
+
+        const button = event.target.closest('.dd-remove-target');
+
+        if (!button || !isEditing) return;
+
+        const index = Number(button.dataset.index);
+        const removedId = targets[index].id;
+
+        targets.splice(index, 1);
+
+        // Menghapus pasangan kartu ke area yang dihapus
+        cards.forEach(card => {
+            if (card.targetId === removedId) {
+                card.targetId = '';
+            }
+        });
+
+        renderRows();
+    });
+
+    // Menyimpan perubahan teks kartu dan area
+    cardsContainer.addEventListener('change', event => {
+
+        const index = Number(event.target.dataset.index);
+
+
+        if (event.target.classList.contains('dd-card-target')) {
+            cards[index].targetId = event.target.value;
+        }
+    });
+
+
+    // Tombol Edit
+    editButton.addEventListener('click', () => {
+
+        isEditing = !isEditing;
+        setEditing(isEditing);
+    });
+
+    // Tombol naik
+    newBlock.querySelector('.move-up').addEventListener('click', () => {
+
+        const previousBlock = newBlock.previousElementSibling;
+
+        if (previousBlock) {
+            editorCanvas.insertBefore(newBlock, previousBlock);
+        }
+    });
+
+    // Tombol turun
+    newBlock.querySelector('.move-down').addEventListener('click', () => {
+
+        const nextBlock = newBlock.nextElementSibling;
+
+        if (nextBlock) {
+            editorCanvas.insertBefore(nextBlock, newBlock);
+        }
+    });
+
+    // Tombol hapus
+    newBlock.querySelector('.delete-dd-block').addEventListener('click', () => {
+
+        newBlock.remove();
+
+        if (editorCanvas.querySelectorAll('.activity-block').length === 0) {
+            editorCanvas.innerHTML = `
+                <div class="empty-editor">
+                    <div style="font-size:48px;">✦</div>
+                    <h2>Mulai Susun Aktivitasmu</h2>
+                    <p>Pilih blok pembelajaran dari panel sebelah kiri untuk mulai membuat konten.</p>
+                </div>
+            `;
+        }
+    });
+
+    renderRows();
+    setEditing(false);
+
+    editorCanvas.appendChild(newBlock);
+}
+// Membuat satu blok Embed Code
+function createEmbedBlock(item = {}) {
+
+    const emptyEditor = editorCanvas.querySelector('.empty-editor');
+
+    if (emptyEditor) {
+        emptyEditor.remove();
+    }
+
+    const newBlock = document.createElement('div');
+    newBlock.classList.add('activity-block');
+    newBlock.dataset.type = 'embed';
+
+    newBlock.style.cssText = `
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    newBlock.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <strong style="color:#365314;">🌐 Blok Embed Code</strong>
+
+            <div style="display:flex; gap:6px;">
+                <button type="button" class="move-up">↑</button>
+                <button type="button" class="move-down">↓</button>
+                <button type="button" class="edit-embed-block">Edit</button>
+                <button type="button" class="delete-embed-block">Hapus</button>
+            </div>
+        </div>
+
+        <label style="font-weight:bold;">Kode HTML, CSS, dan JavaScript</label>
+
+        <textarea
+            class="embed-code"
+            rows="12"
+            placeholder="Tempelkan kode HTML, CSS, dan JavaScript di sini..."
+            style="
+                display:block;
+                width:100%;
+                box-sizing:border-box;
+                padding:14px;
+                margin-top:9px;
+                font-family:monospace;
+                font-size:13px;
+                line-height:1.6;
+                border:1px solid #cbd5e1;
+                border-radius:9px;
+                resize:vertical;
+            "
+        ></textarea>
+
+        <div style="display:flex; gap:8px; margin-top:12px;">
+            <button type="button" class="preview-embed"
+                style="padding:9px 15px; background:#365314; color:white; border:none; border-radius:7px; cursor:pointer;">
+                ▶ Preview
+            </button>
+        </div>
+
+        <div style="margin-top:16px;">
+            <strong>Pratinjau</strong>
+
+            <iframe
+                class="embed-preview"
+                sandbox="allow-scripts allow-forms"
+                style="
+                    display:block;
+                    width:100%;
+                    min-height:300px;
+                    margin-top:10px;
+                    border:1px solid #e2e8f0;
+                    border-radius:9px;
+                    background:white;
+                "
+                title="Pratinjau Embed"
+            ></iframe>
+        </div>
+    `;
+
+    const codeInput = newBlock.querySelector('.embed-code');
+    const previewFrame = newBlock.querySelector('.embed-preview');
+    const editButton = newBlock.querySelector('.edit-embed-block');
+    const previewButton = newBlock.querySelector('.preview-embed');
+
+    let isEditing = false;
+
+    codeInput.value = item.code || '';
+    codeInput.disabled = true;
+
+    // Mengaktifkan atau mengunci editor kode
+    editButton.addEventListener('click', () => {
+
+        isEditing = !isEditing;
+
+        codeInput.disabled = !isEditing;
+        editButton.textContent = isEditing ? 'Selesai' : 'Edit';
+
+    });
+
+    // Menampilkan hasil kode dalam iframe terisolasi
+    previewButton.addEventListener('click', () => {
+
+        previewFrame.srcdoc = codeInput.value;
+
+    });
+
+    // Memuat pratinjau yang sudah tersimpan
+    if (item.code) {
+        previewFrame.srcdoc = item.code;
+    }
+
+    // Mengubah posisi blok ke atas
+    newBlock.querySelector('.move-up').addEventListener('click', () => {
+
+        const previousBlock = newBlock.previousElementSibling;
+
+        if (previousBlock) {
+            editorCanvas.insertBefore(newBlock, previousBlock);
+        }
+
+    });
+
+    // Mengubah posisi blok ke bawah
+    newBlock.querySelector('.move-down').addEventListener('click', () => {
+
+        const nextBlock = newBlock.nextElementSibling;
+
+        if (nextBlock) {
+            editorCanvas.insertBefore(nextBlock, newBlock);
+        }
+
+    });
+
+    // Menghapus blok
+    newBlock.querySelector('.delete-embed-block').addEventListener('click', () => {
+
+        newBlock.remove();
+
+        if (editorCanvas.querySelectorAll('.activity-block').length === 0) {
+            editorCanvas.innerHTML = `
+                <div class="empty-editor">
+                    <div style="font-size:48px;">✦</div>
+                    <h2>Mulai Susun Aktivitasmu</h2>
+                    <p>Pilih blok pembelajaran dari panel sebelah kiri untuk mulai membuat konten.</p>
+                </div>
+            `;
+        }
+
+    });
+
+    editorCanvas.appendChild(newBlock);
+}
+function createVideoBlock(item = {}) {
+    const block = document.createElement('div');
+    block.className = 'activity-block';
+    block.dataset.type = 'video';
+
+    block.innerHTML = `
+        <div class="block-header">
+            <strong>🎬 Video Pembelajaran</strong>
+            <div class="block-actions">
+                <button type="button" class="move-up" title="Pindah ke atas">↑</button>
+                <button type="button" class="move-down" title="Pindah ke bawah">↓</button>
+                <button type="button" class="delete-block">Hapus</button>
+            </div>
+        </div>
+
+        <div class="block-content">
+            <label>Judul Video</label>
+            <input
+                type="text"
+                class="video-title"
+                placeholder="Contoh: Mengenal Persamaan Linear Satu Variabel"
+                value="${item.title || ''}"
+            >
+
+            <label>Link YouTube</label>
+            <input
+                type="url"
+                class="video-url"
+                placeholder="Tempel link YouTube di sini"
+                value="${item.url || ''}"
+            >
+
+            <button type="button" class="preview-video">
+                Lihat Preview
+            </button>
+
+            <div class="video-preview"></div>
+        </div>
+    `;
+
+    const urlInput = block.querySelector('.video-url');
+    const previewButton = block.querySelector('.preview-video');
+    const previewArea = block.querySelector('.video-preview');
+
+    function showVideoPreview() {
+        const url = urlInput.value.trim();
+        const match = url.match(
+            /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/
+        );
+
+        if (!match) {
+            alert('Link YouTube belum valid.');
+            return;
+        }
+
+        const videoId = match[1];
+
+        previewArea.innerHTML = `
+            <iframe
+                width="100%"
+                height="315"
+                src="https://www.youtube-nocookie.com/embed/${videoId}"
+                title="Video Pembelajaran"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+        `;
+    }
+
+    previewButton.addEventListener('click', showVideoPreview);
+    // Memindahkan blok video ke atas
+block.querySelector('.move-up').addEventListener('click', () => {
+    const previousBlock = block.previousElementSibling;
+
+    if (previousBlock && previousBlock.classList.contains('activity-block')) {
+        editorCanvas.insertBefore(block, previousBlock);
+    }
+});
+
+// Memindahkan blok video ke bawah
+block.querySelector('.move-down').addEventListener('click', () => {
+    const nextBlock = block.nextElementSibling;
+
+    if (nextBlock && nextBlock.classList.contains('activity-block')) {
+        editorCanvas.insertBefore(nextBlock, block);
+    }
+});
+
+    if (item.url) {
+        showVideoPreview();
+    }
+
+    block.querySelector('.delete-block').addEventListener('click', () => {
+        block.remove();
+    });
+
+    editorCanvas.appendChild(block);
+}
+
+function createShortAnswerBlock(item = {}) {
+
+    const emptyEditor = editorCanvas.querySelector('.empty-editor');
+
+    if (emptyEditor) {
+        emptyEditor.remove();
+    }
+
+    const block = document.createElement('div');
+    block.className = 'activity-block short-answer-block';
+    block.dataset.type = 'short-answer';
+
+    block.style.cssText = `
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    block.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <strong style="color:#365314;">✏️ Blok Short Answer</strong>
+
+            <div style="display:flex; gap:6px;">
+                <button type="button" class="move-up" title="Pindah ke atas">↑</button>
+                <button type="button" class="move-down" title="Pindah ke bawah">↓</button>
+                <button type="button" class="edit-sa-block">Edit</button>
+                <button type="button" class="delete-sa-block">Hapus</button>
+            </div>
+        </div>
+
+        <label>Pertanyaan</label>
+        <div class="sa-question-editor"></div>
+
+        <div style="margin-top:18px;">
+            <label>Jawaban yang Diharapkan</label>
+            <div class="sa-answer-editor"></div>
+        </div>
+
+        <div style="margin-top:18px;">
+            <label>Pembahasan / Umpan Balik</label>
+            <div class="sa-explanation-editor"></div>
+        </div>
+    `;
+
+    // Membuat editor yang mendukung teks dan rumus
+    const questionEditor = createRichMathEditor(item.question || '', 'short-answer');
+const answerEditor = createRichMathEditor(item.answer || '', 'short-answer');
+const explanationEditor = createRichMathEditor(item.explanation || '', 'short-answer');
+
+    block.querySelector('.sa-question-editor')
+        .appendChild(questionEditor.wrapper);
+
+    block.querySelector('.sa-answer-editor')
+        .appendChild(answerEditor.wrapper);
+
+    block.querySelector('.sa-explanation-editor')
+        .appendChild(explanationEditor.wrapper);
+
+    const editButton = block.querySelector('.edit-sa-block');
+
+    let isEditing = false;
+
+    // Mengatur mode edit
+    function setEditing(enabled) {
+
+        isEditing = enabled;
+
+        questionEditor.setEditing(enabled);
+        answerEditor.setEditing(enabled);
+        explanationEditor.setEditing(enabled);
+
+        editButton.textContent = enabled ? 'Selesai' : 'Edit';
+    }
+
+    // Tombol Edit
+    editButton.addEventListener('click', () => {
+        setEditing(!isEditing);
+    });
+
+    // Memindahkan blok Short Answer ke atas
+block.querySelector('.move-up').addEventListener('click', () => {
+    const previousBlock = block.previousElementSibling;
+
+    if (previousBlock && previousBlock.classList.contains('activity-block')) {
+        editorCanvas.insertBefore(block, previousBlock);
+    }
+});
+
+// Memindahkan blok Short Answer ke bawah
+block.querySelector('.move-down').addEventListener('click', () => {
+    const nextBlock = block.nextElementSibling;
+
+    if (nextBlock && nextBlock.classList.contains('activity-block')) {
+        editorCanvas.insertBefore(nextBlock, block);
+    }
+});
+
+    // Tombol Hapus
+    block.querySelector('.delete-sa-block')
+        .addEventListener('click', () => {
+
+            block.remove();
+
+            if (editorCanvas.querySelectorAll('.activity-block').length === 0) {
+                editorCanvas.innerHTML = `
+                    <div class="empty-editor">
+                        <div style="font-size:48px;">✦</div>
+                        <h2>Mulai Susun Aktivitasmu</h2>
+                        <p>Pilih blok pembelajaran dari panel sebelah kiri untuk mulai membuat konten.</p>
+                    </div>
+                `;
+            }
+        });
+
+    // Awalnya editor terkunci
+    setEditing(false);
+
+    editorCanvas.appendChild(block);
+}
+// Membuat blok Divider
+function createDividerBlock(item = {}) {
+    const emptyState = editorCanvas.querySelector('.empty-editor');
+    if (emptyState) emptyState.remove();
+
+    const block = document.createElement('div');
+    block.className = 'activity-block';
+    block.dataset.type = 'divider';
+
+    block.innerHTML = `
+        <div class="block-header">
+            <span>━ Divider</span>
+
+            <div class="block-actions">
+                <button type="button" class="move-up" title="Pindah ke atas">↑</button>
+                <button type="button" class="move-down" title="Pindah ke bawah">↓</button>
+                <button type="button" class="delete-block" title="Hapus">✕</button>
+            </div>
+        </div>
+
+        <div class="block-content">
+            <hr class="divider-line">
+        </div>
+    `;
+
+    // Pindahkan blok ke atas
+    block.querySelector('.move-up').addEventListener('click', function () {
+        const previousBlock = block.previousElementSibling;
+
+        if (previousBlock && previousBlock.classList.contains('activity-block')) {
+            editorCanvas.insertBefore(block, previousBlock);
+        }
+    });
+
+    // Pindahkan blok ke bawah
+    block.querySelector('.move-down').addEventListener('click', function () {
+        const nextBlock = block.nextElementSibling;
+
+        if (nextBlock && nextBlock.classList.contains('activity-block')) {
+            editorCanvas.insertBefore(nextBlock, block);
+        }
+    });
+
+    // Hapus blok
+    block.querySelector('.delete-block').addEventListener('click', function () {
+        block.remove();
+
+        if (!editorCanvas.querySelector('.activity-block')) {
+            editorCanvas.innerHTML = `
+                <div class="empty-editor">
+                    <p>Belum ada konten.</p>
+                    <span>Pilih blok dari panel sebelah kiri untuk mulai membuat aktivitas.</span>
+                </div>
+            `;
+        }
+    });
+
+    editorCanvas.appendChild(block);
+}
+// Menampilkan blok yang tersimpan
+function renderSavedBlocks() {
+    editorCanvas.innerHTML = '';
+
+    if (activityBlocks.length === 0) return;
+
+    activityBlocks.forEach((item, index) => {
+        console.log('Render blok:', index, item.type, item);
+
+        switch (item.type) {
+            case 'image':
+                createImageBlock(item);
+                break;
+            
+            case 'pdf':
+                createPdfBlock(item);
+                break;
+
+            case 'math':
+                createMathBlock(item);
+                break;
+
+            case 'multiple-choice':
+                createMultipleChoiceBlock(item);
+                break;
+
+            case 'drag-drop':
+                createDragDropBlock(item);
+                break;
+
+            case 'embed':
+                createEmbedBlock(item);
+                break;
+
+            case 'video':
+                createVideoBlock(item);
+                break;
+
+            case 'short-answer':
+                createShortAnswerBlock(item);
+                break;
+            case 'divider':
+                createDividerBlock(item);
+                break;
+
+            case 'text':
+                createTextBlock(item);
+                break;
+
+            default:
+                console.error('Tipe blok tidak dikenali:', item);
+        }
+                // Mempertahankan ID blok dari database
+        const renderedBlock = editorCanvas.lastElementChild;
+
+        if (renderedBlock && item.id) {
+            renderedBlock.dataset.blockId = item.id;
+        }
+    });
+}
+    // Fungsi menyimpan blok aktivitas ke Supabase
+async function saveActivity() {
+
+    const blocks = [];
+    const allBlocks = editorCanvas.querySelectorAll('.activity-block');
+
+    for (const block of allBlocks) {
+
+        const blockType = block.dataset.type;
+
+        // Menyimpan blok Text dan rumus matematika
+if (blockType === 'text') {
+
+    const title = block.querySelector('.text-title').value;
+    const textEditor = block.querySelector('.text-editor');
+
+    // Menyalin isi editor tanpa mengubah tampilan aslinya
+    const editorCopy = textEditor.cloneNode(true);
+
+    // Mengambil rumus dari elemen MathLive yang asli
+    const originalMathFields = textEditor.querySelectorAll('math-field');
+    const copiedMathFields = editorCopy.querySelectorAll('math-field');
+
+    // Mengubah MathLive menjadi penanda rumus sebelum disimpan
+    copiedMathFields.forEach((field, index) => {
+
+        const formula = originalMathFields[index].value;
+
+        const mathPlaceholder = document.createElement('span');
+
+        mathPlaceholder.className = 'saved-inline-math';
+        mathPlaceholder.setAttribute('data-formula', formula);
+
+        mathPlaceholder.textContent = formula;
+
+        field.replaceWith(mathPlaceholder);
+
+    });
+
+    const content = editorCopy.innerHTML;
+
+blocks.push({
+    type: 'text',
+    title: title,
+    content: content
+});
+
+}
+
+        // Menyimpan blok Image
+        else if (blockType === 'image') {
+
+            const fileInput = block.querySelector('.image-file');
+            const caption = block.querySelector('.image-caption').value;
+
+            let imageUrl = block.dataset.imageUrl || '';
+            const file = fileInput.files[0];
+
+            // Jika guru memilih gambar baru, upload ke Storage
+            if (file) {
+
+                const safeFileName = file.name.replace(
+                    /[^a-zA-Z0-9._-]/g,
+                    '_'
+                );
+
+                const filePath =
+                    `${activityId}/${Date.now()}-${safeFileName}`;
+
+                const { error: uploadError } = await supabase
+                    .storage
+                    .from('activity-images')
+                    .upload(filePath, file);
+
+                if (uploadError) {
+                    console.error('Gagal upload gambar:', uploadError.message);
+                    alert('Gambar gagal diunggah: ' + uploadError.message);
+                    return;
+                }
+
+                const { data: publicData } = supabase
+                    .storage
+                    .from('activity-images')
+                    .getPublicUrl(filePath);
+
+                imageUrl = publicData.publicUrl;
+
+                block.dataset.imageUrl = imageUrl;
+
+                // Mencegah gambar yang sama diunggah ulang saat Simpan
+                fileInput.value = '';
+            }
+
+            if (!imageUrl) {
+                alert('Silakan pilih gambar terlebih dahulu.');
+                return;
+            }
+
+            blocks.push({
+                type: 'image',
+                url: imageUrl,
+                caption: caption
+            });
+
+        }
+        // Menyimpan blok PDF
+else if (blockType === 'pdf') {
+
+    const fileInput = block.querySelector('.pdf-file');
+    const titleInput = block.querySelector('.pdf-title');
+
+    const file = fileInput.files[0];
+    const title = titleInput.value.trim();
+
+    let pdfUrl = block.dataset.pdfUrl || '';
+
+    // Jika guru memilih PDF baru, unggah ke Supabase Storage
+    if (file) {
+
+        if (
+            file.type !== 'application/pdf' &&
+            !file.name.toLowerCase().endsWith('.pdf')
+        ) {
+            alert('Silakan pilih file PDF.');
+            return;
+        }
+
+        const safeFileName = file.name.replace(
+            /[^a-zA-Z0-9._-]/g,
+            '_'
+        );
+
+        const filePath =
+            `${activityId}/${Date.now()}-${safeFileName}`;
+
+        const { error: uploadError } = await supabase
+            .storage
+            .from('activity-pdfs')
+            .upload(filePath, file);
+
+        if (uploadError) {
+            console.error('Gagal upload PDF:', uploadError.message);
+            alert('PDF gagal diunggah: ' + uploadError.message);
+            return;
+        }
+
+        const { data: publicData } = supabase
+            .storage
+            .from('activity-pdfs')
+            .getPublicUrl(filePath);
+
+        pdfUrl = publicData.publicUrl;
+
+        // Menyimpan URL PDF pada blok
+        block.dataset.pdfUrl = pdfUrl;
+
+        // Memperbarui pratinjau menggunakan URL permanen
+        block.querySelector('.pdf-preview').src = pdfUrl;
+        block.querySelector('.pdf-download').href = pdfUrl;
+        block.querySelector('.pdf-download').style.display = 'inline-block';
+
+        // Mencegah PDF yang sama diunggah ulang saat Simpan
+        fileInput.value = '';
+    }
+
+    if (!pdfUrl) {
+        alert('Silakan pilih dokumen PDF terlebih dahulu.');
+        return;
+    }
+
+    blocks.push({
+        type: 'pdf',
+        title: title || 'Dokumen Pembelajaran',
+        url: pdfUrl
+    });
+
+}
+        // Menyimpan blok Math Formula
+        else if (blockType === 'math') {
+
+            const formula = block.querySelector('.math-input').value;
+
+            blocks.push({
+                type: 'math',
+                formula: formula
+            });
+
+}
+
+// Menyimpan blok Multiple Choice
+else if (blockType === 'multiple-choice') {
+
+    const question = getRichMathEditorValue(
+        block.querySelector('.mc-question-editor')
+    );
+
+    const options = [
+        ...block.querySelectorAll('.mc-options .rich-math-editor')
+    ].map(editor => getRichMathEditorValue(editor));
+
+    const correctAnswer =
+        block.querySelector('.mc-correct-answer').value;
+
+    const explanation = getRichMathEditorValue(
+        block.querySelector('.mc-explanation-editor')
+    );
+
+    const plainText = html => {
+        const temporary = document.createElement('div');
+        temporary.innerHTML = html;
+
+        temporary.querySelectorAll('.saved-inline-math').forEach(math => {
+            math.textContent = math.getAttribute('data-formula') || '';
+        });
+
+        return temporary.textContent.trim();
+    };
+
+    if (!plainText(question)) {
+        alert('Pertanyaan Multiple Choice belum diisi.');
+        return;
+    }
+
+    if (options.length < 2 || options.some(option => !plainText(option))) {
+        alert('Isi minimal dua pilihan jawaban dan jangan biarkan kosong.');
+        return;
+    }
+
+    if (correctAnswer === '') {
+        alert('Silakan tentukan kunci jawaban.');
+        return;
+    }
+
+    blocks.push({
+        type: 'multiple-choice',
+        question,
+        options,
+        correctAnswer,
+        explanation
+    });
+
+}
+      // Menyimpan blok Drag and Drop
+else if (blockType === 'drag-drop') {
+
+    const title = block.querySelector('.dd-title').value.trim();
+
+    const instruction = getRichMathEditorValue(
+    block.querySelector('.dd-instruction-editor')
+);
+
+    // Mengambil area tujuan beserta ID masing-masing
+    const targetElements = [
+    ...block.querySelectorAll('.dd-target-label')
+];
+
+const savedTargets = targetElements.map(editor => ({
+    id: editor.dataset.targetId,
+    label: getRichMathEditorValue(editor).trim()
+}));
+
+    // Mengambil kartu dan pasangan area tujuannya
+    const cardElements = [
+        ...block.querySelectorAll('.dd-card-text')
+    ];
+
+    const cardTargetElements = [
+        ...block.querySelectorAll('.dd-card-target')
+    ];
+
+    const cards = cardElements.map((editor, index) => ({
+    text: getRichMathEditorValue(editor).trim(),
+    targetId: cardTargetElements[index].value
+}));
+
+    // Validasi judul
+    if (!title) {
+        alert('Judul aktivitas Drag and Drop belum diisi.');
+        return;
+    }
+
+    // Validasi area tujuan
+    if (
+        savedTargets.length === 0 ||
+        savedTargets.some(target => !target.label)
+    ) {
+        alert('Isi semua area tujuan terlebih dahulu.');
+        return;
+    }
+
+    // Validasi kartu
+    if (
+        cards.length === 0 ||
+        cards.some(card => !card.text)
+    ) {
+        alert('Isi semua kartu Drag and Drop terlebih dahulu.');
+        return;
+    }
+
+    // Validasi pasangan kartu dan area tujuan
+    if (
+        cards.some(card =>
+            !card.targetId ||
+            !savedTargets.some(target => target.id === card.targetId)
+        )
+    ) {
+        alert('Tentukan area tujuan yang benar untuk setiap kartu.');
+        return;
+    }
+
+    // Memasukkan data ke daftar blok aktivitas
+    blocks.push({
+        type: 'drag-drop',
+        title: title,
+        instruction: instruction,
+        targets: savedTargets,
+        cards: cards
+    });
+
+}
+// Menyimpan blok Embed Code
+else if (blockType === 'embed') {
+
+    const code = block.querySelector('.embed-code').value;
+
+    if (!code.trim()) {
+        alert('Kode Embed belum diisi.');
+        return;
+    }
+
+    blocks.push({
+        type: 'embed',
+        code: code
+    });
+
+}
+
+// Menyimpan blok Video
+else if (blockType === 'video') {
+
+    const title = block.querySelector('.video-title').value.trim();
+    const url = block.querySelector('.video-url').value.trim();
+
+    if (!url) {
+        alert('Link video belum diisi.');
+        return;
+    }
+
+    blocks.push({
+        type: 'video',
+        title: title,
+        url: url
+    });
+
+}
+else if (blockType === 'short-answer') {
+
+    const question = getRichMathEditorValue(
+        block.querySelector('.sa-question-editor')
+    );
+
+    const answer = getRichMathEditorValue(
+        block.querySelector('.sa-answer-editor')
+    );
+
+    const explanation = getRichMathEditorValue(
+        block.querySelector('.sa-explanation-editor')
+    );
+
+    const plainText = html => {
+        const temporary = document.createElement('div');
+        temporary.innerHTML = html;
+
+        temporary.querySelectorAll('.saved-inline-math').forEach(math => {
+            math.textContent = math.getAttribute('data-formula') || '';
+        });
+
+        return temporary.textContent.trim();
+    };
+
+    if (!plainText(question) || !plainText(answer)) {
+        alert('Pertanyaan dan jawaban Short Answer harus diisi.');
+        return;
+    }
+
+    blocks.push({
+        type: 'short-answer',
+        question,
+        answer,
+        explanation
+    });
+}
+else if (blockType === 'divider') {
+
+    blocks.push({
+        type: 'divider'
+    });
+
+}
+
+            // Memberikan ID stabil pada setiap blok aktivitas
+        const savedBlock = blocks[blocks.length - 1];
+
+        if (savedBlock) {
+            if (!block.dataset.blockId) {
+                block.dataset.blockId = crypto.randomUUID();
+            }
+
+            savedBlock.id = block.dataset.blockId;
+        }
+
+    }
+
+
+    // Menyimpan seluruh susunan blok ke Database
+    const { error } = await supabase
+        .from('material_activities')
+        .update({
+            content: blocks
+        })
+        .eq('id', activityId);
+
+    if (error) {
+        console.error('Gagal menyimpan:', error.message);
+        alert('Aktivitas gagal disimpan.');
+        return;
+    }
+
+    activityBlocks = blocks;
+
+    console.log('Aktivitas berhasil disimpan:', blocks);
+    alert('Aktivitas berhasil disimpan!');
+
+}
+
+// Menghubungkan tombol Simpan
+document.getElementById('save-activity-btn')
+    .addEventListener('click', saveActivity);
+
+    // Ketika guru mengeklik pilihan blok
+blockPanel.addEventListener('click', function(event) {
+
+    const selectedBlock = event.target.closest('[data-block]');
+
+    if (!selectedBlock) return;
+
+    const blockType = selectedBlock.dataset.block;
+
+    // Membuat blok Text baru
+    if (blockType === 'text') {
+    createTextBlock();
+}
+
+else if (blockType === 'image') {
+    createImageBlock();
+}
+
+else if (blockType === 'pdf') {
+    createPdfBlock();
+}
+
+else if (blockType === 'math') {
+    createMathBlock();
+}
+
+else if (blockType === 'multiple-choice') {
+    createMultipleChoiceBlock();
+}
+else if (blockType === 'drag-drop') {
+    createDragDropBlock();
+}
+else if (blockType === 'embed') {
+    createEmbedBlock();
+}
+else if (blockType === 'video') {
+    createVideoBlock();
+}
+else if (blockType === 'short-answer') {
+    createShortAnswerBlock();
+}
+else if (blockType === 'divider') {
+    createDividerBlock();
+}
+
+});
+</script>
+</body>
+</html>
+

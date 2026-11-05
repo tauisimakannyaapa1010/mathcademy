@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Kuis | Mathcademy</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .quiz-card {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .quiz-card h3 {
+            color: #365314;
+            margin-bottom: 8px;
+        }
+
+        .quiz-card p {
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+
+        .quiz-status {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .quiz-action {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-action button {
+            padding: 9px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-create {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 12px 22px;
+    border: none;
+    border-radius: 14px;
+
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+    color: white;
+
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+
+    box-shadow: 0 5px 14px rgba(20, 184, 166, 0.22);
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.btn-create:hover {
+    background: linear-gradient(135deg, #0d665f, #0f9f91);
+    box-shadow: 0 8px 18px rgba(20, 184, 166, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-create:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(20, 184, 166, 0.2);
+}
+
+        .btn-detail {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .quiz-empty {
+            background: white;
+            border: 1px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 35px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+    <a href="teacher.html" class="brand">
+        <span class="brand-icon">∑</span>
+        <span>mathcademy<span class="brand-dot">.</span></span>
+    </a>
+
+    <div class="menu-label">MENU UTAMA</div>
+
+    <nav class="navigation">
+        <a href="teacher.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </a>
+
+        <a href="materials.html" class="nav-item">
+            <span class="nav-icon">▤</span>
+            Kelola Materi
+        </a>
+
+        <a href="quizzes.html" class="nav-item active">
+            <span class="nav-icon">✎</span>
+            Kelola Kuis
+        </a>
+
+        <a href="students.html" class="nav-item">
+            <span class="nav-icon">♙</span>
+            Data Murid
+        </a>
+
+        <a href="progress.html" class="nav-item">
+            <span class="nav-icon">▥</span>
+            Progres & Nilai
+        </a>
+    </nav>
+
+    <div class="menu-label second-label">LAINNYA</div>
+
+    <nav class="navigation">
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            Pengaturan
+        </a>
+
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Tampilan Murid
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="help-card">
+            <div class="help-icon">✦</div>
+            <strong>Semangat mengajar!</strong>
+            <p>Bangun pengalaman belajar matematika yang menyenangkan.</p>
+        </div>
+
+        <a href="#" class="logout" id="teacherLogout">
+            ↪ &nbsp; Keluar
+        </a>
+    </div>
+</aside>
+
+    <main class="main-content">
+        <header class="topbar">
+
+    <div>
+        <p class="breadcrumb">Dashboard / Kelola Kuis</p>
+        <h3>Kelola Kuis</h3>
+    </div>
+
+    <div class="topbar-right">
+
+        <div class="profile">
+            <div class="avatar" id="teacherAvatar">G</div>
+
+            <div>
+                <strong id="teacherName">Nama Guru</strong>
+                <span>Pengajar Mathcademy</span>
+            </div>
+
+            <span class="dropdown">⌄</span>
+        </div>
+
+    </div>
+
+</header>
+
+        <div class="quiz-header">
+            <div>
+                <h1>Kelola Kuis</h1>
+                <p>Buat dan kelola kuis untuk setiap materi pembelajaran.</p>
+            </div>
+
+            <button class="btn-create"
+    onclick="window.location.href='quiz-editor.html'">
+    <span style="font-size: 19px; font-weight: 400;">＋</span>
+    Buat Kuis
+</button>
+        </div>
+
+        <div id="quizList">
+    <div class="quiz-empty">
+        <p>Memuat daftar kuis...</p>
+    </div>
+</div>
+
+    </main>
+</div>
+<script type="module">
+    import { supabase } from './supabase.js';
+
+    // Memeriksa akun yang sedang login
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError || !user) {
+        window.location.href = 'login.html';
+    } else {
+        // Mengambil profil guru
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('full_name, role')
+            .eq('id', user.id)
+            .single();
+
+        // Memastikan akun memiliki role guru
+        if (profileError || !profile || profile.role !== 'teacher') {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        } else {
+            const name = profile.full_name || 'Guru';
+
+            document.getElementById('teacherName').textContent = name;
+            document.getElementById('teacherAvatar').textContent =
+                name.charAt(0).toUpperCase();
+        }
+    }
+
+    // Fungsi keluar dari akun guru
+    const teacherLogout = document.getElementById('teacherLogout');
+
+    teacherLogout.addEventListener('click', async function (event) {
+        event.preventDefault();
+
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            alert('Gagal keluar. Silakan coba lagi.');
+        } else {
+            window.location.href = 'login.html';
+        }
+    });
+
+        // Mengambil daftar kuis dari Supabase
+    async function loadQuizzes() {
+        const quizList = document.getElementById('quizList');
+
+        const { data: quizzes, error } = await supabase
+            .from('quizzes')
+            .select('id, title, description, status, created_at')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            quizList.innerHTML = `
+                <div class="quiz-empty">
+                    <h3>Gagal Memuat Kuis</h3>
+                    <p>${error.message}</p>
+                </div>
+            `;
+            return;
+        }
+
+        if (!quizzes || quizzes.length === 0) {
+            quizList.innerHTML = `
+                <div class="quiz-empty">
+                    <h3>Belum Ada Kuis</h3>
+                    <p>Kuis yang dibuat akan muncul di halaman ini.</p>
+                </div>
+            `;
+            return;
+        }
+
+        quizList.innerHTML = '';
+
+        quizzes.forEach(quiz => {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+
+            const statusText = {
+                draft: 'Draft',
+                published: 'Dipublikasikan'
+            };
+
+            const statusClass = quiz.status === 'published'
+                ? 'published'
+                : 'draft';
+
+            const safeTitle = escapeHTML(quiz.title || 'Tanpa Judul');
+            const safeDescription = escapeHTML(
+                quiz.description || 'Belum ada deskripsi.'
+            );
+
+            card.innerHTML = `
+                <span class="quiz-status ${statusClass}">
+                    ${statusText[quiz.status] || escapeHTML(quiz.status || 'Tidak diketahui')}
+                </span>
+
+                <h3>${safeTitle}</h3>
+                <p>${safeDescription}</p>
+            `;
+
+            
+
+
+
+                        const actions = document.createElement('div');
+            actions.className = 'quiz-action';
+
+            // Tombol Edit
+            const editButton = document.createElement('button');
+            editButton.className = 'btn-detail';
+            editButton.textContent = 'Edit Kuis';
+
+            editButton.addEventListener('click', () => {
+                window.location.href =
+                    `quiz-editor.html?id=${encodeURIComponent(quiz.id)}`;
+            });
+
+            // Tombol Draft / Published
+            const statusButton = document.createElement('button');
+            statusButton.className = 'btn-detail';
+            statusButton.textContent =
+                quiz.status === 'published' ? 'Jadikan Draft' : 'Publish Kuis';
+
+            statusButton.addEventListener('click', async () => {
+                const newStatus =
+                    quiz.status === 'published' ? 'draft' : 'published';
+
+                if (!confirm(`Ubah status kuis menjadi ${newStatus.toUpperCase()}?`)) {
+                    return;
+                }
+
+                const { error } = await supabase
+                    .from('quizzes')
+                    .update({ status: newStatus })
+                    .eq('id', quiz.id);
+
+                if (error) {
+                    alert('Gagal mengubah status: ' + error.message);
+                    return;
+                }
+
+                alert('Status kuis berhasil diubah!');
+                loadQuizzes();
+            });
+
+            // Tombol Hapus
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-detail';
+            deleteButton.textContent = 'Hapus Kuis';
+
+            deleteButton.addEventListener('click', async () => {
+                if (!confirm(
+                    `Yakin ingin menghapus kuis "${quiz.title}"?`
+                )) {
+                    return;
+                }
+
+                const { error } = await supabase
+                    .from('quizzes')
+                    .delete()
+                    .eq('id', quiz.id);
+
+                if (error) {
+                    alert('Gagal menghapus kuis: ' + error.message);
+                    return;
+                }
+
+                alert('Kuis berhasil dihapus!');
+                loadQuizzes();
+            });
+
+            actions.appendChild(editButton);
+            actions.appendChild(statusButton);
+            actions.appendChild(deleteButton);
+
+            card.appendChild(actions);
+
+
+
+            quizList.appendChild(card);
+        });
+    }
+
+    // Mengamankan teks sebelum ditampilkan
+    function escapeHTML(text) {
+        return String(text).replace(/[&<>"']/g, character => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        })[character]);
+    }
+
+    loadQuizzes();
+</script>
+</body>
+</html>

@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Progres Murid | Mathcademy</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .progress-detail-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 24px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #4d7c0f;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .student-info-card,
+        .progress-summary,
+        .chapter-detail-card {
+            background: #fff;
+            border: 1px solid #d8e9b9;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .student-info-card h1 {
+            color: #365314;
+            margin: 0 0 8px;
+        }
+
+        .progress-summary h2,
+        .chapter-detail-card h2 {
+            color: #365314;
+            margin-top: 0;
+        }
+
+        .overall-progress {
+            font-size: 32px;
+            font-weight: 800;
+            color: #4d7c0f;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #84cc16, #4d7c0f);
+            border-radius: 20px;
+        }
+
+        .detail-status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .detail-status.completed {
+            background: #ecfccb;
+            color: #365314;
+        }
+
+        .detail-status.pending {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .detail-activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-history-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .activity-completed-time {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        #detail-message {
+            color: #64748b;
+            padding: 20px 0;
+        }
+
+        /* ACCORDION BAB */
+.chapter-detail-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 24px;
+    cursor: pointer;
+    background: #fff;
+}
+
+.chapter-accordion-header:hover {
+    background: #f5f9ed;
+}
+
+.chapter-accordion-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.chapter-accordion-summary {
+    flex: 1;
+}
+
+.chapter-accordion-summary p {
+    margin: 8px 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.chapter-accordion-content {
+    display: none;
+    padding: 0 24px 20px;
+}
+
+.chapter-detail-card.open .chapter-accordion-content {
+    display: block;
+}
+
+.accordion-icon {
+    color: #4d7c0f;
+    font-size: 20px;
+    font-weight: 800;
+    transition: transform 0.2s ease;
+}
+
+.chapter-detail-card.open .accordion-icon {
+    transform: rotate(180deg);
+}
+
+/* STATUS BAB */
+.chapter-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.chapter-status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.chapter-status.completed {
+    background: #ecfccb;
+    color: #365314;
+}
+
+.chapter-status.in-progress {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.chapter-status.not-started {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <main class="progress-detail-container">
+
+        <a href="students.html" class="back-link">
+            ← Kembali ke Data Murid
+        </a>
+
+        <section class="student-info-card">
+            <h1 id="student-name">Memuat data murid...</h1>
+            <p id="student-email">-</p>
+        </section>
+
+        <section class="progress-summary">
+            <h2>Ringkasan Progres Belajar</h2>
+
+            <div class="overall-progress" id="overall-percentage">
+                0%
+            </div>
+
+            <div class="progress-track">
+                <div
+                    class="progress-fill"
+                    id="overall-progress-bar"
+                    style="width: 0%"
+                ></div>
+            </div>
+
+            <p id="overall-count">Memuat progres aktivitas...</p>
+        </section>
+
+        <section class="progress-summary">
+            <h2>Aktivitas Terakhir</h2>
+            <div id="latest-activity">
+                Belum ada aktivitas yang diselesaikan.
+            </div>
+        </section>
+
+        <section>
+            <h2>Rincian Progres Pembelajaran</h2>
+            <div id="detail-message">Memuat rincian pembelajaran...</div>
+            <div id="chapter-detail-list"></div>
+        </section>
+
+    </main>
+
+    
+<script type="module">
+    import { supabase } from './supabase.js';
+
+    // Mengambil elemen halaman
+    const studentName = document.getElementById('student-name');
+    const studentEmail = document.getElementById('student-email');
+    const detailMessage = document.getElementById('detail-message');
+    const overallPercentage = document.getElementById('overall-percentage');
+    const overallProgressBar = document.getElementById('overall-progress-bar');
+    const overallCount = document.getElementById('overall-count');
+    const chapterDetailList = document.getElementById('chapter-detail-list');
+
+    // Mengambil ID murid dari URL
+    const params = new URLSearchParams(window.location.search);
+const studentId = params.get('studentId');
+
+    async function loadStudentDetail() {
+        try {
+            // Memeriksa akun yang sedang login
+            const { data: authData, error: authError } =
+                await supabase.auth.getUser();
+
+            if (authError || !authData.user) {
+                throw new Error('Silakan login terlebih dahulu.');
+            }
+
+            // Memastikan akun yang login adalah guru
+            const { data: teacherProfile, error: teacherError } =
+                await supabase
+                    .from('profiles')
+                    .select('role')
+                    .eq('id', authData.user.id)
+                    .single();
+                    console.log('ID akun login:', authData.user.id);
+                    console.log('Data profil guru:', teacherProfile);
+                    console.log('Error profil:', teacherError);
+
+            if (teacherError || teacherProfile?.role !== 'teacher') {
+                throw new Error('Halaman ini hanya dapat diakses oleh guru.');
+            }
+            console.log('Pemeriksaan guru berhasil dilewati');
+
+            if (!studentId) {
+                throw new Error('ID murid tidak ditemukan.');
+            }
+
+            // Mengambil data murid
+            const { data: student, error: studentError } =
+                await supabase
+                    .from('profiles')
+                    .select('id, full_name, email')
+                    .eq('id', studentId)
+                    .eq('role', 'student')
+                    .single();
+
+            if (studentError) throw studentError;
+
+            studentName.textContent = student.full_name || 'Tanpa nama';
+            studentEmail.textContent = student.email || '-';
+
+            
+            // Mengambil seluruh BAB
+            const { data: chapters, error: chapterError } =
+                await supabase
+                    .from('chapters')
+                    .select('*')
+                    .eq('is_archived', false)
+                    .order('position', { ascending: true });
+
+            if (chapterError) throw chapterError;
+
+            // Mengambil seluruh subbab yang aktif
+            const { data: materials, error: materialError } =
+                await supabase
+                    .from('materials')
+                    .select('*')
+                    .eq('status', 'published')
+                    .eq('is_archived', false);
+
+            if (materialError) throw materialError;
+
+            // Mengambil seluruh aktivitas yang diterbitkan
+            const { data: activities, error: activityError } =
+                await supabase
+                    .from('material_activities')
+                    .select('id, title, material_id, position')
+                    .eq('status', 'published')
+                    .eq('is_archived', false)
+                    .order('position', { ascending: true });
+
+            if (activityError) throw activityError;
+
+            // Mengambil progres murid yang dipilih
+            const { data: progress, error: progressError } =
+                await supabase
+                    .from('student_activity_progress')
+                    .select('activity_id, completed_at')
+                    .eq('student_id', studentId);
+
+            if (progressError) throw progressError;
+
+            // Membuat daftar aktivitas yang sudah selesai
+            const completedActivityIds = new Set(
+                (progress || []).map(item => item.activity_id)
+            );
+
+            // Menyimpan waktu penyelesaian setiap aktivitas
+            const completedAtByActivity = new Map(
+                (progress || []).map(item => [
+                    item.activity_id,
+                    item.completed_at
+                ])
+            );
+
+            // Menampilkan aktivitas terakhir yang diselesaikan murid
+const latestActivityElement = document.getElementById('latest-activity');
+
+const latestProgress = [...(progress || [])]
+    .filter(item => item.completed_at)
+    .sort((a, b) =>
+        new Date(b.completed_at) - new Date(a.completed_at)
+    )[0];
+
+if (latestProgress) {
+    const latestActivity = activities.find(
+        activity => activity.id === latestProgress.activity_id
+    );
+
+    if (latestActivity) {
+        const latestDate = new Date(latestProgress.completed_at);
+
+        const latestFormattedDate = latestDate.toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+
+        const latestFormattedTime = latestDate.toLocaleTimeString('id-ID', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        latestActivityElement.innerHTML = `
+            <strong>${latestActivity.title}</strong>
+            <p>Diselesaikan pada ${latestFormattedDate}, pukul ${latestFormattedTime}</p>
+        `;
+    }
+}
+
+            // Menghitung progres keseluruhan
+            const totalActivities = activities.length;
+
+            const completedCount = activities.filter(activity =>
+                completedActivityIds.has(activity.id)
+            ).length;
+
+            const percentage = totalActivities > 0
+                ? Math.round((completedCount / totalActivities) * 100)
+                : 0;
+
+            overallPercentage.textContent = `${percentage}%`;
+            overallProgressBar.style.width = `${percentage}%`;
+            overallCount.textContent =
+                `${completedCount} dari ${totalActivities} aktivitas selesai`;
+
+            // Menampilkan progres setiap BAB
+            chapterDetailList.innerHTML = chapters.map((chapter, index) => {
+
+                const chapterMaterials = materials.filter(material =>
+                    material.chapter_id === chapter.id
+                );
+
+                const chapterMaterialIds = chapterMaterials.map(material =>
+                    material.id
+                );
+
+                const chapterActivities = activities.filter(activity =>
+                    chapterMaterialIds.includes(activity.material_id)
+                );
+
+                const chapterCompleted = chapterActivities.filter(activity =>
+                    completedActivityIds.has(activity.id)
+                ).length;
+
+                const chapterPercentage = chapterActivities.length > 0
+                    ? Math.round(
+                        (chapterCompleted / chapterActivities.length) * 100
+                    )
+                    : 0;
+
+                    // Menentukan status penyelesaian BAB
+                    const chapterStatus = chapterPercentage === 100
+                        ? 'Selesai'
+                        : chapterPercentage > 0
+                            ? 'Sedang Berjalan'
+                            : 'Belum Dimulai';
+
+                    const chapterStatusClass = chapterPercentage === 100
+                        ? 'completed'
+                        : chapterPercentage > 0
+                            ? 'in-progress'
+                            : 'not-started';
+
+                const subchapterHTML = chapterMaterials.map(material => {
+
+                    const materialActivities = chapterActivities.filter(
+                        activity => activity.material_id === material.id
+                    );
+
+                    const materialCompleted = materialActivities.filter(
+                        activity => completedActivityIds.has(activity.id)
+                    ).length;
+
+                    const materialPercentage = materialActivities.length > 0
+                        ? Math.round(
+                            (materialCompleted / materialActivities.length) * 100
+                        )
+                        : 0;
+
+                    const activityHTML = materialActivities.map(activity => {
+    const isCompleted =
+        completedActivityIds.has(activity.id);
+
+    const completedAt = completedAtByActivity.get(activity.id);
+
+    let completionDateHTML = '';
+
+    if (isCompleted && completedAt) {
+        const date = new Date(completedAt);
+
+        const formattedDate = date.toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+
+        const formattedTime = date.toLocaleTimeString('id-ID', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        completionDateHTML = `
+            <small class="activity-completed-time">
+                Diselesaikan ${formattedDate}, pukul ${formattedTime}
+            </small>
+        `;
+    }
+
+    return `
+        <div class="detail-activity-item">
+            <div class="activity-history-info">
+                <span>${activity.title}</span>
+                ${completionDateHTML}
+            </div>
+
+            <span class="detail-status ${isCompleted ? 'completed' : 'pending'}">
+                ${isCompleted ? '✓ Selesai' : 'Belum selesai'}
+            </span>
+        </div>
+    `;
+}).join('');
+
+                    return `
+                        <div style="padding: 16px 0; border-top: 1px solid #e5e7eb;">
+                            <h3>${material.title}</h3>
+
+                            <p>
+                                ${materialCompleted} dari
+                                ${materialActivities.length} aktivitas selesai
+                                (${materialPercentage}%)
+                            </p>
+
+                            <div class="progress-track">
+                                <div class="progress-fill"
+                                    style="width: ${materialPercentage}%">
+                                </div>
+                            </div>
+
+                            ${activityHTML || '<p>Belum ada aktivitas.</p>'}
+                        </div>
+                    `;
+                }).join('');
+
+                
+                return `
+                    <div class="chapter-detail-card">
+
+                        <div class="chapter-accordion-header"
+                            onclick="this.parentElement.classList.toggle('open')">
+
+                            <div class="chapter-accordion-summary">
+                                <div class="chapter-title-row">
+                                    <h2>BAB ${index + 1}: ${chapter.title}</h2>
+                                    <span class="chapter-status ${chapterStatusClass}">
+                                        ${chapterStatus}
+                                    </span>
+                                </div>
+
+                                <p>
+                                    ${chapterCompleted} dari
+                                    ${chapterActivities.length} aktivitas selesai
+                                    (${chapterPercentage}%)
+                                </p>
+
+                                <div class="progress-track">
+                                    <div class="progress-fill"
+                                        style="width: ${chapterPercentage}%">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span class="accordion-icon">⌄</span>
+                        </div>
+
+                        <div class="chapter-accordion-content">
+                            ${subchapterHTML || '<p>Belum ada subbab.</p>'}
+                        </div>
+
+                    </div>
+                `;
+
+            }).join('');
+
+            detailMessage.textContent = chapters.length > 0
+                ? 'Berikut rincian progres pembelajaran murid.'
+                : 'Belum ada BAB yang tersedia.';
+
+
+        } catch (error) {
+            console.error('Gagal memuat detail murid:', error);
+            detailMessage.textContent = error.message;
+        }
+    }
+
+    loadStudentDetail();
+</script>
+</body>
+</html>
+

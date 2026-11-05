@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Tes Koneksi Mathcademy</title>
+</head>
+<body>
+    <h2>Tes Koneksi Supabase</h2>
+    <p id="status">Sedang menguji koneksi...</p>
+
+    <script type="module">
+        import { supabase } from './supabase.js';
+
+        const status = document.getElementById('status');
+
+        async function testConnection() {
+            const { error } = await supabase
+                .from('profiles')
+                .select('id')
+                .limit(1);
+
+            if (error) {
+                status.textContent = 'Koneksi gagal: ' + error.message;
+                console.error(error);
+            } else {
+                status.textContent = 'Koneksi Supabase berhasil! 🎉';
+            }
+        }
+
+        testConnection();
+    </script>
+</body>
+</html>

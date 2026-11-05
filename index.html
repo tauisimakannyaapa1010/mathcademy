@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mathcademy — Dashboard Murid</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <a href="#" class="brand">
+        <span class="brand-icon">∑</span>
+        <span>mathcademy<span class="brand-dot">.</span></span>
+      </a>
+
+      <div class="menu-label">MENU UTAMA</div>
+      <nav class="navigation">
+        <a href="#" class="nav-item active">
+          <span class="nav-icon">⌂</span> Dashboard
+        </a>
+        <a href="student-materials.html" class="nav-item">
+          <span class="nav-icon">▤</span> Materi Belajar
+        </a>
+        <a href="student-quizzes.html" class="nav-item">
+            <span class="nav-icon">✎</span> Latihan & Kuis
+        </a>
+        <a href="my-scores.html" class="nav-item">
+          <span class="nav-icon">▥</span> Nilai Saya
+        </a>
+      </nav>
+
+      <div class="menu-label second-label">LAINNYA</div>
+      <nav class="navigation">
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon">⚙</span> Pengaturan
+      </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">ⓘ</span> Bantuan
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="help-card">
+          <div class="help-icon">✦</div>
+          <strong>Terus semangat!</strong>
+          <p>Setiap langkah kecil membawamu lebih dekat pada pemahaman.</p>
+        </div>
+        <a href="#" class="logout" id="logoutButton">
+            ↪ &nbsp; Keluar
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="breadcrumb">
+                Halaman / <strong>Dashboard</strong>
+            </div>
+
+            <div class="topbar-right">
+                <button class="icon-button" aria-label="Notifikasi">
+                    ♧
+                    <span class="notification-dot"></span>
+                </button>
+
+                <div class="profile">
+                    <div class="avatar" id="studentAvatar">M</div>
+                    <div>
+                        <strong id="studentName">Nama Murid</strong>
+                        <span>Siswa</span>
+                    </div>
+                    <span class="dropdown">⌄</span>
+                </div>
+            </div>
+        </header>
+
+      <!-- GREETING -->
+      <section class="welcome-section">
+        <div>
+          <p class="eyebrow">SENANG MELIHATMU KEMBALI!</p>
+          <h1>Halo, <span id="welcomeName">Murid</span>! <span>✦</span></h1>
+          <p class="welcome-text">Siap menjelajahi matematika hari ini? Yuk, lanjutkan perjalanan belajarmu!</p>
+        </div>
+        <div class="welcome-illustration">
+          <div class="sun-shape">✳</div>
+          <div class="math-symbol symbol-one">+</div>
+          <div class="math-symbol symbol-two">÷</div>
+          <div class="math-symbol symbol-three">x²</div>
+          <div class="book-shape">📚</div>
+        </div>
+      </section>
+
+      <!-- STATISTICS -->
+      <section class="stats-grid">
+        <article class="stat-card">
+          <div class="stat-icon lime">▤</div>
+          <div>
+            <p>Total Materi</p>
+            <h2><span id="totalMateri">0</span> <small>Topik</small></h2>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon green">✓</div>
+          <div>
+            <p>Materi Selesai</p>
+            <h2><span id="materiSelesai">0</span> <small>Subbab</small></h2>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon yellow">★</div>
+          <div>
+            <p>Rata-rata Nilai</p>
+            <h2><span id="rataRataNilai">0</span><small>/100</small></h2>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon purple">♧</div>
+          <div>
+            <p>Aktivitas Belajar</p>
+            <h2><span id="totalAktivitas">0</span> <small>Kali</small></h2>
+          </div>
+        </article>
+      </section>
+
+      <!-- COURSES -->
+<section class="content-section" id="materi">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">RUANG BELAJARMU</p>
+            <h2>Materi Pembelajaran</h2>
+            <p class="section-description">
+                Pilih materi dan mulai petualangan matematikamu.
+            </p>
+        </div>
+        <a href="student-materials.html" class="see-all">
+            Lihat semua →
+        </a>
+    </div>
+
+    <!-- Kartu BAB dibuat otomatis dari Supabase -->
+    <div class="course-grid" id="courseGrid">
+        <p>Memuat materi pembelajaran...</p>
+    </div>
+</section>
+
+      <footer class="footer">
+        <span>© 2026 Mathcademy</span>
+        <span>Learn something new every day. <b>✦</b></span>
+      </footer>
+
+    </main>
+  </div>
+<script type="module">
+    import { supabase } from './supabase.js';
+    // Mengambil statistik belajar murid dari Supabase
+async function loadStudentStatistics(studentId) {
+    try {
+        // 1. Mengambil BAB yang sudah dipublikasikan
+        const { data: chapters, error: chapterError } = await supabase
+            .from('chapters')
+            .select('id')
+            .eq('status', 'published')
+            .eq('is_archived', false);
+
+        if (chapterError) throw chapterError;
+
+        // 2. Mengambil materi yang sudah dipublikasikan
+        const { data: materials, error: materialError } = await supabase
+            .from('materials')
+            .select('id, chapter_id')
+            .eq('status', 'published')
+            .eq('is_archived', false);
+
+        if (materialError) throw materialError;
+
+        // 3. Mengambil aktivitas yang sudah dipublikasikan
+        const { data: activities, error: activityError } = await supabase
+            .from('material_activities')
+            .select('id, material_id')
+            .eq('status', 'published')
+            .eq('is_archived', false);
+
+        if (activityError) throw activityError;
+
+        // 4. Mengambil aktivitas yang diselesaikan murid ini
+        const { data: completedActivities, error: progressError } = await supabase
+            .from('student_activity_progress')
+            .select('activity_id')
+            .eq('student_id', studentId);
+
+        if (progressError) throw progressError;
+
+        // 5. Mengambil nilai kuis yang sudah dikumpulkan murid
+        const { data: attempts, error: attemptError } = await supabase
+            .from('quiz_attempts')
+            .select('score, status')
+            .eq('student_id', studentId)
+            .not('submitted_at', 'is', null);
+
+        if (attemptError) throw attemptError;
+
+        // Menghitung statistik
+        const totalMateri = chapters.length;
+
+        const aktivitasSelesai = new Set(
+            completedActivities.map(item => item.activity_id)
+        );
+
+        const materiSelesai = chapters.filter(chapter => {
+            const chapterMaterials = materials.filter(
+                material => material.chapter_id === chapter.id
+            );
+
+            return chapterMaterials.length > 0 &&
+                chapterMaterials.every(material => {
+                    const materialActivities = activities.filter(
+                        activity => activity.material_id === material.id
+                    );
+
+                    return materialActivities.length > 0 &&
+                        materialActivities.every(activity =>
+                            aktivitasSelesai.has(activity.id)
+                        );
+                });
+        }).length;
+
+        const nilaiValid = attempts.filter(
+            attempt => attempt.score !== null
+        );
+
+        const rataRata = nilaiValid.length > 0
+            ? Math.round(
+                nilaiValid.reduce((total, item) =>
+                    total + Number(item.score), 0
+                ) / nilaiValid.length
+            )
+            : 0;
+
+        const totalAktivitas =
+            aktivitasSelesai.size + attempts.length;
+
+        // Menampilkan statistik pada dashboard
+        document.getElementById('totalMateri').textContent = totalMateri;
+        document.getElementById('materiSelesai').textContent = materiSelesai;
+        document.getElementById('rataRataNilai').textContent = rataRata;
+        document.getElementById('totalAktivitas').textContent = totalAktivitas;
+
+    } catch (error) {
+        console.error('Gagal memuat statistik murid:', error);
+    }
+}
+
+
+// Membuat kartu BAB otomatis pada dashboard murid
+async function loadChapterProgress(studentId) {
+    const courseGrid = document.getElementById('courseGrid');
+
+    try {
+        // 1. Mengambil BAB yang sudah dipublikasikan
+        const { data: chapters, error: chapterError } = await supabase
+            .from('chapters')
+            .select('id, title, description, position')
+            .eq('status', 'published')
+            .eq('is_archived', false)
+            .order('position', { ascending: true });
+
+        if (chapterError) throw chapterError;
+
+        // Jika belum ada BAB yang dipublikasikan
+        if (!chapters || chapters.length === 0) {
+            courseGrid.innerHTML =
+                '<p>Belum ada materi pembelajaran yang tersedia.</p>';
+            return;
+        }
+
+        // 2. Mengambil materi yang sudah dipublikasikan
+        const { data: materials, error: materialError } = await supabase
+            .from('materials')
+            .select('id, chapter_id')
+            .eq('status', 'published')
+            .eq('is_archived', false);
+
+        if (materialError) throw materialError;
+
+        // 3. Mengambil aktivitas yang sudah dipublikasikan
+        const { data: activities, error: activityError } = await supabase
+            .from('material_activities')
+            .select('id, material_id')
+            .eq('status', 'published')
+            .eq('is_archived', false);
+
+        if (activityError) throw activityError;
+
+        // 4. Mengambil aktivitas yang sudah diselesaikan murid
+        const { data: completed, error: progressError } = await supabase
+            .from('student_activity_progress')
+            .select('activity_id')
+            .eq('student_id', studentId);
+
+        if (progressError) throw progressError;
+
+        const completedIds = new Set(
+            completed.map(item => item.activity_id)
+        );
+
+        // 5. Membuat kartu untuk setiap BAB
+        courseGrid.innerHTML = chapters.map((chapter, index) => {
+            const chapterMaterials = materials.filter(
+                material => material.chapter_id === chapter.id
+            );
+
+            const chapterActivities = activities.filter(activity =>
+                chapterMaterials.some(
+                    material => material.id === activity.material_id
+                )
+            );
+
+            const completedCount = chapterActivities.filter(activity =>
+                completedIds.has(activity.id)
+            ).length;
+
+            const percentage = chapterActivities.length > 0
+                ? Math.round(
+                    (completedCount / chapterActivities.length) * 100
+                )
+                : 0;
+
+            const description = chapter.description ||
+                'Yuk, mulai pelajari materi pada BAB ini!';
+
+            const artClass = index % 2 === 0
+                ? 'algebra-art'
+                : 'equation-art';
+
+            const illustration = index % 2 === 0
+                ? '<div class="floating-shape shape-a">x²</div><div class="algebra-equation">2x + 3</div><div class="floating-shape shape-b">+</div>'
+                : '<div class="floating-shape shape-c">=</div><div class="equation-balance"><span>x + 2</span><b>=</b><span>5</span></div><div class="floating-shape shape-d">÷</div>';
+
+            const chapterNumber = String(index + 1).padStart(2, '0');
+
+            return `
+                <article class="course-card">
+                    <div class="course-art ${artClass}">
+                        <span class="course-tag">BAB ${chapterNumber}</span>
+                        ${illustration}
+                        <span class="art-caption">MATHCADEMY</span>
+                    </div>
+
+                    <div class="course-info">
+                        <div class="course-meta">
+                            <span>BAB ${chapterNumber}</span>
+                            <span>${chapterActivities.length} AKTIVITAS</span>
+                        </div>
+
+                        <h3>${escapeHTML(chapter.title)}</h3>
+
+                        <p>${escapeHTML(description)}</p>
+
+                        <div class="progress-info">
+                            <span>Progres belajar</span>
+                            <strong>${percentage}%</strong>
+                        </div>
+
+                        <div class="progress-track">
+                            <div class="progress-fill"
+                                style="width: ${percentage}%">
+                            </div>
+                        </div>
+
+                        <a href="student-materials.html?chapter=${encodeURIComponent(chapter.id)}"
+                           class="course-button">
+                            <span>${percentage > 0 ? 'Lanjutkan Belajar' : 'Mulai Belajar'}</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </article>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Gagal memuat kartu BAB:', error);
+        courseGrid.innerHTML =
+            '<p>Materi belum dapat dimuat. Silakan coba lagi.</p>';
+    }
+}
+
+// Mengamankan teks dari data Supabase sebelum ditampilkan sebagai HTML
+function escapeHTML(text) {
+    return String(text).replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[character]);
+}
+
+
+    // Mengambil data murid yang sedang login
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+        window.location.href = 'login.html';
+    } else {
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('full_name, role')
+            .eq('id', user.id)
+            .single();
+
+        // Memastikan akun memiliki role murid
+        if (profileError || !profile || profile.role !== 'student') {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        } else {
+            const name = profile.full_name || 'Murid';
+
+            document.getElementById('studentName').textContent = name;
+            document.getElementById('studentAvatar').textContent =
+                name.charAt(0).toUpperCase();
+            document.getElementById('welcomeName').textContent = name;
+            await loadStudentStatistics(user.id);
+            await loadChapterProgress(user.id);
+        }
+    }
+
+    logoutButton.addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        logoutButton.textContent = 'Keluar...';
+
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            alert('Gagal keluar. Silakan coba lagi.');
+            logoutButton.textContent = '↪ Keluar';
+            return;
+        }
+
+        window.location.href = 'login.html';
+    });
+</script>
+</body>
+</html>

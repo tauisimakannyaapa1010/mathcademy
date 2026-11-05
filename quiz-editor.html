@@ -1,0 +1,2600 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Kuis | Mathcademy</title>
+    <link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathlive"></script>
+
+    <style>
+        .quiz-editor {
+            width: 100%;
+            max-width: 1200px;
+            min-width: 0;
+            box-sizing: border-box;
+            margin: 0 auto;
+            padding: 32px 36px 48px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .editor-header {
+            margin-bottom: 28px;
+        }
+
+        .editor-header h1 {
+            color: #244b3b;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+            margin: 0 0 8px;
+        }
+
+        .editor-header p {
+            color: #718078;
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .editor-header p {
+            color: #64748b;
+        }
+
+        .quiz-info-card,
+        .question-panel {
+            background: #ffffff;
+            border: 1px solid #e7eee9;
+            border-radius: 18px;
+            padding: 26px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(35, 75, 59, 0.045);
+        }
+
+        .quiz-info-card h2,
+        .question-panel h2 {
+            color: #244b3b;
+            font-size: 19px;
+            font-weight: 700;
+            margin: 0 0 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .quiz-info-card p,
+        .question-panel > p {
+            color: #718078;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .question-type-grid {
+    display: grid;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.question-type {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+        .question-type {
+            padding: 22px;
+            background: #ffffff;
+            border: 1px solid #e7eee9;
+            border-radius: 16px;
+            text-align: left;
+            cursor: pointer;
+            font: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .question-type:hover {
+            background: #f3f8f5;
+            border-color: #8bb9a5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(36, 75, 59, 0.08);
+        }
+
+        .question-type strong {
+            display: block;
+            color: #244b3b;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .question-type span {
+            font-size: 13px;
+            color: #718078;
+            line-height: 1.6;
+        }
+        .question-list {
+            margin-top: 25px;
+        }
+
+        .empty-question {
+            padding: 45px 24px;
+            text-align: center;
+            border: 1px dashed #b9cfc1;
+            border-radius: 14px;
+            background: #f8fbf9;
+            color: #718078;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        math-field {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #ffffff;
+    font-size: 18px;
+    color: #1f2937;
+}
+
+math-field:focus-within {
+    border-color: #84cc16;
+    outline: 2px solid #ecfccb;
+}
+
+/* Toolbar editor pertanyaan */
+.question-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.equation-button {
+    padding: 9px 15px;
+    background: #edf5f0;
+    color: #244b3b;
+    border: 1px solid #d5e5dc;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: 0.2s ease;
+}
+
+.equation-button:hover {
+    background: #dcece3;
+    border-color: #9fc4ae;
+}
+
+.question-text-editor {
+    min-height: 130px;
+    padding: 16px;
+    border: 1px solid #dce7e0;
+    border-radius: 12px;
+    background: #ffffff;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #344b40;
+    transition: 0.2s ease;
+}
+
+.question-text-editor:focus {
+    outline: none;
+    border-color: #80ad96;
+    box-shadow: 0 0 0 3px rgba(128, 173, 150, 0.15);
+}
+
+.question-text-editor math-field {
+    display: inline-block;
+    width: auto;
+    min-width: 50px;
+    min-height: 35px;
+    padding: 2px 5px;
+    vertical-align: middle;
+}
+/* Form pilihan ganda */
+.question-field {
+    margin-top: 22px;
+}
+
+.question-field label {
+    display: block;
+    font-weight: 600;
+    color: #365314;
+    margin-bottom: 9px;
+}
+
+.answer-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 14px;
+    border: 1px solid #e7eee9;
+    border-radius: 12px;
+    background: #f8faf9;
+    transition: 0.2s ease;
+}
+
+.answer-option:focus-within {
+    border-color: #8bb9a5;
+    background: #ffffff;
+}
+
+.answer-option input[type="radio"] {
+    accent-color: #3d8064;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.answer-option .option-label {
+    font-weight: 700;
+    color: #244b3b;
+}
+
+.answer-option .option-editor {
+    flex: 1;
+    min-height: 45px;
+    padding: 10px 12px;
+    border: 1px solid #dce7e0;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #344b40;
+}
+
+.answer-option .equation-button {
+    padding: 7px 11px;
+}
+
+.question-points {
+    width: 120px;
+    padding: 11px 12px;
+    border: 1px solid #dce7e0;
+    border-radius: 9px;
+    font: inherit;
+    color: #344b40;
+    background: #ffffff;
+}
+
+.question-save-button {
+    margin-top: 24px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    background: #315f4b;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.question-save-button:hover {
+    background: #244b3b;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(36, 75, 59, 0.15);
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="app">
+
+        <aside class="sidebar">
+    <a href="teacher.html" class="brand">
+        <span class="brand-icon">∑</span>
+        <span>mathcademy<span class="brand-dot">.</span></span>
+    </a>
+
+    <div class="menu-label">MENU UTAMA</div>
+
+    <nav class="navigation">
+        <a href="teacher.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </a>
+
+        <a href="materials.html" class="nav-item">
+            <span class="nav-icon">▤</span>
+            Materi
+        </a>
+
+        <a href="students.html" class="nav-item">
+            <span class="nav-icon">♙</span>
+            Data Murid
+        </a>
+
+        <a href="quizzes.html" class="nav-item active">
+            <span class="nav-icon">✎</span>
+            Kuis
+        </a>
+    </nav>
+
+    <div class="menu-label second-label">LAINNYA</div>
+
+    <nav class="navigation">
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            Pengaturan
+        </a>
+
+        <a href="#" class="nav-item">
+            <span class="nav-icon">ⓘ</span>
+            Bantuan
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="help-card">
+            <div class="help-icon">✦</div>
+            <strong>Terus semangat!</strong>
+            <p>Setiap langkah kecil membawamu lebih dekat pada pemahaman.</p>
+        </div>
+
+        <a href="#" class="logout" id="logoutButton">
+            ↪ &nbsp; Keluar
+        </a>
+    </div>
+</aside>
+
+        <div class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="breadcrumb">Dashboard / Kuis / Editor Kuis</p>
+                </div>
+            </header>
+
+            <main class="quiz-editor">
+
+        <div class="editor-header">
+            <h1>Editor Kuis</h1>
+            <p>Susun pertanyaan dan tantangan untuk murid Mathcademy.</p>
+        </div>
+
+        <!-- FORM IDENTITAS KUIS BARU -->
+<section class="quiz-info-card" id="newQuizForm" style="display: none;">
+    <h2>Buat Kuis Baru</h2>
+    <p>Lengkapi informasi kuis sebelum menambahkan soal.</p>
+
+    <div class="question-field">
+        <label for="newQuizTitle">Judul Kuis</label>
+        <input
+            type="text"
+            id="newQuizTitle"
+            placeholder="Contoh: Kuis Bentuk Aljabar"
+            style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px;"
+        >
+    </div>
+
+    <div class="question-field">
+        <label for="newQuizDescription">Deskripsi</label>
+        <textarea
+            id="newQuizDescription"
+            placeholder="Tuliskan deskripsi kuis..."
+            style="width: 100%; min-height: 90px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px;"
+        ></textarea>
+            </div>
+            <div class="question-field">
+        <label for="newQuizChapter">Pilih BAB</label>
+        <select id="newQuizChapter" required
+            style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px;">
+            <option value="">Pilih BAB</option>
+        </select>
+    </div>
+
+    <div class="question-field">
+        <label for="newQuizType">Jenis Kuis</label>
+        <select id="newQuizType" required
+            style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px;">
+            <option value="practice">Kuis Latihan</option>
+            <option value="final">Evaluasi Akhir BAB</option>
+        </select>
+    </div>
+
+
+    <button
+        type="button"
+        class="question-save-button"
+        id="createQuizButton"
+    >
+        Buat dan Lanjutkan
+    </button>
+</section>
+
+<!-- INFORMASI KUIS -->
+<section class="quiz-info-card" id="quizInfoCard">
+    <h2 id="quizTitle">Memuat kuis...</h2>
+    <p id="quizDescription">Informasi kuis akan ditampilkan di sini.</p>
+</section>
+
+        <!-- FORM SOAL -->
+<section class="question-panel" id="questionFormPanel" style="display: none;">
+    <h2 id="questionFormTitle">Buat Soal</h2>
+    <div id="questionFormContent"></div>
+</section>
+
+<!-- PILIH JENIS SOAL -->
+<section class="question-panel">
+    <h2>Tambah Soal</h2>
+    <p>Pilih jenis soal yang ingin kamu buat.</p>
+
+    <div class="question-type-grid">
+
+        <button class="question-type" data-type="multiple_choice">
+            <strong>Pilihan Ganda</strong>
+            <span>Murid memilih satu jawaban yang benar.</span>
+        </button>
+
+        <button class="question-type" data-type="true_false">
+            <strong>Benar / Salah</strong>
+            <span>Murid menentukan kebenaran pernyataan.</span>
+        </button>
+
+        <button class="question-type" data-type="short_answer">
+            <strong>Isian Singkat</strong>
+            <span>Murid mengetik jawaban sendiri.</span>
+        </button>
+
+        <button class="question-type" data-type="drag_drop">
+            <strong>Drag and Drop</strong>
+            <span>Murid menyeret pilihan ke tempat yang tepat.</span>
+        </button>
+
+    </div>
+</section>
+
+                   <!-- DAFTAR SOAL -->
+        <section class="question-panel">
+            <h2>Daftar Soal</h2>
+
+            <div class="question-list" id="questionList">
+                <div class="empty-question">
+                    <h3>Belum Ada Soal</h3>
+                    <p>Soal yang dibuat akan muncul di sini.</p>
+                </div>
+            </div>
+        </section>
+
+                </main>
+        </div>
+    </div>
+
+<script type="module">
+    import { supabase } from './supabase.js';
+    // ID kuis yang sedang dibuka
+let quizId = null;
+
+// Memuat daftar BAB untuk form kuis baru
+async function loadChaptersForQuiz() {
+    const chapterSelect = document.getElementById('newQuizChapter');
+
+    const { data, error } = await supabase
+        .from('chapters')
+        .select('id, title')
+        .eq('is_archived', false)
+        .order('position', { ascending: true });
+
+    if (error) {
+        console.error('Gagal memuat BAB:', error);
+        alert('Daftar BAB gagal dimuat: ' + error.message);
+        return;
+    }
+
+    chapterSelect.innerHTML = '<option value="">Pilih BAB</option>';
+
+    (data || []).forEach(chapter => {
+        const option = document.createElement('option');
+        option.value = chapter.id;
+        option.textContent = chapter.title;
+        chapterSelect.appendChild(option);
+    });
+}
+
+// Memilih kuis atau membuka mode kuis baru
+async function selectQuiz() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    quizId =
+        urlParams.get('id') ||
+        urlParams.get('quiz_id');
+
+    // Jika tidak ada ID, buka mode membuat kuis baru
+    if (!quizId) {
+        document.getElementById('newQuizForm').style.display = 'block';
+        document.getElementById('quizInfoCard').style.display = 'none';
+
+
+        return 'new';
+    }
+
+    // Jika ada ID, lanjutkan mode edit kuis
+    const { data: selectedQuiz, error } = await supabase
+        .from('quizzes')
+        .select('id, title')
+        .eq('id', quizId)
+        .maybeSingle();
+
+    if (error) {
+        console.error('Gagal mengambil kuis:', error);
+        alert('Kuis gagal dimuat: ' + error.message);
+        return false;
+    }
+
+    if (!selectedQuiz) {
+        alert('Kuis dengan ID tersebut tidak ditemukan.');
+        return false;
+    }
+
+    return 'edit';
+}
+    // Memuat informasi kuis
+async function loadQuizInfo() {
+    if (!quizId) return;
+
+    const { data, error } = await supabase
+        .from('quizzes')
+        .select('title, description')
+        .eq('id', quizId)
+        .maybeSingle();
+
+    if (error) {
+        console.error('Gagal memuat kuis:', error);
+        document.getElementById('quizTitle').textContent =
+            'Kuis gagal dimuat';
+        document.getElementById('quizDescription').textContent =
+            error.message;
+        return;
+    }
+
+    if (!data) {
+        document.getElementById('quizTitle').textContent =
+            'Kuis tidak ditemukan';
+        document.getElementById('quizDescription').textContent =
+            'Periksa kembali ID kuis atau akses akun guru.';
+        return;
+    }
+
+    document.getElementById('quizTitle').textContent = data.title;
+    document.getElementById('quizDescription').textContent =
+        data.description || 'Tidak ada deskripsi kuis.';
+}
+
+
+// Menyimpan ID soal yang sedang diedit
+let editingQuestionId = null;
+let pendingDragDropEdit = null;
+// Memuat daftar soal dari Supabase
+
+async function loadQuestions() {
+    const questionList = document.getElementById('questionList');
+
+    if (!quizId) {
+        questionList.textContent = 'ID kuis tidak ditemukan.';
+        return;
+    }
+
+    questionList.innerHTML = `
+        <div class="empty-question">Memuat daftar soal...</div>
+    `;
+
+    try {
+        const { data, error } = await supabase
+            .from('quiz_questions')
+            .select('*')
+            .eq('quiz_id', quizId)
+            .order('sort_order', { ascending: true });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            questionList.innerHTML = `
+                <div class="empty-question">
+                    <h3>Belum Ada Soal</h3>
+                    <p>Belum ada soal yang tersimpan untuk kuis ini.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const questionIds = data.map(q => q.id);
+
+        const { data: answerKeys, error: keyError } = await supabase
+            .from('quiz_answer_keys')
+            .select('*')
+            .in('question_id', questionIds);
+
+        if (keyError) {
+            console.error('Kunci jawaban gagal dimuat:', keyError);
+        }
+
+        questionList.innerHTML = '';
+
+        data.forEach((question, index) => {
+            const card = document.createElement('div');
+            card.style.cssText = `
+                padding: 18px;
+                margin-bottom: 15px;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                background: #f8fafc;
+            `;
+
+            const title = document.createElement('h3');
+            title.textContent = `Soal ${index + 1}`;
+            title.style.color = '#365314';
+
+            const questionText = document.createElement('p');
+            questionText.textContent = question.question_text || '(Pertanyaan kosong)';
+
+            const typeNames = {
+                multiple_choice: 'Pilihan Ganda',
+                true_false: 'Benar / Salah',
+                short_answer: 'Isian Singkat',
+                drag_drop: 'Drag and Drop'
+            };
+
+            const typeLabel = document.createElement('p');
+            typeLabel.textContent =
+                `Jenis Soal: ${typeNames[question.question_type] || question.question_type}`;
+
+            card.append(title, questionText, typeLabel);
+
+            const options = question.options || {};
+
+            if (question.question_type === 'multiple_choice') {
+                ['A', 'B', 'C', 'D'].forEach(key => {
+                    const option = document.createElement('p');
+                    const value = options[key];
+
+                    option.textContent = `${key}. ${
+                        Array.isArray(value)
+                            ? value.map(item => item.value || '').join('')
+                            : value || ''
+                    }`;
+
+                    card.appendChild(option);
+                });
+            }
+
+            if (question.question_type === 'true_false') {
+                const option = document.createElement('p');
+                option.textContent = 'Pilihan: Benar atau Salah';
+                card.appendChild(option);
+            }
+
+            if (question.question_type === 'short_answer') {
+                const option = document.createElement('p');
+                option.textContent = 'Jawaban berupa isian singkat.';
+                card.appendChild(option);
+            }
+
+            if (question.question_type === 'drag_drop') {
+                const targets = options.targets || [];
+                const cards = options.cards || [];
+
+                const info = document.createElement('p');
+                info.textContent =
+                    `${targets.length} kelompok dan ${cards.length} kartu`;
+                card.appendChild(info);
+            }
+
+            const points = document.createElement('p');
+            points.textContent = `Poin: ${question.points ?? 1}`;
+            card.appendChild(points);
+
+            const answerKey = answerKeys?.find(
+                item => item.question_id === question.id
+            );
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit Soal';
+            editButton.style.cssText = `
+                padding: 9px 15px;
+                margin: 10px 8px 0 0;
+                background: #4d7c0f;
+                color: white;
+                border: none;
+                border-radius: 7px;
+                cursor: pointer;
+            `;
+
+            editButton.addEventListener('click', () => {
+    editingQuestionId = question.id;
+
+    // Siapkan data Drag & Drop sebelum form dibuka
+    pendingDragDropEdit =
+        question.question_type === 'drag_drop'
+            ? question
+            : null;
+
+    const questionType =
+        question.question_type || 'multiple_choice';
+
+    const typeButton = document.querySelector(
+        `[data-type="${questionType}"]`
+    );
+
+    if (typeButton) typeButton.click();
+
+    setTimeout(() => {
+    // 1. Kembalikan isi pertanyaan
+    const editor = questionFormContent.querySelector(
+        '.question-text-editor'
+    );
+
+    if (editor) {
+        setEditorContent(
+            editor,
+            question.content?.length
+                ? question.content
+                : [{
+                    type: 'text',
+                    value: question.question_text || ''
+                }]
+        );
+    }
+
+    // 2. Kembalikan isi pilihan A, B, C, dan D
+    if (question.question_type === 'multiple_choice') {
+        const optionRows = questionFormContent.querySelectorAll(
+            '.answer-option'
+        );
+
+        optionRows.forEach(row => {
+            const optionKey = row.querySelector('.option-label')
+                ?.textContent
+                .replace('.', '')
+                .trim();
+
+            const optionEditor = row.querySelector(
+                '.question-text-editor'
+            );
+
+            if (!optionEditor || !optionKey) return;
+
+            const savedContent = question.options?.[optionKey];
+
+            setEditorContent(
+                optionEditor,
+                Array.isArray(savedContent)
+                    ? savedContent
+                    : [{
+                        type: 'text',
+                        value: savedContent || ''
+                    }]
+            );
+        });
+    }
+
+    // 3. Kembalikan kunci jawaban
+    const correctRadio = questionFormContent.querySelector(
+        `input[name="correctAnswer"][value="${answerKey?.correct_answer}"]`
+    );
+
+    if (correctRadio) {
+        correctRadio.checked = true;
+    }
+
+    // 4. Kembalikan poin soal
+    const pointsInput = questionFormContent.querySelector(
+        '.question-points'
+    );
+
+    if (pointsInput) {
+        pointsInput.value = question.points || 1;
+    }
+
+}, 150);
+});
+
+            card.appendChild(editButton);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Hapus Soal';
+            deleteButton.style.cssText = `
+                padding: 9px 15px;
+                margin-top: 10px;
+                background: #dc2626;
+                color: white;
+                border: none;
+                border-radius: 7px;
+                cursor: pointer;
+            `;
+
+            deleteButton.addEventListener('click', async () => {
+                if (!confirm(`Yakin ingin menghapus Soal ${index + 1}?`)) {
+                    return;
+                }
+
+                try {
+                    const { error: keyError } = await supabase
+                        .from('quiz_answer_keys')
+                        .delete()
+                        .eq('question_id', question.id);
+
+                    if (keyError) throw keyError;
+
+                    const { error: questionError } = await supabase
+                        .from('quiz_questions')
+                        .delete()
+                        .eq('id', question.id);
+
+                    if (questionError) throw questionError;
+
+                    await loadQuestions();
+                } catch (err) {
+                    alert('Gagal menghapus soal: ' + err.message);
+                }
+            });
+
+            card.appendChild(deleteButton);
+            questionList.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error('Gagal memuat daftar soal:', error);
+
+        questionList.innerHTML = `
+            <div class="empty-question">
+                <h3>Daftar soal gagal dimuat</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+
+    // Mengambil isi teks dan rumus dari editor
+    // Mengambil isi teks dan rumus dari editor
+function getEditorContent(editor) {
+    const content = [];
+
+    editor.childNodes.forEach(node => {
+        if (
+            node.nodeType === Node.ELEMENT_NODE &&
+            node.classList.contains('equation-wrapper')
+        ) {
+            const mathField = node.querySelector('math-field');
+
+            content.push({
+                type: 'equation',
+                value: mathField ? mathField.value : ''
+            });
+
+        } else if (node.nodeType === Node.TEXT_NODE) {
+            if (node.textContent) {
+                content.push({
+                    type: 'text',
+                    value: node.textContent.replace(/\u200B/g, '')
+                });
+            }
+
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            content.push({
+                type: 'text',
+                value: node.innerText || ''
+            });
+        }
+    });
+
+    return content;
+}
+// Mengembalikan teks dan rumus ke dalam editor
+function setEditorContent(editor, content) {
+    editor.innerHTML = '';
+
+    (content || []).forEach(item => {
+        if (item.type === 'equation') {
+            const wrapper = document.createElement('span');
+            wrapper.className = 'equation-wrapper';
+            wrapper.contentEditable = 'false';
+
+            const mathField = createMathField(item.value || '');
+            wrapper.appendChild(mathField);
+
+            editor.appendChild(wrapper);
+
+            const cursorMarker = document.createTextNode('\u200B\u00A0');
+            editor.appendChild(cursorMarker);
+
+        } else if (item.type === 'text') {
+            editor.appendChild(
+                document.createTextNode(item.value || '')
+            );
+        }
+    });
+}
+    function createMathField(initialValue = '') {
+        const mathField = document.createElement('math-field');
+
+        mathField.className = 'quiz-math-field';
+        mathField.value = initialValue;
+        mathField.mathVirtualKeyboardPolicy = 'auto';
+
+        return mathField;
+    }
+
+    // Membuat editor teks yang mendukung equation
+function createRichTextEditor(placeholder = '') {
+    const container = document.createElement('div');
+
+    const toolbar = document.createElement('div');
+    toolbar.className = 'question-toolbar';
+
+    const equationButton = document.createElement('button');
+    equationButton.type = 'button';
+    equationButton.className = 'equation-button';
+    equationButton.textContent = '∑ Equation';
+
+    toolbar.appendChild(equationButton);
+
+// Tombol tambah gambar
+const imageButton = document.createElement('button');
+imageButton.type = 'button';
+imageButton.className = 'equation-button';
+imageButton.textContent = '🖼️ Gambar';
+
+toolbar.appendChild(imageButton);
+// Input untuk memilih gambar
+const imageInput = document.createElement('input');
+imageInput.type = 'file';
+imageInput.accept = 'image/*';
+imageInput.hidden = true;
+
+toolbar.appendChild(imageInput);
+
+// Klik tombol Gambar untuk membuka file laptop
+imageButton.addEventListener('click', () => {
+    imageInput.click();
+});
+// Upload gambar ke Supabase Storage
+imageInput.addEventListener('change', async () => {
+    const file = imageInput.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar.');
+        imageInput.value = '';
+        return;
+    }
+
+    const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+    const { data, error } = await supabase.storage
+        .from('activity-images')
+        .upload(fileName, file);
+
+    if (error) {
+        console.error('Gagal upload gambar:', error);
+        alert('Gambar gagal diunggah: ' + error.message);
+        imageInput.value = '';
+        return;
+    }
+
+    const { data: urlData } = supabase.storage
+        .from('activity-images')
+        .getPublicUrl(data.path);
+
+    console.log('URL gambar:', urlData.publicUrl);
+
+// Simpan posisi kursor sebelum gambar dimasukkan
+editor.focus();
+
+const selection = window.getSelection();
+let range;
+
+if (savedRange && editor.contains(savedRange.startContainer)) {
+    range = savedRange.cloneRange();
+} else {
+    range = document.createRange();
+    range.selectNodeContents(editor);
+    range.collapse(false);
+}
+
+// Buat elemen gambar
+const image = document.createElement('img');
+image.src = urlData.publicUrl;
+image.alt = file.name;
+image.style.maxWidth = '100%';
+image.style.height = 'auto';
+image.style.display = 'block';
+image.style.margin = '10px 0';
+
+// Masukkan gambar ke editor
+range.deleteContents();
+range.insertNode(image);
+
+// Letakkan kursor setelah gambar
+const newRange = document.createRange();
+newRange.setStartAfter(image);
+newRange.collapse(true);
+
+selection.removeAllRanges();
+selection.addRange(newRange);
+
+savedRange = newRange.cloneRange();
+
+alert('Gambar berhasil ditambahkan!');
+imageInput.value = '';
+});
+
+    const editor = document.createElement('div');
+    editor.className = 'question-text-editor';
+    editor.contentEditable = 'true';
+    editor.setAttribute('data-placeholder', placeholder);
+
+    container.appendChild(toolbar);
+    container.appendChild(editor);
+
+    let savedRange = null;
+
+    function saveCursorPosition() {
+        const selection = window.getSelection();
+
+        if (
+            selection.rangeCount > 0 &&
+            editor.contains(selection.anchorNode)
+        ) {
+            savedRange = selection.getRangeAt(0).cloneRange();
+        }
+    }
+
+    editor.addEventListener('keyup', saveCursorPosition);
+    editor.addEventListener('mouseup', saveCursorPosition);
+    editor.addEventListener('input', saveCursorPosition);
+    editor.addEventListener('keydown', event => {
+    if (event.key === 'ArrowRight') {
+        const selection = window.getSelection();
+
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+
+        if (
+            range.startContainer.nodeType === Node.TEXT_NODE &&
+            range.startContainer.textContent.includes('\u200B') &&
+            range.startOffset === 0
+        ) {
+            range.setStart(range.startContainer, 1);
+            range.collapse(true);
+
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            savedRange = range.cloneRange();
+        }
+    }
+});
+    // Memudahkan kursor berpindah ke belakang kotak Equation
+editor.addEventListener('click', event => {
+    const wrapper = event.target.closest('.equation-wrapper');
+
+    if (!wrapper || !editor.contains(wrapper)) return;
+
+    const nextNode = wrapper.nextSibling;
+
+    if (
+        nextNode &&
+        nextNode.nodeType === Node.TEXT_NODE &&
+        nextNode.textContent.startsWith('\u200B')
+    ) {
+        const range = document.createRange();
+        range.setStart(nextNode, 1);
+        range.collapse(true);
+
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        savedRange = range.cloneRange();
+    }
+});
+    // Aktifkan fitur hapus equation
+    enableEquationDeletion(editor, saveCursorPosition);
+
+    equationButton.addEventListener('mousedown', event => {
+        event.preventDefault();
+    });
+
+    equationButton.addEventListener('click', () => {
+    editor.focus();
+
+    const selection = window.getSelection();
+    let range;
+
+    if (savedRange && editor.contains(savedRange.startContainer)) {
+        range = savedRange.cloneRange();
+    } else {
+        range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+    }
+
+    range.deleteContents();
+
+    const wrapper = document.createElement('span');
+    wrapper.className = 'equation-wrapper';
+    wrapper.contentEditable = 'false';
+
+    const mathField = createMathField();
+    wrapper.appendChild(mathField);
+
+    // Penanda posisi kursor setelah rumus
+    const cursorMarker = document.createTextNode('\u200B\u00A0');
+
+    range.insertNode(cursorMarker);
+    range.insertNode(wrapper);
+
+    // Arahkan kursor setelah kotak Equation
+const newRange = document.createRange();
+newRange.setStart(cursorMarker, 1);
+newRange.collapse(true);
+
+editor.focus();
+
+selection.removeAllRanges();
+selection.addRange(newRange);
+
+savedRange = newRange.cloneRange();
+});
+
+    return {
+        container,
+        editor
+    };
+}
+
+// Mengaktifkan fitur hapus equation
+function enableEquationDeletion(editor, saveCursorPosition) {
+    editor.addEventListener('keydown', event => {
+        if (event.key !== 'Backspace' && event.key !== 'Delete') {
+            return;
+        }
+
+        const selection = window.getSelection();
+
+        if (!selection.rangeCount || !selection.isCollapsed) return;
+
+        const range = selection.getRangeAt(0);
+        const node = range.startContainer;
+        const offset = range.startOffset;
+
+        let equation = null;
+        let marker = null;
+
+        if (node.nodeType === Node.TEXT_NODE) {
+            const textBefore = node.textContent.slice(0, offset);
+            const textAfter = node.textContent.slice(offset);
+
+            if (event.key === 'Backspace') {
+                if (textBefore.endsWith('\u200B')) {
+                    marker = node;
+                    equation = node.previousSibling;
+                } else if (offset === 0) {
+                    equation = node.previousSibling;
+                }
+            }
+
+            if (event.key === 'Delete') {
+                if (textAfter.startsWith('\u200B')) {
+                    marker = node;
+                    equation = node.nextSibling;
+                } else if (offset === node.textContent.length) {
+                    equation = node.nextSibling;
+                }
+            }
+        }
+
+        if (node === editor) {
+            if (event.key === 'Backspace' && offset > 0) {
+                equation = node.childNodes[offset - 1];
+            }
+
+            if (event.key === 'Delete' && offset < node.childNodes.length) {
+                equation = node.childNodes[offset];
+            }
+        }
+
+        if (
+            equation &&
+            equation.nodeType === Node.ELEMENT_NODE &&
+            equation.classList.contains('equation-wrapper')
+        ) {
+            event.preventDefault();
+
+            const parent = equation.parentNode;
+            const index = Array.from(parent.childNodes).indexOf(equation);
+
+            equation.remove();
+
+            if (marker) marker.textContent = '';
+
+            const newRange = document.createRange();
+
+            if (parent === editor) {
+                newRange.setStart(
+                    parent,
+                    Math.min(index, parent.childNodes.length)
+                );
+            } else if (parent.nodeType === Node.TEXT_NODE) {
+                newRange.setStart(parent, parent.textContent.length);
+            } else {
+                newRange.selectNodeContents(editor);
+                newRange.collapse(false);
+            }
+
+            newRange.collapse(true);
+
+            selection.removeAllRanges();
+            selection.addRange(newRange);
+
+            saveCursorPosition();
+        }
+    });
+}
+
+    const questionButtons = document.querySelectorAll('.question-type');
+    const questionFormPanel = document.getElementById('questionFormPanel');
+    const questionFormTitle = document.getElementById('questionFormTitle');
+    const questionFormContent = document.getElementById('questionFormContent');
+
+    questionButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const type = button.dataset.type;
+
+        const typeNames = {
+            multiple_choice: 'Pilihan Ganda',
+            true_false: 'Benar / Salah',
+            short_answer: 'Isian Singkat',
+            drag_drop: 'Drag and Drop'
+        };
+
+        questionFormTitle.textContent = 'Buat Soal ' + typeNames[type];
+        questionFormContent.innerHTML = '';
+
+        if (type === 'short_answer') {
+
+    // Editor pertanyaan
+    const questionField = document.createElement('div');
+    questionField.className = 'question-field';
+
+    const questionLabel = document.createElement('label');
+    questionLabel.textContent = 'Pertanyaan';
+
+    const questionEditor = createRichTextEditor(
+        'Tulis pertanyaan di sini...'
+    );
+
+    questionField.appendChild(questionLabel);
+    questionField.appendChild(questionEditor.container);
+    questionFormContent.appendChild(questionField);
+
+    // Jawaban utama
+    const answerField = document.createElement('div');
+    answerField.className = 'question-field';
+
+    const answerLabel = document.createElement('label');
+    answerLabel.textContent = 'Jawaban Benar';
+
+    const answerInput = document.createElement('input');
+    answerInput.type = 'text';
+    answerInput.placeholder = 'Masukkan jawaban benar...';
+    answerInput.style.width = '100%';
+    answerInput.style.padding = '12px';
+    answerInput.style.border = '1px solid #d1d5db';
+    answerInput.style.borderRadius = '8px';
+
+    answerField.appendChild(answerLabel);
+    answerField.appendChild(answerInput);
+    questionFormContent.appendChild(answerField);
+
+    // Jawaban alternatif
+    const acceptedField = document.createElement('div');
+    acceptedField.className = 'question-field';
+
+    const acceptedLabel = document.createElement('label');
+    acceptedLabel.textContent = 'Jawaban Alternatif';
+
+    const acceptedInput = document.createElement('textarea');
+    acceptedInput.placeholder =
+        'Masukkan jawaban alternatif, pisahkan dengan koma...';
+    acceptedInput.style.width = '100%';
+    acceptedInput.style.minHeight = '80px';
+    acceptedInput.style.padding = '12px';
+    acceptedInput.style.border = '1px solid #d1d5db';
+    acceptedInput.style.borderRadius = '8px';
+
+    acceptedField.appendChild(acceptedLabel);
+    acceptedField.appendChild(acceptedInput);
+    questionFormContent.appendChild(acceptedField);
+
+    // Pembahasan
+    const explanationField = document.createElement('div');
+    explanationField.className = 'question-field';
+
+    const explanationLabel = document.createElement('label');
+    explanationLabel.textContent = 'Pembahasan';
+
+    const explanationEditor = createRichTextEditor(
+        'Tuliskan pembahasan di sini...'
+    );
+
+    explanationField.appendChild(explanationLabel);
+    explanationField.appendChild(explanationEditor.container);
+    questionFormContent.appendChild(explanationField);
+
+    // Poin
+    const pointsLabel = document.createElement('label');
+    pointsLabel.textContent = 'Poin Soal';
+
+    const pointsInput = document.createElement('input');
+    pointsInput.type = 'number';
+    pointsInput.className = 'question-points';
+    pointsInput.min = '1';
+    pointsInput.value = '1';
+
+    questionFormContent.appendChild(pointsLabel);
+    questionFormContent.appendChild(pointsInput);
+
+    // Tombol simpan
+    const saveButton = document.createElement('button');
+    saveButton.type = 'button';
+    saveButton.className = 'question-save-button';
+    saveButton.textContent = 'Simpan Soal';
+
+    saveButton.addEventListener('click', async () => {
+
+        const questionContent = getEditorContent(questionEditor.editor);
+        const explanation = getEditorContent(explanationEditor.editor);
+
+        const correctAnswer = answerInput.value.trim();
+
+        const acceptedAnswers = acceptedInput.value
+            .split(',')
+            .map(item => item.trim())
+            .filter(item => item !== '');
+
+        const points = Number(pointsInput.value);
+
+        if (!questionContent.some(item => item.value.trim())) {
+            alert('Pertanyaan belum diisi.');
+            return;
+        }
+
+        if (!correctAnswer) {
+            alert('Jawaban benar belum diisi.');
+            return;
+        }
+
+        if (!Number.isInteger(points) || points < 1) {
+            alert('Poin soal minimal 1.');
+            return;
+        }
+
+        saveButton.disabled = true;
+        saveButton.textContent = 'Menyimpan...';
+
+        try {
+            const questionText = questionContent
+                .map(item => item.value)
+                .join(' ')
+                .trim();
+
+            const explanationText = explanation
+                .map(item => item.value)
+                .join(' ')
+                .trim();
+
+            if (editingQuestionId) {
+
+                const { error: questionError } = await supabase
+                    .from('quiz_questions')
+                    .update({
+                        question_type: 'short_answer',
+                        question_text: questionText,
+                        content: questionContent,
+                        options: {},
+                        points: points
+                    })
+                    .eq('id', editingQuestionId);
+
+                if (questionError) throw questionError;
+
+                const { error: keyError } = await supabase
+                    .from('quiz_answer_keys')
+                    .update({
+                        correct_answer: correctAnswer,
+                        accepted_answers: acceptedAnswers,
+                        explanation: explanationText
+                    })
+                    .eq('question_id', editingQuestionId);
+
+                if (keyError) throw keyError;
+
+                editingQuestionId = null;
+
+            } else {
+
+                const { data: lastQuestion, error: orderError } = await supabase
+                    .from('quiz_questions')
+                    .select('sort_order')
+                    .eq('quiz_id', quizId)
+                    .order('sort_order', { ascending: false })
+                    .limit(1);
+
+                if (orderError) throw orderError;
+
+                const nextOrder = lastQuestion.length
+                    ? lastQuestion[0].sort_order + 1
+                    : 1;
+
+                const { data: savedQuestion, error: questionError } =
+                    await supabase
+                        .from('quiz_questions')
+                        .insert({
+                            quiz_id: quizId,
+                            question_type: 'short_answer',
+                            question_text: questionText,
+                            content: questionContent,
+                            options: {},
+                            points: points,
+                            sort_order: nextOrder
+                        })
+                        .select('id')
+                        .single();
+
+                if (questionError) throw questionError;
+
+                const { error: keyError } = await supabase
+                    .from('quiz_answer_keys')
+                    .insert({
+                        question_id: savedQuestion.id,
+                        correct_answer: correctAnswer,
+                        accepted_answers: acceptedAnswers,
+                        explanation: explanationText
+                    });
+
+                if (keyError) throw keyError;
+            }
+
+            alert('Soal Isian Singkat berhasil disimpan!');
+            await loadQuestions();
+            questionFormPanel.style.display = 'none';
+
+        } catch (error) {
+            console.error('Gagal menyimpan soal:', error);
+            alert('Soal gagal disimpan: ' + error.message);
+
+        } finally {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Simpan Soal';
+        }
+    });
+
+    questionFormContent.appendChild(saveButton);
+
+} else if (type === 'true_false') {
+
+    questionFormTitle.textContent = 'Buat Soal Benar / Salah';
+
+    // Editor pertanyaan
+    const questionField = document.createElement('div');
+    questionField.className = 'question-field';
+
+    const questionLabel = document.createElement('label');
+    questionLabel.textContent = 'Pernyataan';
+
+    const questionEditor = createRichTextEditor(
+        'Tulis pernyataan di sini...'
+    );
+
+    questionField.appendChild(questionLabel);
+    questionField.appendChild(questionEditor.container);
+    questionFormContent.appendChild(questionField);
+
+    // Pilihan benar atau salah
+    const answerField = document.createElement('div');
+    answerField.className = 'question-field';
+
+    const answerLabel = document.createElement('label');
+    answerLabel.textContent = 'Kunci Jawaban';
+
+    answerField.appendChild(answerLabel);
+
+    ['true', 'false'].forEach(value => {
+        const label = document.createElement('label');
+        label.style.display = 'inline-flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.marginRight = '25px';
+
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'correctAnswer';
+        radio.value = value;
+
+        label.appendChild(radio);
+        label.appendChild(
+            document.createTextNode(
+                value === 'true' ? 'Benar' : 'Salah'
+            )
+        );
+
+        answerField.appendChild(label);
+    });
+
+    questionFormContent.appendChild(answerField);
+
+    // Editor pembahasan
+    const explanationField = document.createElement('div');
+    explanationField.className = 'question-field';
+
+    const explanationLabel = document.createElement('label');
+    explanationLabel.textContent = 'Pembahasan';
+
+    const explanationEditor = createRichTextEditor(
+        'Tuliskan pembahasan di sini...'
+    );
+
+    explanationField.appendChild(explanationLabel);
+    explanationField.appendChild(explanationEditor.container);
+    questionFormContent.appendChild(explanationField);
+
+    // Poin
+    const pointsLabel = document.createElement('label');
+    pointsLabel.textContent = 'Poin Soal';
+
+    const pointsInput = document.createElement('input');
+    pointsInput.type = 'number';
+    pointsInput.className = 'question-points';
+    pointsInput.min = '1';
+    pointsInput.value = '1';
+
+    questionFormContent.appendChild(pointsLabel);
+    questionFormContent.appendChild(pointsInput);
+
+    // Tombol simpan
+    const saveButton = document.createElement('button');
+    saveButton.type = 'button';
+    saveButton.className = 'question-save-button';
+    saveButton.textContent = 'Simpan Soal';
+
+    saveButton.addEventListener('click', async () => {
+        const questionContent = getEditorContent(questionEditor.editor);
+        const explanation = getEditorContent(explanationEditor.editor);
+
+        const correctAnswer = questionFormContent.querySelector(
+            'input[name="correctAnswer"]:checked'
+        );
+
+        const points = Number(pointsInput.value);
+
+        if (!questionContent.some(item => item.value.trim())) {
+            alert('Pernyataan belum diisi.');
+            return;
+        }
+
+        if (!correctAnswer) {
+            alert('Pilih Benar atau Salah sebagai kunci jawaban.');
+            return;
+        }
+
+        if (!Number.isInteger(points) || points < 1) {
+            alert('Poin soal minimal 1.');
+            return;
+        }
+
+        saveButton.disabled = true;
+        saveButton.textContent = 'Menyimpan...';
+
+        try {
+            const questionText = questionContent
+                .map(item => item.value)
+                .join(' ')
+                .trim();
+
+            const explanationText = explanation
+                .map(item => item.value)
+                .join(' ')
+                .trim();
+
+            let savedQuestionId = editingQuestionId;
+
+            if (editingQuestionId) {
+                const { error } = await supabase
+                    .from('quiz_questions')
+                    .update({
+                        question_type: 'true_false',
+                        question_text: questionText,
+                        content: questionContent,
+                        options: {
+                            true: 'Benar',
+                            false: 'Salah'
+                        },
+                        points: points
+                    })
+                    .eq('id', editingQuestionId);
+
+                if (error) throw error;
+
+                const { error: keyError } = await supabase
+                    .from('quiz_answer_keys')
+                    .update({
+                        correct_answer: correctAnswer.value,
+                        explanation: explanationText
+                    })
+                    .eq('question_id', editingQuestionId);
+
+                if (keyError) throw keyError;
+
+                editingQuestionId = null;
+
+            } else {
+                const { data: lastQuestion, error: orderError } = await supabase
+                    .from('quiz_questions')
+                    .select('sort_order')
+                    .eq('quiz_id', quizId)
+                    .order('sort_order', { ascending: false })
+                    .limit(1);
+
+                if (orderError) throw orderError;
+
+                const nextOrder = lastQuestion.length
+                    ? lastQuestion[0].sort_order + 1
+                    : 1;
+
+                const { data: savedQuestion, error } = await supabase
+                    .from('quiz_questions')
+                    .insert({
+                        quiz_id: quizId,
+                        question_type: 'true_false',
+                        question_text: questionText,
+                        content: questionContent,
+                        options: {
+                            true: 'Benar',
+                            false: 'Salah'
+                        },
+                        points: points,
+                        sort_order: nextOrder
+                    })
+                    .select('id')
+                    .single();
+
+                if (error) throw error;
+
+                savedQuestionId = savedQuestion.id;
+
+                const { error: keyError } = await supabase
+                    .from('quiz_answer_keys')
+                    .insert({
+                        question_id: savedQuestionId,
+                        correct_answer: correctAnswer.value,
+                        explanation: explanationText
+                    });
+
+                if (keyError) throw keyError;
+            }
+
+            alert('Soal Benar / Salah berhasil disimpan!');
+            await loadQuestions();
+
+            questionFormPanel.style.display = 'none';
+
+        } catch (error) {
+            console.error('Gagal menyimpan soal:', error);
+            alert('Soal gagal disimpan: ' + error.message);
+
+        } finally {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Simpan Soal';
+        }
+    });
+
+    questionFormContent.appendChild(saveButton);
+
+
+} else if (type === 'drag_drop') {
+
+    // Editor pertanyaan
+    const questionField = document.createElement('div');
+    questionField.className = 'question-field';
+
+    const questionLabel = document.createElement('label');
+    questionLabel.textContent = 'Pertanyaan / Instruksi';
+
+    const questionEditor = createRichTextEditor(
+        'Contoh: Kelompokkan setiap bentuk aljabar ke dalam kategori yang tepat...'
+    );
+
+    questionField.appendChild(questionLabel);
+    questionField.appendChild(questionEditor.container);
+    questionFormContent.appendChild(questionField);
+
+    // Bagian kelompok tujuan
+    const targetsField = document.createElement('div');
+    targetsField.className = 'question-field';
+
+    const targetsLabel = document.createElement('label');
+    targetsLabel.textContent = 'Kelompok / Kolom Tujuan';
+
+    const targetsContainer = document.createElement('div');
+    targetsContainer.style.display = 'grid';
+    targetsContainer.style.gridTemplateColumns =
+        'repeat(auto-fit, minmax(180px, 1fr))';
+    targetsContainer.style.gap = '10px';
+
+    const targets = [];
+
+    function renderTargets() {
+        targetsContainer.innerHTML = '';
+
+        targets.forEach((target, index) => {
+            const targetRow = document.createElement('div');
+            targetRow.style.display = 'flex';
+            targetRow.style.gap = '6px';
+
+            const targetEditor = createRichTextEditor(
+    `Nama kelompok ${index + 1}`
+);
+
+// Muat isi editor yang sudah ada
+setEditorContent(
+    targetEditor.editor,
+    target.content || [
+        {
+            type: 'text',
+            value: target.label || ''
+        }
+    ]
+);
+
+// Simpan perubahan teks dan rumus
+targetEditor.editor.addEventListener('input', () => {
+    target.content = getEditorContent(targetEditor.editor);
+
+    // Simpan versi teks untuk keperluan dropdown
+    target.label = target.content
+        .map(item => item.value || '')
+        .join('')
+        .trim();
+
+    renderCards();
+});
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.textContent = '×';
+            removeButton.style.padding = '8px 12px';
+            removeButton.style.border = 'none';
+            removeButton.style.borderRadius = '8px';
+            removeButton.style.background = '#fee2e2';
+            removeButton.style.color = '#b91c1c';
+            removeButton.style.cursor = 'pointer';
+
+            removeButton.addEventListener('click', () => {
+                if (targets.length <= 2) {
+                    alert('Minimal harus ada dua kelompok.');
+                    return;
+                }
+
+                targets.splice(index, 1);
+
+                cards.forEach(card => {
+                    if (!targets.some(item => item.id === card.targetId)) {
+                        card.targetId = targets[0].id;
+                    }
+                });
+
+                renderTargets();
+                renderCards();
+            });
+
+            targetRow.appendChild(targetEditor.container);
+            targetRow.appendChild(removeButton);
+            targetsContainer.appendChild(targetRow);
+        });
+    }
+
+    const addTargetButton = document.createElement('button');
+    addTargetButton.type = 'button';
+    addTargetButton.textContent = '+ Tambah Kelompok';
+    addTargetButton.className = 'equation-button';
+    addTargetButton.style.marginTop = '10px';
+
+    addTargetButton.addEventListener('click', () => {
+        targets.push({
+    id: crypto.randomUUID(),
+    label: '',
+    content: []
+});
+
+        renderTargets();
+        renderCards();
+    });
+
+    targetsField.appendChild(targetsLabel);
+    targetsField.appendChild(targetsContainer);
+    targetsField.appendChild(addTargetButton);
+    questionFormContent.appendChild(targetsField);
+
+    // Bagian kartu yang akan diseret
+    const cardsField = document.createElement('div');
+    cardsField.className = 'question-field';
+
+    const cardsLabel = document.createElement('label');
+    cardsLabel.textContent = 'Kartu yang Akan Diseret';
+
+    const cardsContainer = document.createElement('div');
+    cardsContainer.style.display = 'flex';
+    cardsContainer.style.flexDirection = 'column';
+    cardsContainer.style.gap = '12px';
+
+    const cards = [];
+
+    function renderCards() {
+        cardsContainer.innerHTML = '';
+
+        cards.forEach((card, index) => {
+            const cardRow = document.createElement('div');
+            cardRow.style.display = 'grid';
+            cardRow.style.gridTemplateColumns = '1fr 1fr auto';
+            cardRow.style.gap = '8px';
+            cardRow.style.alignItems = 'center';
+            cardRow.style.padding = '12px';
+            cardRow.style.background = '#f8fafc';
+            cardRow.style.border = '1px solid #e2e8f0';
+            cardRow.style.borderRadius = '10px';
+
+            const cardEditor = createRichTextEditor(
+    `Isi kartu ${index + 1}`
+);
+
+// Muat isi kartu yang sudah ada
+setEditorContent(
+    cardEditor.editor,
+    card.content || [
+        {
+            type: 'text',
+            value: card.text || ''
+        }
+    ]
+);
+
+// Simpan perubahan teks dan rumus
+cardEditor.editor.addEventListener('input', () => {
+    card.content = getEditorContent(cardEditor.editor);
+
+    // Simpan versi teks untuk kebutuhan validasi
+    card.text = card.content
+        .map(item => item.value || '')
+        .join('')
+        .trim();
+});
+
+            const targetSelect = document.createElement('select');
+            targetSelect.style.width = '100%';
+            targetSelect.style.padding = '10px';
+            targetSelect.style.border = '1px solid #d1d5db';
+            targetSelect.style.borderRadius = '8px';
+
+            targets.forEach(target => {
+                const option = document.createElement('option');
+                option.value = target.id;
+                option.textContent = target.label || 'Kelompok belum diberi nama';
+                targetSelect.appendChild(option);
+            });
+
+            targetSelect.value = card.targetId;
+
+            targetSelect.addEventListener('change', () => {
+                card.targetId = targetSelect.value;
+            });
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.textContent = 'Hapus';
+            removeButton.style.padding = '9px';
+            removeButton.style.border = 'none';
+            removeButton.style.borderRadius = '8px';
+            removeButton.style.background = '#fee2e2';
+            removeButton.style.color = '#b91c1c';
+            removeButton.style.cursor = 'pointer';
+
+            removeButton.addEventListener('click', () => {
+                cards.splice(index, 1);
+                renderCards();
+            });
+
+            cardRow.appendChild(cardEditor.container);
+            cardRow.appendChild(targetSelect);
+            cardRow.appendChild(removeButton);
+
+            cardsContainer.appendChild(cardRow);
+        });
+    }
+
+    const addCardButton = document.createElement('button');
+    addCardButton.type = 'button';
+    addCardButton.textContent = '+ Tambah Kartu';
+    addCardButton.className = 'equation-button';
+    addCardButton.style.marginTop = '10px';
+
+    addCardButton.addEventListener('click', () => {
+        cards.push({
+    text: '',
+    content: [],
+    targetId: targets[0].id
+});
+
+        renderCards();
+    });
+
+    cardsField.appendChild(cardsLabel);
+    cardsField.appendChild(cardsContainer);
+    cardsField.appendChild(addCardButton);
+    questionFormContent.appendChild(cardsField);
+
+    // Poin soal
+    const pointsLabel = document.createElement('label');
+    pointsLabel.textContent = 'Poin Soal';
+
+    const pointsInput = document.createElement('input');
+    pointsInput.type = 'number';
+    pointsInput.className = 'question-points';
+    pointsInput.min = '1';
+    pointsInput.value = '1';
+
+    questionFormContent.appendChild(pointsLabel);
+    questionFormContent.appendChild(pointsInput);
+
+    // Data awal
+    // Data awal atau data soal yang sedang diedit
+if (pendingDragDropEdit) {
+    const savedOptions = pendingDragDropEdit.options || {};
+
+    // Muat kelompok lama
+    (savedOptions.targets || []).forEach(target => {
+        targets.push({
+            id: target.id,
+            label: target.label || '',
+            content: target.content || [
+                {
+                    type: 'text',
+                    value: target.label || ''
+                }
+            ]
+        });
+    });
+
+    // Muat kartu lama
+    (savedOptions.cards || []).forEach(card => {
+        cards.push({
+            text: card.text || '',
+            content: card.content || [
+                {
+                    type: 'text',
+                    value: card.text || ''
+                }
+            ],
+            targetId: card.targetId
+        });
+    });
+
+    // Muat poin soal
+    pointsInput.value = pendingDragDropEdit.points || 1;
+
+    pendingDragDropEdit = null;
+
+} else {
+    // Data default untuk soal baru
+    targets.push(
+        {
+            id: crypto.randomUUID(),
+            label: 'Kelompok 1',
+            content: [
+                { type: 'text', value: 'Kelompok 1' }
+            ]
+        },
+        {
+            id: crypto.randomUUID(),
+            label: 'Kelompok 2',
+            content: [
+                { type: 'text', value: 'Kelompok 2' }
+            ]
+        }
+    );
+
+    cards.push(
+        {
+            text: '',
+            content: [],
+            targetId: targets[0].id
+        },
+        {
+            text: '',
+            content: [],
+            targetId: targets[1].id
+        }
+    );
+}
+
+    renderTargets();
+    renderCards();
+
+    // Tombol simpan
+    const saveButton = document.createElement('button');
+    saveButton.type = 'button';
+    saveButton.className = 'question-save-button';
+    saveButton.textContent = 'Simpan Soal';
+
+    saveButton.addEventListener('click', async () => {
+
+        const questionContent = getEditorContent(questionEditor.editor);
+        const points = Number(pointsInput.value);
+
+        const questionText = questionContent
+            .map(item => item.value)
+            .join(' ')
+            .trim();
+
+        if (!questionText) {
+            alert('Pertanyaan belum diisi.');
+            return;
+        }
+
+        function hasEditorContent(content, fallbackText = '') {
+    return (content || []).some(item =>
+        String(item.value || '').trim() !== ''
+    ) || String(fallbackText || '').trim() !== '';
+}
+
+if (targets.some(target =>
+    !hasEditorContent(target.content, target.label)
+)) {
+    alert('Semua kelompok harus diberi nama.');
+    return;
+}
+
+if (
+    cards.length < 2 ||
+    cards.some(card =>
+        !hasEditorContent(card.content, card.text)
+    )
+) {
+    alert('Isi minimal dua kartu jawaban.');
+    return;
+}
+
+        if (!Number.isInteger(points) || points < 1) {
+            alert('Poin soal minimal 1.');
+            return;
+        }
+
+     const dragDropData = {
+    targets: targets.map(target => ({
+        id: target.id,
+        label: target.label.trim(),
+        content: target.content || [
+            {
+                type: 'text',
+                value: target.label.trim()
+            }
+        ]
+    })),
+
+    cards: cards.map(card => ({
+        text: card.text.trim(),
+        content: card.content || [
+            {
+                type: 'text',
+                value: card.text.trim()
+            }
+        ]
+    }))
+};
+
+// Pemetaan jawaban benar disimpan terpisah
+const dragDropAnswerKey = cards.map(card => ({
+    text: card.text.trim(),
+    content: card.content || [
+        {
+            type: 'text',
+            value: card.text.trim()
+        }
+    ],
+    targetId: card.targetId
+}));
+
+        saveButton.disabled = true;
+        saveButton.textContent = 'Menyimpan...';
+
+        try {
+            if (editingQuestionId) {
+
+                const { error: questionError } = await supabase
+                    .from('quiz_questions')
+                    .update({
+                        question_type: 'drag_drop',
+                        question_text: questionText,
+                        content: questionContent,
+                        options: dragDropData,
+                        points: points
+                    })
+                    .eq('id', editingQuestionId);
+
+                if (questionError) throw questionError;
+
+                const { error: keyError } = await supabase
+                .from('quiz_answer_keys')
+                .update({
+                    correct_answer: JSON.stringify(dragDropAnswerKey),
+                    accepted_answers: [],
+                    explanation: ''
+                })
+                .eq('question_id', editingQuestionId);
+
+                if (keyError) throw keyError;
+
+                editingQuestionId = null;
+
+            } else {
+
+                const { data: lastQuestion, error: orderError } = await supabase
+                    .from('quiz_questions')
+                    .select('sort_order')
+                    .eq('quiz_id', quizId)
+                    .order('sort_order', { ascending: false })
+                    .limit(1);
+
+                if (orderError) throw orderError;
+
+                const nextOrder = lastQuestion.length
+                    ? lastQuestion[0].sort_order + 1
+                    : 1;
+
+                const { data: savedQuestion, error: questionError } =
+                    await supabase
+                        .from('quiz_questions')
+                        .insert({
+                            quiz_id: quizId,
+                            question_type: 'drag_drop',
+                            question_text: questionText,
+                            content: questionContent,
+                            options: dragDropData,
+                            points: points,
+                            sort_order: nextOrder
+                        })
+                        .select('id')
+                        .single();
+
+                if (questionError) throw questionError;
+
+                const { error: keyError } = await supabase
+                    .from('quiz_answer_keys')
+                    .insert({
+                        question_id: savedQuestion.id,
+                        correct_answer: JSON.stringify(dragDropAnswerKey),
+                        accepted_answers: [],
+                        explanation: ''
+                    });
+
+                if (keyError) throw keyError;
+            }
+
+            alert('Soal Drag and Drop berhasil disimpan!');
+            await loadQuestions();
+            questionFormPanel.style.display = 'none';
+
+        } catch (error) {
+            console.error('Gagal menyimpan soal Drag and Drop:', error);
+            alert('Soal gagal disimpan: ' + error.message);
+
+        } finally {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Simpan Soal';
+        }
+    });
+
+    questionFormContent.appendChild(saveButton);
+
+
+} else if (type !== 'multiple_choice') {
+
+    questionFormContent.textContent =
+        'Form jenis soal ini akan kita buat pada tahap berikutnya.';
+
+} else {
+            // Editor pertanyaan
+            const questionField = document.createElement('div');
+            questionField.className = 'question-field';
+
+            const questionLabel = document.createElement('label');
+            questionLabel.textContent = 'Pertanyaan';
+
+            const questionEditor = createRichTextEditor(
+                'Ketik pertanyaan di sini...'
+            );
+
+            questionField.appendChild(questionLabel);
+            questionField.appendChild(questionEditor.container);
+
+            questionFormContent.appendChild(questionField);
+
+            // Pilihan jawaban
+            const optionsField = document.createElement('div');
+            optionsField.className = 'question-field';
+
+            const optionsLabel = document.createElement('label');
+            optionsLabel.textContent = 'Pilihan Jawaban';
+
+            optionsField.appendChild(optionsLabel);
+
+            ['A', 'B', 'C', 'D'].forEach(option => {
+                const optionRow = document.createElement('div');
+                optionRow.className = 'answer-option';
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'correctAnswer';
+                radio.value = option;
+                radio.setAttribute('aria-label', 'Jawaban benar ' + option);
+
+                const optionLabel = document.createElement('span');
+                optionLabel.className = 'option-label';
+                optionLabel.textContent = option + '.';
+
+                const optionEditor = createRichTextEditor(
+                    'Tulis pilihan ' + option + '...'
+                );
+
+                optionRow.appendChild(radio);
+                optionRow.appendChild(optionLabel);
+                optionRow.appendChild(optionEditor.container);
+
+                optionsField.appendChild(optionRow);
+            });
+
+            questionFormContent.appendChild(optionsField);
+
+            // Pembahasan
+            const explanationField = document.createElement('div');
+            explanationField.className = 'question-field';
+
+            const explanationLabel = document.createElement('label');
+            explanationLabel.textContent = 'Pembahasan';
+
+            const explanationEditor = createRichTextEditor(
+                'Tuliskan pembahasan jawaban di sini...'
+            );
+
+            explanationField.appendChild(explanationLabel);
+            explanationField.appendChild(explanationEditor.container);
+
+            questionFormContent.appendChild(explanationField);
+
+            // Poin soal
+            const pointsField = document.createElement('div');
+            pointsField.className = 'question-field';
+
+            const pointsLabel = document.createElement('label');
+            pointsLabel.textContent = 'Poin Soal';
+
+            const pointsInput = document.createElement('input');
+            pointsInput.type = 'number';
+            pointsInput.className = 'question-points';
+            pointsInput.min = '1';
+            pointsInput.step = '1';
+            pointsInput.value = '1';
+
+            pointsField.appendChild(pointsLabel);
+            pointsField.appendChild(pointsInput);
+
+            questionFormContent.appendChild(pointsField);
+
+           // Tombol simpan soal
+const saveButton = document.createElement('button');
+saveButton.type = 'button';
+saveButton.className = 'question-save-button';
+saveButton.textContent = 'Simpan Soal';
+
+saveButton.addEventListener('click', async () => {
+    const questionContent = getEditorContent(questionEditor.editor);
+
+    const options = {};
+    optionsField.querySelectorAll('.answer-option').forEach(row => {
+        const option = row.querySelector('.option-label')
+            .textContent.replace('.', '');
+
+        const editor = row.querySelector('.question-text-editor');
+        options[option] = getEditorContent(editor);
+    });
+
+    const correctAnswer = questionFormContent.querySelector(
+        'input[name="correctAnswer"]:checked'
+    );
+
+    const explanation = getEditorContent(explanationEditor.editor);
+    const points = Number(pointsInput.value);
+
+    // Validasi pertanyaan
+    if (questionContent.length === 0) {
+        alert('Pertanyaan belum diisi.');
+        return;
+    }
+
+    // Validasi pilihan jawaban
+    if (Object.values(options).some(option =>
+        option.length === 0 ||
+        option.every(item => !item.value.trim())
+    )) {
+        alert('Semua pilihan jawaban harus diisi.');
+        return;
+    }
+
+    if (!correctAnswer) {
+        alert('Pilih jawaban yang benar terlebih dahulu.');
+        return;
+    }
+
+    if (!Number.isInteger(points) || points < 1) {
+        alert('Poin soal minimal 1.');
+        return;
+    }
+
+    if (!quizId) {
+        alert('ID kuis tidak ditemukan.');
+        return;
+    }
+
+    saveButton.disabled = true;
+    saveButton.textContent = 'Menyimpan...';
+
+    try {
+    // Jika sedang mengedit soal lama
+    if (editingQuestionId) {
+
+        const questionText = questionContent
+            .map(item => item.value)
+            .join(' ')
+            .trim();
+
+        const explanationText = explanation
+            .map(item => item.value)
+            .join(' ')
+            .trim();
+
+        // Memperbarui data soal
+        const { error: questionUpdateError } = await supabase
+            .from('quiz_questions')
+            .update({
+                question_text: questionText,
+                content: questionContent,
+                options: options,
+                points: points
+            })
+            .eq('id', editingQuestionId);
+
+        if (questionUpdateError) throw questionUpdateError;
+
+        // Memperbarui kunci jawaban dan pembahasan
+        const { error: answerUpdateError } = await supabase
+            .from('quiz_answer_keys')
+            .update({
+                correct_answer: correctAnswer.value,
+                explanation: explanationText
+            })
+            .eq('question_id', editingQuestionId);
+
+        if (answerUpdateError) throw answerUpdateError;
+
+        editingQuestionId = null;
+
+        alert('Perubahan soal berhasil disimpan!');
+
+        await loadQuestions();
+
+        return;
+    }
+
+    // Menentukan urutan soal
+    const { data: lastQuestion, error: orderError } = await supabase
+            .from('quiz_questions')
+            .select('sort_order')
+            .eq('quiz_id', quizId)
+            .order('sort_order', { ascending: false })
+            .limit(1);
+
+        if (orderError) throw orderError;
+
+        const nextOrder = lastQuestion.length > 0
+            ? lastQuestion[0].sort_order + 1
+            : 1;
+
+        // Mengubah isi editor menjadi teks biasa
+        const questionText = questionContent
+            .map(item => item.value)
+            .join(' ')
+            .trim();
+
+        const explanationText = explanation
+            .map(item => item.value)
+            .join(' ')
+            .trim();
+
+        // Menyimpan soal
+        const { data: savedQuestion, error: questionError } = await supabase
+            .from('quiz_questions')
+            .insert({
+                quiz_id: quizId,
+                question_type: 'multiple_choice',
+                question_text: questionText,
+                content: questionContent,
+                options: options,
+                points: points,
+                sort_order: nextOrder
+            })
+            .select('id')
+            .single();
+
+        if (questionError) throw questionError;
+
+        // Menyimpan kunci jawaban dan pembahasan
+        const { error: answerKeyError } = await supabase
+            .from('quiz_answer_keys')
+            .insert({
+                question_id: savedQuestion.id,
+                correct_answer: correctAnswer.value,
+                explanation: explanationText
+            });
+
+        if (answerKeyError) throw answerKeyError;
+
+        alert('Soal berhasil disimpan!');
+
+        console.log('Soal tersimpan:', savedQuestion.id);
+
+        await loadQuestions();
+
+    } catch (error) {
+        console.error('Gagal menyimpan soal:', error);
+        alert('Soal gagal disimpan: ' + error.message);
+
+    } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = 'Simpan Soal';
+    }
+});
+
+questionFormContent.appendChild(saveButton);
+        }
+
+        questionFormPanel.style.display = 'block';
+
+        questionFormPanel.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+});
+    });
+});
+// Membuat kuis baru di Supabase
+// Membuat kuis baru di Supabase
+async function createNewQuiz() {
+    const title = document.getElementById('newQuizTitle').value.trim();
+    const description = document.getElementById('newQuizDescription').value.trim();
+    const chapterId = document.getElementById('newQuizChapter').value;
+    const quizType = document.getElementById('newQuizType').value;
+
+    if (!title) {
+        alert('Judul kuis wajib diisi.');
+        return;
+    }
+    if (!chapterId) {
+    alert('Silakan pilih BAB terlebih dahulu.');
+    return;
+    }
+
+    const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError || !userData.user) {
+        alert('Sesi login tidak ditemukan. Silakan login kembali.');
+        return;
+    }
+
+    const { data, error } = await supabase
+        .from('quizzes')
+        .insert({
+            title: title,
+            description: description,
+            material_id: null,
+            chapter_id: chapterId,
+            quiz_type: quizType,
+            status: 'draft',
+            created_by: userData.user.id
+        })
+        .select('id')
+        .single();
+
+    if (error) {
+        console.error('Gagal membuat kuis:', error);
+        alert('Kuis gagal dibuat: ' + error.message);
+        return;
+    }
+
+    quizId = data.id;
+
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set('id', quizId);
+    window.history.replaceState({}, '', newUrl);
+
+    document.getElementById('newQuizForm').style.display = 'none';
+    document.getElementById('quizInfoCard').style.display = 'block';
+
+    document.getElementById('quizTitle').textContent = title;
+    document.getElementById('quizDescription').textContent =
+        description || 'Tidak ada deskripsi kuis.';
+
+    await loadQuestions();
+
+    alert('Kuis berhasil dibuat! Sekarang kamu bisa menambahkan soal.');
+}
+// Memulai editor setelah menentukan mode kuis
+async function initializeQuizEditor() {
+    const mode = await selectQuiz();
+
+    // Jika sedang membuat kuis baru
+    if (mode === 'new') {
+        await loadChaptersForQuiz();
+        document.getElementById('questionList').innerHTML = `
+            <div class="empty-question">
+                <h3>Kuis baru belum dibuat</h3>
+                <p>Lengkapi informasi kuis terlebih dahulu,
+                lalu klik tombol Buat dan Lanjutkan.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    // Jika kuis gagal dimuat
+    if (mode !== 'edit') {
+        document.getElementById('quizTitle').textContent =
+            'Kuis belum dipilih';
+
+        document.getElementById('questionList').innerHTML = `
+            <div class="empty-question">
+                <h3>Daftar soal belum dapat ditampilkan</h3>
+                <p>Pilih kuis terlebih dahulu untuk melihat soal.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    // Jika sedang mengedit kuis lama
+    await loadQuizInfo();
+    await loadQuestions();
+}
+document.getElementById('createQuizButton')
+    .addEventListener('click', createNewQuiz);
+initializeQuizEditor();
+</script>
+
+
+</body>
+</html>

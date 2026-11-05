@@ -1,0 +1,513 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aktivitas Belajar | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        body {
+            background: #f8fafc;
+        }
+
+        .activity-page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 35px 28px 60px;
+        }
+
+        .activity-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #0f766e;
+            font-weight: 700;
+        }
+
+        .activity-label {
+            color: #0f766e;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .activity-title {
+            margin: 10px 0;
+            font-size: 32px;
+            color: #1e293b;
+        }
+
+        .activity-description {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .activity-content {
+            margin-top: 30px;
+        }
+
+        .activity-loading,
+        .activity-error {
+            padding: 35px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .student-block {
+            padding: 24px;
+            margin-bottom: 20px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.025);
+        }
+
+        .student-text-title {
+            margin: 0 0 16px;
+            color: #1e293b;
+            font-size: 21px;
+        }
+
+        .student-text-content {
+            color: #334155;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+
+        .student-text-content h1,
+        .student-text-content h2,
+        .student-text-content h3 {
+            color: #1e293b;
+            line-height: 1.4;
+        }
+
+        .student-image {
+            display: block;
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            margin: 15px auto;
+            border-radius: 10px;
+        }
+
+        .image-caption {
+            color: #64748b;
+            text-align: center;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .math-display {
+            padding: 24px;
+            margin-top: 12px;
+            background: #f0fdfa;
+            border: 1px solid #ccfbf1;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 24px;
+            overflow-x: auto;
+        }
+
+        /* BLOK AKTIVITAS MURID */
+.student-activity-block {
+    padding: 24px;
+    margin-bottom: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.025);
+}
+
+/* PILIHAN GANDA */
+.student-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.student-option {
+    padding: 16px 18px;
+    border: 1.5px solid #d8e9b9;
+    border-radius: 12px;
+    background: #f5f9ed;
+    color: #365314;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.student-option:hover:not(:disabled) {
+    background: #ecfccb;
+    border-color: #84cc16;
+    transform: translateY(-2px);
+}
+
+.student-option.selected {
+    background: #84cc16;
+    border: 2px solid #65a30d;
+    color: #243b0b;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(132, 204, 22, 0.2);
+}
+
+.student-option:disabled {
+    cursor: default;
+    opacity: 1;
+}
+
+/* FEEDBACK JAWABAN */
+.answer-feedback {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.6;
+    display: none;
+}
+
+/* JAWABAN BENAR */
+.answer-feedback.correct {
+    display: block;
+    color: #365314;
+    background: #ecfccb;
+    border: 1px solid #a3d65c;
+}
+
+.answer-feedback.correct::before {
+    content: "✓ ";
+    font-size: 17px;
+    font-weight: 900;
+}
+
+/* JAWABAN SALAH */
+.answer-feedback.incorrect {
+    display: block;
+    color: #b91c1c;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.answer-feedback.incorrect::before {
+    content: "↻ ";
+    font-size: 17px;
+    font-weight: 900;
+}
+
+@media (max-width: 600px) {
+    .student-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+        .activity-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .activity-page {
+                padding: 22px 15px 40px;
+            }
+
+            .activity-title {
+                font-size: 25px;
+            }
+
+            .student-block {
+                padding: 18px;
+            }
+
+            .activity-top {
+                align-items: flex-start;
+            }
+        }
+        /* DRAG AND DROP */
+.drag-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    min-height: 90px;
+    background: #f5f9ed;
+    border: 1px dashed #cbdcae;
+    border-radius: 16px;
+}
+
+.drag-card {
+    padding: 14px 22px;
+    border: 1.5px solid #d8e9b9;
+    border-radius: 12px;
+    background: white;
+    color: #365314;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: grab;
+    box-shadow: 0 3px 8px rgba(54, 83, 20, 0.06);
+    transition: 0.2s ease;
+}
+
+.drag-card:hover {
+    background: #f0f8df;
+    border-color: #84cc16;
+    transform: translateY(-3px);
+}
+
+.drag-card:active {
+    cursor: grabbing;
+}
+
+
+
+.drop-targets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.drop-target {
+    min-height: 135px;
+    padding: 18px;
+    background: #f5f9ed;
+    border: 1.5px dashed #cbdcae;
+    border-radius: 16px;
+    color: #365314;
+    transition: 0.2s ease;
+}
+
+.drop-target strong {
+    display: block;
+    margin-bottom: 14px;
+    color: #365314;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.drop-target.drag-over {
+    background: #e8f7c9;
+    border: 2px solid #84cc16;
+}
+
+.drop-target-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 45px;
+}
+
+.drop-target-content .drag-card {
+    background: #ecfccb;
+    border-color: #a3d65c;
+}
+
+@media (max-width: 600px) {
+    .drop-targets {
+        grid-template-columns: 1fr;
+    }
+}
+/* TOMBOL SELESAIKAN AKTIVITAS */
+.complete-activity-btn {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 12px;
+    background: #84cc16;
+    color: #243b0b;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.complete-activity-btn:hover:not(:disabled) {
+    background: #65a30d;
+    transform: translateY(-2px);
+}
+
+.complete-activity-btn:disabled {
+    background: #e2e8d5;
+    color: #94a38a;
+    cursor: not-allowed;
+}
+
+.success-message {
+    margin-top: 18px;
+    padding: 16px 20px;
+    background: #ecfccb;
+    border: 1px solid #a3d65c;
+    border-radius: 12px;
+    color: #365314;
+    font-weight: 700;
+    line-height: 1.6;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <a href="index.html" class="brand">
+                <span class="brand-icon">∑</span>
+                <span>mathcademy<span class="brand-dot">.</span></span>
+            </a>
+
+            <div class="menu-label">MENU UTAMA</div>
+
+            <nav class="navigation">
+                <a href="index.html" class="nav-item">
+                    <span class="nav-icon">⌂</span> Dashboard
+                </a>
+
+                <a href="student-materials.html" class="nav-item active">
+                    <span class="nav-icon">▤</span> Materi Belajar
+                </a>
+
+                <a href="index.html#latihan" class="nav-item">
+                    <span class="nav-icon">✎</span> Latihan & Kuis
+                </a>
+
+                <a href="index.html#nilai" class="nav-item">
+                    <span class="nav-icon">▥</span> Nilai Saya
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="#" class="logout" id="logoutButton">
+                    ↪ &nbsp; Keluar
+                </a>
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <div class="breadcrumb">
+                    Halaman / Materi Belajar / <strong>Aktivitas</strong>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="profile">
+                        <div class="avatar" id="studentAvatar">M</div>
+
+                        <div>
+                            <strong id="studentName">Nama Murid</strong>
+                            <span>Siswa</span>
+                        </div>
+                    </div>
+                </div>
+
+            </header>
+
+            <section class="activity-page">
+
+                <div class="activity-top">
+                    <a href="student-materials.html" class="back-link">
+                        ← Kembali ke Materi
+                    </a>
+
+                    <span class="activity-label">
+                        MATHCADEMY LEARNING
+                    </span>
+                </div>
+
+                <div class="activity-heading">
+
+                    <p class="activity-label">
+                        AKTIVITAS PEMBELAJARAN
+                    </p>
+
+                    <h1 class="activity-title" id="activity-title">
+                        Memuat aktivitas...
+                    </h1>
+
+                    <p class="activity-description" id="activityDescription">
+                        Mari pelajari materi dan selesaikan aktivitas berikut.
+                    </p>
+                    <div id="activity-message"></div>
+
+                </div>
+
+                <!-- KONTEN AKTIVITAS -->
+                <section class="activity-content" id="activity-content">
+
+                    <div class="activity-loading">
+                        Sedang menyiapkan aktivitas belajarmu...
+                    </div>
+
+                </section>
+
+                 <!-- TOMBOL SELESAIKAN AKTIVITAS -->
+                <button id="complete-activity-btn" class="complete-activity-btn" disabled>
+                    Selesaikan Aktivitas
+                </button>
+
+                <div class="activity-footer">
+                    <a href="student-materials.html" class="back-link">
+                        ← Daftar Materi
+                    </a>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script type="module" src="js/student-activity.js"></script>
+
+</body>
+</html>

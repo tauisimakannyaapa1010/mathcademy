@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Murid | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .students-welcome {
+            background: linear-gradient(120deg, #365314, #4d7c0f);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+        }
+
+        .students-welcome h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .students-welcome p {
+            color: #ecfccb;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .students-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid #edf0e8;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .summary-card p {
+            color: #87917e;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .summary-card h2 {
+            color: #365314;
+            font-size: 28px;
+        }
+
+        .students-section {
+            background: white;
+            border: 1px solid #edf0e8;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .students-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .students-header h2 {
+            color: #26351d;
+            font-size: 19px;
+        }
+
+        .search-box {
+            padding: 11px 14px;
+            border: 1px solid #d4d4d4;
+            border-radius: 10px;
+            font-size: 14px;
+            width: 230px;
+            outline: none;
+        }
+
+        .search-box:focus {
+            border-color: #84cc16;
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .students-table th,
+        .students-table td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid #edf0e8;
+            font-size: 14px;
+        }
+
+        .students-table th {
+            color: #87917e;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center !important;
+            padding: 55px 20px !important;
+            color: #87917e;
+        }
+
+        .empty-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state strong {
+            display: block;
+            color: #365314;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .add-student-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+    color: white;
+    text-decoration: none;
+
+    padding: 12px 20px;
+    border: none;
+    border-radius: 14px;
+
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 5px 14px rgba(20, 184, 166, 0.22);
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.add-student-btn:hover {
+    background: linear-gradient(135deg, #0d665f, #0f9f91);
+    box-shadow: 0 8px 18px rgba(20, 184, 166, 0.3);
+    transform: translateY(-2px);
+}
+
+.add-student-btn:active {
+    transform: translateY(0);
+}
+
+        
+/* Popup Tambah Murid */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 450px;
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content h2 {
+    color: #365314;
+    font-size: 21px;
+    margin-bottom: 8px;
+}
+
+.modal-content > p {
+    color: #87917e;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+.modal-content .form-group {
+    margin-bottom: 16px;
+}
+
+.modal-content label {
+    display: block;
+    color: #365314;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d4d4d4;
+    border-radius: 9px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.modal-content input:focus {
+    outline: none;
+    border-color: #84cc16;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-actions button {
+    padding: 11px 16px;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#closeAddStudent {
+    background: #f1f5e9;
+    color: #365314;
+}
+
+#saveStudent {
+    background: #84cc16;
+    color: #26351d;
+}
+
+#saveStudent:hover {
+    background: #a3e635;
+}
+
+#studentFormMessage {
+    font-size: 13px;
+    margin-top: 10px;
+    color: #dc2626;
+}
+
+
+        @media (max-width: 700px) {
+            .students-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .students-section {
+                overflow-x: auto;
+            }
+
+            .students-header {
+                align-items: flex-start;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+    <a href="teacher.html" class="brand">
+        <span class="brand-icon">∑</span>
+        <span>mathcademy<span class="brand-dot">.</span></span>
+    </a>
+
+    <div class="menu-label">MENU UTAMA</div>
+
+    <nav class="navigation">
+        <a href="teacher.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </a>
+
+        <a href="materials.html" class="nav-item">
+            <span class="nav-icon">▤</span>
+            Kelola Materi
+        </a>
+
+        <a href="quizzes.html" class="nav-item">
+            <span class="nav-icon">✎</span>
+            Kelola Kuis
+        </a>
+
+        <a href="students.html" class="nav-item active">
+            <span class="nav-icon">♙</span>
+            Data Murid
+        </a>
+
+        <a href="progress.html" class="nav-item">
+            <span class="nav-icon">▥</span>
+            Progres & Nilai
+        </a>
+    </nav>
+
+    <div class="menu-label second-label">LAINNYA</div>
+
+    <nav class="navigation">
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            Pengaturan
+        </a>
+
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Tampilan Murid
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="help-card">
+            <div class="help-icon">✦</div>
+            <strong>Semangat mengajar!</strong>
+            <p>Bangun pengalaman belajar matematika yang menyenangkan.</p>
+        </div>
+
+        <a href="#" class="logout" id="teacherLogout">
+            ↪ &nbsp; Keluar
+        </a>
+    </div>
+</aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <p class="breadcrumb">Dashboard / Data Murid</p>
+                <h3>Data Murid</h3>
+            </div>
+
+            <div class="topbar-right">
+    <div class="profile">
+        <div class="avatar" id="teacherAvatar">G</div>
+
+        <div>
+            <strong id="teacherName">Nama Guru</strong>
+            <span>Pengajar Mathcademy</span>
+        </div>
+
+        <span class="dropdown">⌄</span>
+    </div>
+</div>
+
+        </header>
+
+        <section class="students-welcome">
+
+            <h1>Data Seluruh Murid 👩‍🎓</h1>
+
+            <p>
+                Kelola dan pantau seluruh akun murid yang terdaftar
+                di Mathcademy melalui halaman ini.
+            </p>
+
+        </section>
+
+        <section class="students-summary">
+
+            <div class="summary-card">
+                <p>Total Murid Terdaftar</p>
+                <h2 id="totalStudents">0</h2>
+            </div>
+
+            <div class="summary-card">
+                <p>Total Akun Guru</p>
+                <h2>5</h2>
+            </div>
+
+        </section>
+
+        <section class="students-section">
+
+            <div class="students-header">
+
+                <h2>Daftar Seluruh Murid</h2>
+
+                <button type="button" class="add-student-btn" id="openAddStudent">
+                    <span style="font-size: 19px; font-weight: 400;">＋</span>
+                    Tambah Murid
+                </button>
+
+            </div>
+
+            <table class="students-table">
+
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Nama Murid</th>
+                        <th>Email</th>
+                        <th>Progres</th>
+                        <th>Nilai Terakhir</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="studentsTableBody">
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-icon">📚</div>
+                            <strong>Memuat Data Murid...</strong>
+                            Mohon tunggu sebentar.
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+ <div class="modal-overlay" id="addStudentModal">
+        <div class="modal-content">
+            <h2>Tambah Murid Baru</h2>
+            <p>Daftarkan akun murid Mathcademy.</p>
+
+            <form id="addStudentForm">
+                <div class="form-group">
+                    <label for="studentName">Nama Lengkap</label>
+                    <input
+                        type="text"
+                        id="studentName"
+                        placeholder="Masukkan nama lengkap"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="studentEmail">Email</label>
+                    <input
+                        type="email"
+                        id="studentEmail"
+                        placeholder="Masukkan email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="studentPassword">Kata Sandi Sementara</label>
+                    <input
+                        type="password"
+                        id="studentPassword"
+                        placeholder="Minimal 8 karakter"
+                        minlength="8"
+                        required
+                    >
+                </div>
+
+                <p id="studentFormMessage" role="alert"></p>
+
+                <div class="modal-actions">
+                    <button type="button" id="closeAddStudent">
+                        Batal
+                    </button>
+
+                    <button type="submit" id="saveStudent">
+                        Daftarkan Murid
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="module">
+    import { supabase } from './supabase.js';
+    // Mengambil profil guru yang sedang login
+const { data: { user }, error: userError } =
+    await supabase.auth.getUser();
+
+if (userError || !user) {
+    window.location.href = 'login.html';
+} else {
+    const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('full_name, role')
+        .eq('id', user.id)
+        .single();
+
+    if (profileError || !profile || profile.role !== 'teacher') {
+        await supabase.auth.signOut();
+        window.location.href = 'login.html';
+    } else {
+        const name = profile.full_name || 'Guru';
+
+        document.getElementById('teacherName').textContent = name;
+        document.getElementById('teacherAvatar').textContent =
+            name.charAt(0).toUpperCase();
+    }
+}
+
+// Fungsi keluar dari akun guru
+const teacherLogout = document.getElementById('teacherLogout');
+
+teacherLogout.addEventListener('click', async function(event) {
+    event.preventDefault();
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        alert('Gagal keluar. Silakan coba lagi.');
+    } else {
+        window.location.href = 'login.html';
+    }
+});
+
+    const addStudentModal = document.getElementById('addStudentModal');
+    const openAddStudent = document.getElementById('openAddStudent');
+    const closeAddStudent = document.getElementById('closeAddStudent');
+    const totalStudents = document.getElementById('totalStudents');
+    const studentsTableBody = document.getElementById('studentsTableBody');
+
+    async function loadStudents() {
+        studentsTableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty-state">
+                    Memuat data murid...
+                </td>
+            </tr>
+        `;
+
+        const { data: students, error } = await supabase
+            .from('profiles')
+            .select('id, full_name, email')
+            .eq('role', 'student')
+            .order('full_name');
+
+            // Mengambil seluruh aktivitas yang sudah dipublikasikan
+const { data: activities, error: activityError } = await supabase
+    .from('material_activities')
+    .select('id')
+    .eq('status', 'published')
+    .eq('is_archived', false);
+
+if (activityError) {
+    console.error(activityError);
+    return;
+}
+
+// Mengambil progres seluruh murid
+const { data: progress, error: progressError } = await supabase
+    .from('student_activity_progress')
+    .select('student_id, activity_id');
+
+if (progressError) {
+    console.error(progressError);
+    return;
+}
+
+        if (error) {
+            console.error(error);
+            studentsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        Gagal memuat data murid.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        // Mengambil seluruh percobaan Evaluasi Akhir BAB yang sudah dikumpulkan
+const { data: finalAttempts, error: finalError } = await supabase
+    .from('quiz_attempts')
+    .select(`
+        student_id,
+        score,
+        total_points,
+        submitted_at,
+        quizzes!inner (
+            quiz_type
+        )
+    `)
+    .eq('status', 'graded')
+    .eq('quizzes.quiz_type', 'final')
+    .not('submitted_at', 'is', null)
+    .order('submitted_at', { ascending: false });
+
+if (finalError) {
+    console.error('Gagal mengambil nilai evaluasi akhir:', finalError);
+}
+
+// Menyimpan hanya percobaan terakhir setiap murid
+const latestFinalScores = {};
+
+(finalAttempts || []).forEach(attempt => {
+    if (!latestFinalScores[attempt.student_id]) {
+        latestFinalScores[attempt.student_id] = attempt;
+    }
+});
+
+        totalStudents.textContent = students.length;
+
+        // Menghitung total aktivitas yang tersedia
+const totalActivities = activities.length;
+
+// Menghitung progres setiap murid
+const studentProgress = {};
+
+students.forEach(student => {
+    const completedCount = progress.filter(item =>
+        item.student_id === student.id &&
+        activities.some(activity => activity.id === item.activity_id)
+    ).length;
+
+    const percentage = totalActivities > 0
+        ? Math.round((completedCount / totalActivities) * 100)
+        : 0;
+
+    studentProgress[student.id] = {
+        completedCount,
+        percentage
+    };
+});
+
+        if (students.length === 0) {
+            studentsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <strong>Belum Ada Data Murid</strong>
+                        Data murid yang didaftarkan akan ditampilkan di sini.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        studentsTableBody.innerHTML = students.map((student, index) => `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${student.full_name || '-'}</td>
+                <td>${student.email || '-'}</td>
+                <td>
+    <div class="student-progress">
+        <strong>${studentProgress[student.id].percentage}%</strong>
+        <div class="progress-track">
+            <div
+                class="progress-fill"
+                style="width: ${studentProgress[student.id].percentage}%"
+            ></div>
+        </div>
+        <small>
+            ${studentProgress[student.id].completedCount}
+            dari ${totalActivities} aktivitas
+        </small>
+    </div>
+</td>
+<td>
+    ${
+        latestFinalScores[student.id]
+            ? (() => {
+                const attempt = latestFinalScores[student.id];
+                const score = Number(attempt.score);
+                const totalPoints = Number(attempt.total_points);
+
+                const finalScore = totalPoints > 0
+                    ? Math.round((score / totalPoints) * 100)
+                    : score;
+
+                return `${finalScore}`;
+            })()
+            : 'Belum tersedia'
+    }
+</td>
+<td>
+    <a
+        href="student-progress-detail.html?studentId=${encodeURIComponent(student.id)}"
+        class="detail-button"
+    >
+        Lihat Detail →
+    </a>
+</td>
+            </tr>
+        `).join('');
+    }
+
+    loadStudents();
+
+    // Membuka popup
+    openAddStudent.addEventListener('click', function() {
+        addStudentModal.classList.add('active');
+    });
+
+    // Menutup popup melalui tombol Batal
+    closeAddStudent.addEventListener('click', function() {
+        addStudentModal.classList.remove('active');
+    });
+
+    // Menutup popup jika area luar diklik
+    addStudentModal.addEventListener('click', function(event) {
+        if (event.target === addStudentModal) {
+            addStudentModal.classList.remove('active');
+        }
+    });
+
+// Mendaftarkan akun murid
+const addStudentForm = document.getElementById('addStudentForm');
+const studentFormMessage = document.getElementById('studentFormMessage');
+const saveStudent = document.getElementById('saveStudent');
+
+addStudentForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    studentFormMessage.textContent = '';
+    saveStudent.disabled = true;
+    saveStudent.textContent = 'Mendaftarkan...';
+
+    const fullName = document.getElementById('studentName').value.trim();
+    const email = document.getElementById('studentEmail').value.trim();
+    const password = document.getElementById('studentPassword').value;
+
+    try {
+        const { data, error } = await supabase.functions.invoke(
+            'create-student-account',
+            {
+                body: {
+                    full_name: fullName,
+                    email: email,
+                    password: password
+                }
+            }
+        );
+
+        if (error) {
+            throw error;
+        }
+
+        if (data?.error) {
+            throw new Error(data.error);
+        }
+
+        studentFormMessage.style.color = '#16a34a';
+        studentFormMessage.textContent = 'Akun murid berhasil dibuat!';
+
+        addStudentForm.reset();
+        await loadStudents();
+
+    } catch (error) {
+        console.error(error);
+        studentFormMessage.style.color = '#dc2626';
+        studentFormMessage.textContent =
+            error.message || 'Gagal mendaftarkan akun murid.';
+    } finally {
+        saveStudent.disabled = false;
+        saveStudent.textContent = 'Daftarkan Murid';
+    }
+});
+</script>
+</body>
+</html>

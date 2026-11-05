@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="settings-page">
+
+    <div class="dashboard-container">
+
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <p class="breadcrumb">
+                        <a id="backDashboard" href="index.html">← Kembali ke Dashboard</a>
+                        / Pengaturan
+                    </p>
+                    <h3>Pengaturan</h3>
+                </div>
+            </header>
+
+            <section class="progress-welcome">
+                <h1>Pengaturan Akun ⚙️</h1>
+                <p>
+                    Kelola informasi akun dan preferensi
+                    penggunaan Mathcademy.
+                </p>
+            </section>
+            <section class="progress-section">
+    <h2>Ubah Kata Sandi</h2>
+
+    <div class="form-group">
+        <label>Kata Sandi Baru</label>
+        <input
+            type="password"
+            id="newPassword"
+            placeholder="Masukkan kata sandi baru"
+        >
+    </div>
+
+    <div class="form-group">
+        <label>Konfirmasi Kata Sandi</label>
+        <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Ulangi kata sandi baru"
+        >
+    </div>
+
+    <button type="button" class="btn-primary" id="changePassword">
+        Ubah Kata Sandi
+    </button>
+
+    <p id="passwordMessage"></p>
+</section>
+
+            <section class="progress-section">
+    <h2>Profil Pengguna</h2>
+
+    <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input
+            type="text"
+            id="fullName"
+            placeholder="Masukkan nama lengkap"
+        >
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input
+            type="email"
+            id="userEmail"
+            readonly
+        >
+    </div>
+
+    <div class="form-group">
+        <label>Peran Pengguna</label>
+        <input
+            type="text"
+            id="userRole"
+            readonly
+        >
+    </div>
+
+    <button type="button" class="btn-primary" id="saveProfile">
+        Simpan Perubahan
+    </button>
+
+    <p id="profileMessage"></p>
+</section>
+<section class="progress-section" id="studentPreferences">
+    <h2>Preferensi Tampilan Belajar</h2>
+    <p>Atur ukuran teks agar nyaman saat membaca materi.</p>
+
+    <div class="form-group">
+        <label for="textSize">Ukuran Teks</label>
+        <select id="textSize">
+            <option value="small">Kecil</option>
+            <option value="normal" selected>Normal</option>
+            <option value="large">Besar</option>
+        </select>
+    </div>
+
+    <button type="button" class="btn-primary" id="saveTextSize">
+        Simpan Preferensi
+    </button>
+
+    <p id="textSizeMessage"></p>
+</section>
+<section class="progress-section">
+    <h2>Tentang Mathcademy</h2>
+
+    <p>
+        Mathcademy merupakan platform pembelajaran matematika
+        interaktif yang membantu murid memahami konsep matematika
+        melalui materi, eksplorasi, dan latihan.
+    </p>
+
+    <p><strong>Versi:</strong> 1.0</p>
+    <p><strong>Platform:</strong> Mathcademy</p>
+</section>
+
+        </main>
+
+    </div>
+<script type="module">
+import { supabase } from './supabase.js';
+
+// Ambil elemen halaman
+const fullNameInput = document.getElementById('fullName');
+const userEmailInput = document.getElementById('userEmail');
+const userRoleInput = document.getElementById('userRole');
+const saveButton = document.getElementById('saveProfile');
+const profileMessage = document.getElementById('profileMessage');
+
+let currentUser = null;
+
+// Memuat profil pengguna
+async function loadProfile() {
+    try {
+        const { data: { user }, error: authError } =
+            await supabase.auth.getUser();
+
+        if (authError || !user) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        currentUser = user;
+
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('full_name, role')
+            .eq('id', user.id)
+            .single();
+
+        if (error) throw error;
+
+        fullNameInput.value = profile.full_name || '';
+        userEmailInput.value = user.email || '';
+
+        userRoleInput.value = profile.role === 'teacher'
+            ? 'Guru'
+            : 'Murid';
+            // Preferensi tampilan khusus murid
+const preferences = document.getElementById('studentPreferences');
+
+if (profile.role === 'student') {
+    preferences.style.display = 'block';
+
+    const savedSize = localStorage.getItem(
+        `textSize_${user.id}`
+    ) || 'normal';
+
+    document.getElementById('textSize').value = savedSize;
+    document.body.style.fontSize =
+        savedSize === 'small' ? '14px' :
+        savedSize === 'large' ? '18px' : '16px';
+} else {
+    preferences.style.display = 'none';
+}
+
+    } catch (error) {
+        console.error('Gagal memuat profil:', error);
+        profileMessage.textContent = 'Gagal memuat informasi profil.';
+    }
+}
+
+// Simpan perubahan nama
+saveButton.addEventListener('click', async () => {
+    const newName = fullNameInput.value.trim();
+
+    if (!newName) {
+        profileMessage.textContent = 'Nama tidak boleh kosong.';
+        return;
+    }
+
+    saveButton.disabled = true;
+    saveButton.textContent = 'Menyimpan...';
+
+    try {
+        const { error } = await supabase
+            .from('profiles')
+            .update({ full_name: newName })
+            .eq('id', currentUser.id);
+
+        if (error) throw error;
+
+        profileMessage.textContent = 'Profil berhasil diperbarui!';
+        profileMessage.style.color = '#15803d';
+
+    } catch (error) {
+        console.error('Gagal menyimpan profil:', error);
+        profileMessage.textContent = 'Gagal menyimpan perubahan.';
+        profileMessage.style.color = '#dc2626';
+
+    } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = 'Simpan Perubahan';
+    }
+});
+
+// Fungsi ubah kata sandi
+const changePasswordButton = document.getElementById('changePassword');
+
+changePasswordButton.addEventListener('click', async () => {
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const passwordMessage = document.getElementById('passwordMessage');
+
+    if (!newPassword || !confirmPassword) {
+        passwordMessage.textContent = 'Semua kolom harus diisi.';
+        return;
+    }
+
+    if (newPassword.length < 6) {
+        passwordMessage.textContent = 'Kata sandi minimal 6 karakter.';
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        passwordMessage.textContent = 'Konfirmasi kata sandi tidak cocok.';
+        return;
+    }
+
+    changePasswordButton.disabled = true;
+    changePasswordButton.textContent = 'Memproses...';
+
+    const { error } = await supabase.auth.updateUser({
+        password: newPassword
+    });
+
+    if (error) {
+        console.error(error);
+        passwordMessage.textContent = 'Gagal mengubah kata sandi.';
+        passwordMessage.style.color = '#dc2626';
+    } else {
+        passwordMessage.textContent = 'Kata sandi berhasil diubah!';
+        passwordMessage.style.color = '#15803d';
+
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+    }
+
+    changePasswordButton.disabled = false;
+    changePasswordButton.textContent = 'Ubah Kata Sandi';
+});
+document.getElementById('saveTextSize').addEventListener('click', () => {
+    const size = document.getElementById('textSize').value;
+
+    if (!currentUser) return;
+
+    localStorage.setItem(`textSize_${currentUser.id}`, size);
+
+    document.body.style.fontSize =
+        size === 'small' ? '14px' :
+        size === 'large' ? '18px' : '16px';
+
+    document.getElementById('textSizeMessage').textContent =
+        'Preferensi berhasil disimpan!';
+});
+// Jalankan saat halaman dibuka
+loadProfile();
+</script>
+</body>
+</html>

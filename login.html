@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Mathcademy</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f7fee7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+        }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 950px;
+            width: 100%;
+            min-height: 560px;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 45px rgba(54, 83, 20, 0.10);
+        }
+
+        .login-left {
+            background: linear-gradient(145deg, #365314, #65a30d);
+            color: white;
+            padding: 55px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .brand span {
+            color: #bef264;
+        }
+
+        .login-left h1 {
+            font-size: 34px;
+            line-height: 1.3;
+            margin-bottom: 18px;
+        }
+
+        .login-left p {
+            color: #ecfccb;
+            line-height: 1.8;
+        }
+
+        .math-decoration {
+            font-size: 65px;
+            font-weight: 800;
+            color: #d9f99d;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .login-right {
+            padding: 55px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-right h2 {
+            font-size: 28px;
+            color: #26351d;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #87917e;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .role-label,
+        .field-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #365314;
+            margin-bottom: 10px;
+        }
+
+        .role-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .role-option {
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px 10px;
+            cursor: pointer;
+            text-align: center;
+            color: #526047;
+            transition: 0.2s;
+        }
+
+        .role-option input {
+            display: none;
+        }
+
+        .role-option:has(input:checked) {
+            border-color: #84cc16;
+            background: #f7fee7;
+            color: #365314;
+            font-weight: 700;
+        }
+
+        .role-option .role-icon {
+            display: block;
+            font-size: 25px;
+            margin-bottom: 7px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            border-color: #84cc16;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #84cc16;
+            color: #26351d;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .login-button:hover {
+            background: #a3e635;
+        }
+
+        .register-text {
+            text-align: center;
+            margin-top: 25px;
+            color: #87917e;
+            font-size: 14px;
+        }
+
+        .register-text a {
+            color: #65a30d;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        @media (max-width: 700px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+
+            .login-left {
+                padding: 30px;
+                min-height: 250px;
+            }
+
+            .login-left h1 {
+                font-size: 25px;
+            }
+
+            .math-decoration {
+                display: none;
+            }
+
+            .login-right {
+                padding: 35px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <section class="login-left">
+        <div class="brand">mathcademy<span>.</span></div>
+
+        <div>
+            <h1>Belajar Matematika dengan Cara yang Lebih Menyenangkan.</h1>
+            <p>
+                Jelajahi konsep matematika, selesaikan tantangan interaktif,
+                dan pantau perkembangan belajarmu.
+            </p>
+            <div class="math-decoration">x² + y²</div>
+        </div>
+
+        <p>© 2026 Mathcademy. Learn, Explore, and Grow.</p>
+    </section>
+
+    <section class="login-right">
+
+        <h2>Selamat Datang!</h2>
+        <p class="subtitle">
+            Masuk ke akun Mathcademy untuk melanjutkan aktivitas pembelajaran.
+        </p>
+
+        <form id="loginForm">
+            <label class="role-label">Masuk sebagai</label>
+
+            <div class="role-options">
+                <label class="role-option">
+                    <input type="radio" name="role" value="student" checked>
+                    <span class="role-icon">🎓</span>
+                    Murid
+                </label>
+
+                <label class="role-option">
+                    <input type="radio" name="role" value="teacher">
+                    <span class="role-icon">👩‍🏫</span>
+                    Guru
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label class="field-label">Email</label>
+                <input type="email" id="email" placeholder="Masukkan email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="field-label">Kata Sandi</label>
+                <input type="password" id="password" placeholder="Masukkan kata sandi" required>
+            </div>
+
+            <p id="loginMessage" role="alert" style="color: #dc2626; font-size: 13px; margin-bottom: 15px;"></p>
+
+            <button type="submit" class="login-button" id="loginButton">
+                Masuk ke Mathcademy
+            </button>
+        </form>
+
+        <p class="register-text">
+            Belum memiliki akun?
+            <span style="color: #65a30d; font-weight: 700;">Hubungi guru untuk mendapatkan akun.</span>
+        </p>
+
+    </section>
+
+</div>
+
+<script type="module">
+    import { supabase } from './supabase.js';
+
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const loginButton = document.getElementById('loginButton');
+
+    loginForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        loginMessage.textContent = '';
+        loginButton.disabled = true;
+        loginButton.textContent = 'Sedang masuk...';
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const selectedRole = document.querySelector(
+            'input[name="role"]:checked'
+        ).value;
+
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                throw new Error('Email atau kata sandi tidak sesuai.');
+            }
+
+            const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('full_name, role')
+                .eq('id', data.user.id)
+                .single();
+
+            if (profileError || !profile) {
+                await supabase.auth.signOut();
+                throw new Error('Profil pengguna tidak ditemukan.');
+            }
+
+            if (profile.role !== selectedRole) {
+                await supabase.auth.signOut();
+                throw new Error(
+                    'Jenis akun tidak sesuai. Silakan pilih peran yang benar.'
+                );
+            }
+
+            if (profile.role === 'teacher') {
+                window.location.href = 'teacher.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+
+        } catch (error) {
+            loginMessage.textContent = error.message;
+        } finally {
+            loginButton.disabled = false;
+            loginButton.textContent = 'Masuk ke Mathcademy';
+        }
+    });
+</script>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilai Saya | Mathcademy</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <main class="my-scores-container">
+<a href="index.html" class="back-dashboard-btn">
+    ← Kembali ke Dashboard
+</a>
+        <header class="my-scores-header">
+            <h1>Nilai Saya</h1>
+            <p>Lihat perkembangan hasil belajarmu di Mathcademy.</p>
+        </header>
+
+        <section class="score-summary">
+
+    <div class="score-card">
+        <p>Rata-rata Nilai</p>
+        <h2 id="averageScore">-</h2>
+        <span>Nilai evaluasi akhir</span>
+    </div>
+
+    <div class="score-card">
+        <p>Evaluasi Selesai</p>
+        <h2 id="completedEvaluations">0</h2>
+        <span>Jumlah BAB yang telah dievaluasi</span>
+    </div>
+
+    <div class="score-card">
+        <p>Total Pengerjaan</p>
+        <h2 id="totalAttempts">0</h2>
+        <span>Seluruh latihan dan evaluasi</span>
+    </div>
+
+</section>
+
+        <section class="chapter-scores">
+    <div class="section-heading">
+        <div>
+            <h2>Nilai Evaluasi per BAB</h2>
+            <p>Hasil evaluasi akhir dari setiap BAB yang telah kamu kerjakan.</p>
+        </div>
+    </div>
+
+    <div id="chapterScoreList" class="chapter-score-list">
+        <p class="empty-score">Memuat nilai evaluasi...</p>
+    </div>
+</section>
+
+        <section class="score-history">
+    <div class="section-heading">
+        <div>
+            <h2>Riwayat Pengerjaan</h2>
+            <p>Catatan seluruh latihan dan evaluasi yang telah kamu kerjakan.</p>
+        </div>
+    </div>
+
+    <div class="history-table-wrapper">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Nama Aktivitas</th>
+                    <th>Jenis</th>
+                    <th>Tanggal</th>
+                    <th>Nilai</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="scoreHistoryList">
+                <tr>
+                    <td colspan="5" class="empty-score">
+                        Memuat riwayat pengerjaan...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+    </main>
+
+<script type="module">
+    import { supabase } from './supabase.js';
+
+    async function checkStudentLogin() {
+        const { data: { user }, error } = await supabase.auth.getUser();
+
+        if (error || !user) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('id, full_name, role')
+            .eq('id', user.id)
+            .single();
+
+        if (profileError || !profile || profile.role !== 'student') {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        console.log('Murid berhasil masuk:', profile.full_name);
+return profile;
+    }
+
+    function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[char]);
+}
+    async function loadChapterScores(studentId) {
+    const chapterList = document.getElementById('chapterScoreList');
+
+    try {
+        // Ambil seluruh BAB yang tidak diarsipkan
+        const { data: chapters, error: chapterError } = await supabase
+            .from('chapters')
+            .select('id, title, position')
+            .eq('is_archived', false)
+            .order('position');
+
+        if (chapterError) throw chapterError;
+
+        // Ambil evaluasi akhir murid yang sudah dinilai
+        const { data: attempts, error: attemptError } = await supabase
+            .from('quiz_attempts')
+            .select(`
+                id,
+                student_id,
+                quiz_id,
+                score,
+                total_points,
+                submitted_at,
+                quizzes!inner (
+                    id,
+                    title,
+                    quiz_type,
+                    chapter_id
+                )
+            `)
+            .eq('student_id', studentId)
+            .eq('status', 'graded')
+            .not('submitted_at', 'is', null)
+            .eq('quizzes.quiz_type', 'final')
+            .order('submitted_at', { ascending: false });
+
+        if (attemptError) throw attemptError;
+
+        // Ambil percobaan terbaru untuk setiap BAB
+        const latestAttempts = new Map();
+
+        (attempts || []).forEach(attempt => {
+            const chapterId = attempt.quizzes?.chapter_id;
+
+            if (!chapterId || latestAttempts.has(chapterId)) return;
+
+            latestAttempts.set(chapterId, attempt);
+        });
+
+        // Tampilkan nilai setiap BAB
+        chapterList.innerHTML = (chapters || []).map(chapter => {
+            const attempt = latestAttempts.get(chapter.id);
+
+            if (!attempt) {
+                return `
+                    <div class="chapter-score-item">
+                        <strong>${escapeHTML(chapter.title)}</strong>
+                        <span>Belum dikerjakan</span>
+                    </div>
+                `;
+            }
+
+            const score = Number(attempt.score);
+            const totalPoints = Number(attempt.total_points);
+
+            const percentage = totalPoints > 0
+                ? Math.round(score / totalPoints * 100)
+                : 0;
+
+            return `
+                <div class="chapter-score-item">
+                    <strong>${escapeHTML(chapter.title)}</strong>
+                    <span>${percentage}/100</span>
+                </div>
+            `;
+        }).join('');
+
+        // Hitung rata-rata nilai evaluasi terbaru
+        const scores = Array.from(latestAttempts.values())
+            .map(attempt => {
+                const score = Number(attempt.score);
+                const total = Number(attempt.total_points);
+
+                return total > 0 ? score / total * 100 : null;
+            })
+            .filter(score => score !== null);
+
+        document.getElementById('averageScore').textContent =
+            scores.length > 0
+                ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) + '%'
+                : '—';
+
+        document.getElementById('completedEvaluations').textContent =
+            latestAttempts.size;
+
+    } catch (error) {
+        console.error('Gagal memuat nilai BAB:', error);
+        chapterList.innerHTML = `
+            <p class="empty-score">Gagal memuat nilai evaluasi.</p>
+        `;
+    }
+}
+   async function loadScoreHistory(studentId) {
+    const historyList = document.getElementById('scoreHistoryList');
+
+    try {
+        const { data: attempts, error } = await supabase
+            .from('quiz_attempts')
+            .select(`
+                id,
+                score,
+                total_points,
+                submitted_at,
+                status,
+                quizzes!inner (
+                    title,
+                    quiz_type
+                )
+            `)
+            .eq('student_id', studentId)
+            .not('submitted_at', 'is', null)
+            .order('submitted_at', { ascending: false });
+
+        if (error) throw error;
+
+        const history = attempts || [];
+
+        // Hitung seluruh pengerjaan yang sudah dikumpulkan
+        document.getElementById('totalAttempts').textContent =
+            history.length;
+
+        if (history.length === 0) {
+            historyList.innerHTML = `
+                <tr>
+                    <td colspan="5">Belum ada riwayat pengerjaan.</td>
+                </tr>
+            `;
+            return;
+        }
+
+        historyList.innerHTML = history.map(attempt => {
+            const quiz = attempt.quizzes;
+            const score = Number(attempt.score);
+            const total = Number(attempt.total_points);
+
+            const percentage = total > 0
+                ? Math.round(score / total * 100)
+                : 0;
+
+            const type = quiz.quiz_type === 'final'
+                ? 'Evaluasi'
+                : 'Latihan';
+
+            const date = new Date(attempt.submitted_at)
+                .toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+
+            const status = attempt.status === 'graded'
+                ? 'Selesai dinilai'
+                : 'Menunggu penilaian';
+
+            return `
+                <tr>
+                    <td>${escapeHTML(quiz.title)}</td>
+                    <td>${type}</td>
+                    <td>${date}</td>
+                    <td>${attempt.status === 'graded' ? percentage + '/100' : '—'}</td>
+                    <td>${status}</td>
+                </tr>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Gagal memuat riwayat nilai:', error);
+        historyList.innerHTML = `
+            <tr>
+                <td colspan="5">Gagal memuat riwayat pengerjaan.</td>
+            </tr>
+        `;
+    }
+}
+checkStudentLogin().then(profile => {
+    if (profile) {
+        loadChapterScores(profile.id);
+        loadScoreHistory(profile.id);
+    }
+});
+</script>
+
+</body>
+</html>

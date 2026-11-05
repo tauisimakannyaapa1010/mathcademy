@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan & Kuis | Mathcademy</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        .quiz-welcome {
+            background: linear-gradient(120deg, #ecfccb, #d1fae5, #ccfbf1);
+            padding: 32px;
+            border-radius: 22px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-welcome h1 {
+            color: #365314;
+            font-size: 28px;
+            margin: 8px 0;
+        }
+
+        .quiz-welcome p {
+            color: #52634a;
+            max-width: 550px;
+        }
+
+        .quiz-welcome .decoration {
+            position: absolute;
+            right: 45px;
+            top: 20px;
+            font-size: 75px;
+            color: #65a30d;
+            opacity: .35;
+        }
+
+        .quiz-section-heading {
+            margin-bottom: 20px;
+        }
+
+        .quiz-section-heading h2 {
+            color: #263b24;
+            margin: 5px 0;
+        }
+
+        .quiz-section-heading p {
+            color: #718096;
+        }
+
+        .student-quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+        }
+
+        .student-quiz-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            overflow: hidden;
+            transition: .2s ease;
+        }
+
+        .student-quiz-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(54, 83, 20, .09);
+        }
+
+        .student-quiz-art {
+            min-height: 135px;
+            background: linear-gradient(135deg, #ecfccb, #d1fae5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .student-quiz-art .math-icon {
+            font-size: 55px;
+            font-weight: 800;
+            color: #4d7c0f;
+        }
+
+        .student-quiz-art .quiz-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            color: #4d7c0f;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .student-quiz-info {
+            padding: 22px;
+        }
+
+        .student-quiz-info h3 {
+            color: #365314;
+            margin-bottom: 9px;
+        }
+
+        .student-quiz-info p {
+            color: #718096;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .student-quiz-button {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: #84cc16;
+            color: #365314;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .student-quiz-button:hover {
+            background: #a3e635;
+        }
+
+        .quiz-empty {
+            background: white;
+            border: 1px dashed #cbd5e1;
+            border-radius: 18px;
+            padding: 45px 20px;
+            text-align: center;
+            color: #718096;
+            grid-column: 1 / -1;
+        }
+
+        .quiz-empty .empty-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .quiz-error {
+            color: #b91c1c;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-welcome {
+                padding: 24px;
+            }
+
+            .quiz-welcome .decoration {
+                right: 15px;
+                font-size: 45px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <a href="index.html" class="brand">
+            <span class="brand-icon">∑</span>
+            <span>mathcademy<span class="brand-dot">.</span></span>
+        </a>
+
+        <div class="menu-label">MENU UTAMA</div>
+        <nav class="navigation">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">⌂</span> Dashboard
+            </a>
+            <a href="student-materials.html" class="nav-item">
+                <span class="nav-icon">▤</span> Materi Belajar
+            </a>
+            <a href="student-quizzes.html" class="nav-item active">
+                <span class="nav-icon">✎</span> Latihan & Kuis
+            </a>
+            <a href="index.html#nilai" class="nav-item">
+                <span class="nav-icon">▥</span> Nilai Saya
+            </a>
+        </nav>
+
+        <div class="menu-label second-label">LAINNYA</div>
+        <nav class="navigation">
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙</span> Pengaturan
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">ⓘ</span> Bantuan
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="help-card">
+                <div class="help-icon">✦</div>
+                <strong>Terus semangat!</strong>
+                <p>Setiap langkah kecil membawamu lebih dekat pada pemahaman.</p>
+            </div>
+            <a href="#" class="logout" id="logoutButton">
+                ↪ &nbsp; Keluar
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="breadcrumb">
+                Halaman / <strong>Latihan & Kuis</strong>
+            </div>
+
+            <div class="topbar-right">
+                <div class="profile">
+                    <div class="avatar" id="studentAvatar">M</div>
+                    <div>
+                        <strong id="studentName">Nama Murid</strong>
+                        <span>Siswa</span>
+                    </div>
+                    <span class="dropdown">⌄</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="quiz-welcome">
+            <p class="eyebrow">UJI PEMAHAMANMU</p>
+            <h1>Latihan & Kuis <span>✦</span></h1>
+            <p>
+                Saatnya menguji pemahamanmu! Kerjakan kuis yang tersedia
+                dan lihat sejauh mana kamu sudah memahami matematika.
+            </p>
+            <div class="decoration">✎</div>
+        </section>
+
+        <section>
+            <div class="quiz-section-heading">
+                <p class="eyebrow">RUANG TANTANGANMU</p>
+                <h2>Kuis Tersedia</h2>
+                <p>Pilih kuis dan mulai uji kemampuanmu.</p>
+            </div>
+
+            <div class="student-quiz-grid" id="studentQuizList">
+                <div class="quiz-empty">
+                    <div class="empty-icon">⌛</div>
+                    <h3>Memuat kuis...</h3>
+                    <p>Sebentar, kami sedang menyiapkan kuis untukmu.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <span>© 2026 Mathcademy</span>
+            <span>Learn something new every day. <b>✦</b></span>
+        </footer>
+
+    </main>
+</div>
+
+<script type="module">
+    import { supabase } from './supabase.js';
+
+    const logoutButton = document.getElementById('logoutButton');
+    const quizList = document.getElementById('studentQuizList');
+
+    // Memeriksa akun murid
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError || !user) {
+        window.location.href = 'login.html';
+    } else {
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('full_name, role')
+            .eq('id', user.id)
+            .single();
+
+        if (profileError || !profile || profile.role !== 'student') {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        } else {
+            const name = profile.full_name || 'Murid';
+
+            document.getElementById('studentName').textContent = name;
+            document.getElementById('studentAvatar').textContent =
+                name.charAt(0).toUpperCase();
+        }
+    }
+
+    // Keluar dari akun
+    logoutButton.addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            alert('Gagal keluar. Silakan coba lagi.');
+            return;
+        }
+
+        window.location.href = 'login.html';
+    });
+
+    // Mengambil kuis yang sudah dipublikasikan
+    async function loadStudentQuizzes() {
+        const { data: quizzes, error } = await supabase
+            .from('quizzes')
+            .select('id, title, description, status')
+            .eq('status', 'published')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Gagal memuat kuis:', error);
+
+            quizList.innerHTML = `
+                <div class="quiz-empty quiz-error">
+                    <div class="empty-icon">!</div>
+                    <h3>Kuis gagal dimuat</h3>
+                    <p>${escapeHTML(error.message)}</p>
+                </div>
+            `;
+            return;
+        }
+
+        if (!quizzes || quizzes.length === 0) {
+            quizList.innerHTML = `
+                <div class="quiz-empty">
+                    <div class="empty-icon">✎</div>
+                    <h3>Belum Ada Kuis</h3>
+                    <p>Belum ada kuis yang dipublikasikan oleh guru.</p>
+                </div>
+            `;
+            return;
+        }
+
+        quizList.innerHTML = '';
+
+        quizzes.forEach((quiz, index) => {
+            const card = document.createElement('article');
+            card.className = 'student-quiz-card';
+
+            const cardArt = document.createElement('div');
+            cardArt.className = 'student-quiz-art';
+
+            const tag = document.createElement('span');
+            tag.className = 'quiz-tag';
+            tag.textContent = 'KUIS ' + String(index + 1).padStart(2, '0');
+
+            const icon = document.createElement('div');
+            icon.className = 'math-icon';
+            icon.textContent = 'x²';
+
+            cardArt.append(tag, icon);
+
+            const info = document.createElement('div');
+            info.className = 'student-quiz-info';
+
+            const title = document.createElement('h3');
+            title.textContent = quiz.title || 'Kuis Tanpa Judul';
+
+            const description = document.createElement('p');
+            description.textContent =
+                quiz.description || 'Ayo uji pemahamanmu melalui kuis ini!';
+
+            const button = document.createElement('a');
+            button.className = 'student-quiz-button';
+            button.textContent = 'Mulai Kuis →';
+
+            // Tujuan halaman pengerjaan akan kita sambungkan berikutnya.
+            button.href =
+                'quiz-player.html?id=' + encodeURIComponent(quiz.id);
+
+            info.append(title, description, button);
+            card.append(cardArt, info);
+            quizList.appendChild(card);
+        });
+    }
+
+    function escapeHTML(text) {
+        return String(text).replace(/[&<>"']/g, character => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        })[character]);
+    }
+
+    await loadStudentQuizzes();
+</script>
+</body>
+</html>

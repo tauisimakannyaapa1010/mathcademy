@@ -1,0 +1,1856 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progres & Nilai | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    
+<script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+    },
+    options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: {
+        typeset: false
+    }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+    <style>
+        .progress-welcome {
+            background: linear-gradient(120deg, #365314, #4d7c0f);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+        }
+
+        .progress-welcome h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .progress-welcome p {
+            color: #ecfccb;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .progress-stat {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            border: 1px solid #edf0e8;
+        }
+
+        .progress-stat p {
+            color: #87917e;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .progress-stat h2 {
+            color: #365314;
+            font-size: 28px;
+        }
+
+        .progress-section {
+            background: white;
+            border: 1px solid #edf0e8;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .progress-section h2 {
+            color: #26351d;
+            font-size: 19px;
+            margin-bottom: 18px;
+        }
+
+        .progress-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .progress-table th,
+        .progress-table td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid #edf0e8;
+            font-size: 14px;
+        }
+
+        .progress-table th {
+            color: #87917e;
+            font-weight: 600;
+        }
+
+        .progress-track {
+            background: #ecfccb;
+            height: 8px;
+            border-radius: 20px;
+            overflow: hidden;
+            min-width: 90px;
+        }
+
+        .progress-fill {
+            background: #84cc16;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .empty-state {
+            text-align: center !important;
+            color: #87917e;
+            padding: 45px 20px !important;
+        }
+
+        .empty-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state strong {
+            display: block;
+            color: #365314;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 700px) {
+            .progress-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-section {
+                overflow-x: auto;
+            }
+        }
+        
+.student-detail-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 30, 15, 0.55);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.student-detail-content {
+    background: white;
+    width: 100%;
+    max-width: 650px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 28px;
+    border-radius: 20px;
+    position: relative;
+}
+
+.detail-close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    border: none;
+    background: #f0f4e9;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.detail-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 22px 0;
+}
+
+.detail-summary div {
+    background: #f5f8ef;
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.detail-summary small,
+.detail-summary strong {
+    display: block;
+}
+
+.detail-summary strong {
+    color: #365314;
+    font-size: 22px;
+    margin-top: 8px;
+}
+
+#detailActivityList {
+    margin-top: 14px;
+}
+
+.detail-activity-item {
+    padding: 13px;
+    border-bottom: 1px solid #edf0e8;
+}
+
+@media (max-width: 500px) {
+    .detail-summary {
+        grid-template-columns: 1fr;
+    }
+}
+.student-detail-btn {
+    border: none;
+    background: none;
+    color: #4d7c0f;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.student-detail-btn:hover {
+    text-decoration: underline;
+}
+/* ANALISIS JAWABAN EVALUASI AKHIR BAB */
+.analysis-section {
+    background: white;
+    border: 1px solid #edf0e8;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.analysis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.analysis-header h2 {
+    color: #26351d;
+    font-size: 19px;
+    margin: 0;
+}
+
+.analysis-filter {
+    padding: 10px 14px;
+    border: 1px solid #d4d4d4;
+    border-radius: 9px;
+    min-width: 200px;
+    font-size: 14px;
+}
+
+.analysis-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.analysis-stat {
+    background: #f5f8ef;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.analysis-stat small {
+    display: block;
+    color: #64748b;
+}
+
+.analysis-stat strong {
+    display: block;
+    color: #365314;
+    font-size: 24px;
+    margin-top: 8px;
+}
+
+.analysis-question {
+    border: 1px solid #edf0e8;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.analysis-question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 16px;
+    cursor: pointer;
+}
+
+.analysis-question-header:hover {
+    background: #f8faf3;
+}
+
+.analysis-question-info {
+    flex: 1;
+}
+
+.analysis-question-info strong {
+    display: block;
+    color: #26351d;
+    margin-bottom: 7px;
+}
+
+.analysis-question-info small {
+    color: #64748b;
+}
+
+.wrong-count {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.analysis-answer-details {
+    display: none;
+    padding: 16px;
+    background: #fafcf7;
+    border-top: 1px solid #edf0e8;
+}
+
+.analysis-question.open .analysis-answer-details {
+    display: block;
+}
+
+.analysis-answer-row {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr) 85px;
+    align-items: start;
+    gap: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid #e8eee2;
+}
+
+.analysis-student-name {
+    font-weight: 600;
+    color: #334155;
+    overflow-wrap: anywhere;
+}
+
+.analysis-student-answer {
+    min-width: 0;
+    color: #475569;
+    overflow-wrap: anywhere;
+}
+
+.analysis-answer-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.analysis-answer-status {
+    text-align: right;
+}
+
+.analysis-answer-row:last-child {
+    border-bottom: none;
+}
+
+.analysis-answer-row strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.answer-correct {
+    color: #15803d;
+    font-weight: 700;
+}
+
+.answer-wrong {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+.analysis-empty {
+    color: #87917e;
+    text-align: center;
+    padding: 30px 15px;
+}
+
+@media (max-width: 700px) {
+    .analysis-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .analysis-header {
+        align-items: stretch;
+    }
+
+    .analysis-filter {
+        width: 100%;
+    }
+}
+
+/* =====================================
+   ANALISIS EVALUASI AKHIR BAB
+===================================== */
+
+.analysis-section {
+    background: #ffffff;
+    border: 1px solid #e8eee2;
+    border-radius: 22px;
+    padding: 30px;
+    margin-top: 28px;
+    box-shadow: 0 3px 14px rgba(42, 67, 25, 0.035);
+}
+
+.analysis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.analysis-header h2 {
+    color: #29451b;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.analysis-header p {
+    color: #829080;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.analysis-filter {
+    min-width: 190px;
+    padding: 12px 15px;
+    border: 1px solid #dce8d1;
+    border-radius: 11px;
+    background: #ffffff;
+    color: #344b2b;
+    font-size: 14px;
+    outline: none;
+}
+
+.analysis-filter:focus {
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.10);
+}
+
+.analysis-overview {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.analysis-stat {
+    background: #f8faf5;
+    border: 1px solid #edf1e8;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.analysis-stat small {
+    display: block;
+    color: #829080;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.analysis-stat strong {
+    display: block;
+    color: #365314;
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.analysis-section h3 {
+    color: #29451b;
+    font-size: 17px;
+    margin: 0 0 16px;
+}
+
+.analysis-question {
+    background: #ffffff;
+    border: 1px solid #e8eee2;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.analysis-question:hover {
+    border-color: #cbdcb9;
+}
+
+.analysis-question-header {
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    cursor: pointer;
+}
+
+.analysis-question-info {
+    flex: 1;
+    min-width: 0;
+    color: #344b2b;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.analysis-question-info strong {
+    display: block;
+    color: #29451b;
+    margin-bottom: 5px;
+}
+
+.wrong-count {
+    background: #fff1f0;
+    color: #c65b53;
+    padding: 7px 11px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.analysis-answer-details {
+    display: none;
+    padding: 18px 20px;
+    background: #fafbf8;
+    border-top: 1px solid #edf1e8;
+}
+
+.analysis-question.open .analysis-answer-details {
+    display: block;
+}
+
+.analysis-answer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 13px 0;
+    border-bottom: 1px solid #edf1e8;
+    color: #53614e;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.analysis-answer-row:last-child {
+    border-bottom: none;
+}
+
+.answer-correct {
+    color: #27845c;
+    background: #eaf7ef;
+    padding: 5px 9px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.answer-wrong {
+    color: #c65b53;
+    background: #fff0ef;
+    padding: 5px 9px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.analysis-empty {
+    background: #f8faf5;
+    border: 1px dashed #dce8d1;
+    border-radius: 13px;
+    padding: 28px 20px;
+    text-align: center;
+    color: #829080;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+    .analysis-section {
+        padding: 20px;
+    }
+
+    .analysis-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .analysis-header {
+        align-items: stretch;
+    }
+
+    .analysis-filter {
+        width: 100%;
+    }
+
+    .analysis-question-header {
+        padding: 15px;
+    }
+
+    .analysis-answer-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+
+/* Tata letak jawaban murid */
+.analysis-answer-details > strong {
+    display: block;
+    color: #365314;
+    font-size: 15px;
+    margin-bottom: 14px;
+}
+
+.analysis-answer-row {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr) 85px;
+    align-items: start;
+    gap: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid #e8eee2;
+}
+
+.analysis-answer-row:last-child {
+    border-bottom: none;
+}
+
+.analysis-student-name {
+    color: #29451b;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.analysis-student-answer {
+    color: #53614e;
+    min-width: 0;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.analysis-answer-status {
+    text-align: center;
+}
+
+.analysis-answer-status .answer-correct,
+.analysis-answer-status .answer-wrong {
+    display: inline-block;
+}
+
+@media (max-width: 650px) {
+    .analysis-answer-row {
+        grid-template-columns: 1fr auto;
+        gap: 8px 12px;
+    }
+
+    .analysis-student-name {
+        grid-column: 1;
+    }
+
+    .analysis-answer-status {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .analysis-student-answer {
+        grid-column: 1 / -1;
+    }
+}
+
+
+.analysis-drag-pair {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 7px 0;
+}
+
+.analysis-drag-arrow {
+    color: #0d9488;
+    font-weight: 700;
+}
+/* Tabel jawaban seluruh murid */
+.analysis-answer-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e8eee2;
+    border-radius: 12px;
+    background: white;
+}
+
+.analysis-answer-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    min-width: 550px;
+}
+
+.analysis-answer-table th:nth-child(1),
+.analysis-answer-table td:nth-child(1) {
+    width: 30%;
+    text-align: left;
+}
+
+.analysis-answer-table th:nth-child(2),
+.analysis-answer-table td:nth-child(2) {
+    width: 55%;
+    text-align: left;
+}
+
+.analysis-answer-table th:nth-child(3),
+.analysis-answer-table td:nth-child(3) {
+    width: 15%;
+    text-align: center;
+}
+
+.analysis-answer-table th {
+    background: #f0f7ed;
+    color: #365314;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    padding: 14px 16px;
+}
+
+.analysis-answer-table td {
+    padding: 14px 16px;
+    border-top: 1px solid #edf1e8;
+    color: #53614e;
+    font-size: 13px;
+    vertical-align: top;
+}
+
+.analysis-answer-table .answer-correct,
+.analysis-answer-table .answer-wrong {
+    display: inline-block;
+}
+
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+    <a href="teacher.html" class="brand">
+        <span class="brand-icon">∑</span>
+        <span>mathcademy<span class="brand-dot">.</span></span>
+    </a>
+
+    <div class="menu-label">MENU UTAMA</div>
+
+    <nav class="navigation">
+        <a href="teacher.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </a>
+
+        <a href="materials.html" class="nav-item">
+            <span class="nav-icon">▤</span>
+            Kelola Materi
+        </a>
+
+        <a href="quizzes.html" class="nav-item">
+            <span class="nav-icon">✎</span>
+            Kelola Kuis
+        </a>
+
+        <a href="students.html" class="nav-item">
+            <span class="nav-icon">♙</span>
+            Data Murid
+        </a>
+
+        <a href="progress.html" class="nav-item active">
+            <span class="nav-icon">▥</span>
+            Progres & Nilai
+        </a>
+    </nav>
+
+    <div class="menu-label second-label">LAINNYA</div>
+
+    <nav class="navigation">
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            Pengaturan
+        </a>
+
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Tampilan Murid
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="help-card">
+            <div class="help-icon">✦</div>
+            <strong>Semangat mengajar!</strong>
+            <p>Bangun pengalaman belajar matematika yang menyenangkan.</p>
+        </div>
+
+        <a href="#" class="logout" id="teacherLogout">
+            ↪ &nbsp; Keluar
+        </a>
+    </div>
+</aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <p class="breadcrumb">Dashboard / Progres & Nilai</p>
+                <h3>Progres & Nilai</h3>
+            </div>
+
+            <div class="topbar-right">
+    <div class="profile">
+        <div class="avatar" id="teacherAvatar">G</div>
+        <div>
+            <strong id="teacherName">Nama Guru</strong>
+            <span>Pengajar Mathcademy</span>
+        </div>
+        <span class="dropdown">⌄</span>
+    </div>
+</div>
+
+        </header>
+
+        <section class="progress-welcome">
+
+            <h1>Pantau Hasil Belajar Murid 📊</h1>
+
+            <p>
+                Lihat perkembangan pembelajaran dan hasil evaluasi
+                seluruh murid melalui satu halaman.
+            </p>
+
+        </section>
+
+        <section class="progress-stats">
+
+            <div class="progress-stat">
+                <p>Rata-rata Progres Belajar</p>
+                <h2 id="averageProgress">0%</h2>
+            </div>
+
+            <div class="progress-stat">
+                <p>Rata-rata Nilai</p>
+                <h2 id="averageScore">—</h2>
+            </div>
+
+            <div class="progress-stat">
+                <p>Kuis Telah Dikerjakan</p>
+                <h2 id="totalAttempts">0</h2>
+            </div>
+
+        </section>
+
+        <section class="progress-section">
+
+            <h2>Ringkasan Progres dan Nilai Murid</h2>
+
+            <table class="progress-table">
+
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Nama Murid</th>
+                        <th>Materi Selesai</th>
+                        <th>Progres</th>
+                        <th>Kuis Dikerjakan</th>
+                        <th>Nilai Terakhir</th>
+                    </tr>
+                </thead>
+
+                <tbody id="studentProgressTable">
+    <tr>
+        <td colspan="6" class="empty-state">
+            <div class="empty-icon">📊</div>
+            <strong>Memuat Data Murid...</strong>
+            Mohon tunggu sebentar.
+        </td>
+    </tr>
+</tbody>
+
+            </table>
+
+        </section>
+        <section class="analysis-section">
+
+    <div class="analysis-header">
+        <div>
+            <h2>Analisis Jawaban Evaluasi Akhir BAB</h2>
+            <p style="color:#87917e; font-size:14px; margin-top:8px;">
+                Identifikasi soal yang paling banyak dijawab salah
+                dan tinjau jawaban setiap murid.
+            </p>
+        </div>
+
+        <select id="analysisChapterFilter" class="analysis-filter">
+            <option value="">Memuat daftar BAB...</option>
+        </select>
+    </div>
+
+    <div class="analysis-overview">
+        <div class="analysis-stat">
+            <small>Murid Mengerjakan</small>
+            <strong id="analysisStudentCount">0</strong>
+        </div>
+
+        <div class="analysis-stat">
+            <small>Jumlah Soal</small>
+            <strong id="analysisQuestionCount">0</strong>
+        </div>
+
+        <div class="analysis-stat">
+            <small>Rata-rata Jawaban Salah</small>
+            <strong id="analysisWrongAverage">0%</strong>
+        </div>
+    </div>
+
+    <h3 style="color:#365314; margin-bottom:14px;">
+        Analisis Kesalahan per Soal
+    </h3>
+
+    <div id="analysisQuestionList" class="analysis-empty">
+        Memuat analisis evaluasi...
+    </div>
+
+</section>
+
+<div id="studentDetailModal" class="student-detail-modal" style="display:none;">
+    <div class="student-detail-content">
+        <button type="button" id="closeStudentDetail" class="detail-close">×</button>
+
+        <h2 id="detailStudentName">Detail Murid</h2>
+        <p>Ringkasan aktivitas dan hasil belajar murid.</p>
+
+        <div class="detail-summary">
+            <div>
+                <small>Progres Belajar</small>
+                <strong id="detailProgress">0%</strong>
+            </div>
+            <div>
+                <small>Aktivitas Selesai</small>
+                <strong id="detailCompleted">0</strong>
+            </div>
+            <div>
+                <small>Kuis Dikerjakan</small>
+                <strong id="detailQuizCount">0</strong>
+            </div>
+        </div>
+
+        <h3>Riwayat Aktivitas</h3>
+        <div id="detailActivityList">
+            Belum ada aktivitas.
+        </div>
+    </div>
+</div>
+
+    </main>
+
+</div>
+
+<script type="module">
+import { supabase } from './supabase.js';
+
+async function loadProgressData() {
+    const tableBody = document.getElementById('studentProgressTable');
+
+    try {
+        // 1. Periksa akun yang sedang login
+        const { data: { user }, error: authError } =
+            await supabase.auth.getUser();
+
+        if (authError || !user) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // 2. Pastikan akun merupakan guru
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('full_name, role')
+            .eq('id', user.id)
+            .single();
+
+        if (profileError || !profile || profile.role !== 'teacher') {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // 3. Ambil seluruh murid
+        const { data: students, error: studentError } = await supabase
+            .from('profiles')
+            .select('id, full_name')
+            .eq('role', 'student')
+            .order('full_name');
+
+        if (studentError) throw studentError;
+
+        if (!students || students.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        Belum ada data murid.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        // 4. Ambil materi yang diterbitkan dan tidak diarsipkan
+        const { data: materials, error: materialError } = await supabase
+            .from('materials')
+            .select('id')
+            .eq('status', 'published')
+            .eq('is_archived', false);
+
+        if (materialError) throw materialError;
+
+        const materialIds = (materials || []).map(item => item.id);
+
+        // 5. Ambil aktivitas yang tersedia
+        let activities = [];
+
+        if (materialIds.length > 0) {
+            const { data, error } = await supabase
+                .from('material_activities')
+                .select('id, material_id')
+                .in('material_id', materialIds)
+                .eq('status', 'published')
+                .eq('is_archived', false);
+
+            if (error) throw error;
+            activities = data || [];
+        }
+
+        const activityIds = activities.map(item => item.id);
+
+        // 6. Ambil catatan aktivitas yang selesai
+        let completions = [];
+
+        if (activityIds.length > 0) {
+            const { data, error } = await supabase
+                .from('student_activity_progress')
+                .select('student_id, activity_id, completed_at')
+                .in('activity_id', activityIds)
+                .not('completed_at', 'is', null);
+
+            if (error) throw error;
+            completions = data || [];
+        }
+
+        // 7. Ambil percobaan kuis yang sudah dikumpulkan
+        const { data: attempts, error: attemptError } = await supabase
+            .from('quiz_attempts')
+            .select('student_id, score, total_points, submitted_at')
+            .not('submitted_at', 'is', null)
+            .order('submitted_at', { ascending: false });
+
+        if (attemptError) throw attemptError;
+
+        // 8. Susun data setiap murid
+        let totalProgress = 0;
+        let progressStudentCount = 0;
+        let totalScore = 0;
+        let scoreStudentCount = 0;
+
+        const rows = students.map((student, index) => {
+            const completedIds = new Set(
+                completions
+                    .filter(item => item.student_id === student.id)
+                    .map(item => item.activity_id)
+            );
+
+            const completedCount = completedIds.size;
+            const totalActivities = activities.length;
+
+            const progress = totalActivities > 0
+                ? Math.round(completedCount / totalActivities * 100)
+                : 0;
+
+            if (totalActivities > 0) {
+                totalProgress += progress;
+                progressStudentCount++;
+            }
+
+            const studentAttempts = (attempts || []).filter(
+                item => item.student_id === student.id
+            );
+
+            const latestAttempt = studentAttempts[0];
+
+            let latestScore = '—';
+
+            if (latestAttempt) {
+                const score = Number(latestAttempt.score);
+                const totalPoints = Number(latestAttempt.total_points);
+
+                if (Number.isFinite(score) &&
+                    Number.isFinite(totalPoints) &&
+                    totalPoints > 0) {
+                    latestScore = Math.round(score / totalPoints * 100);
+
+                    totalScore += latestScore;
+                    scoreStudentCount++;
+                }
+            }
+
+            return `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>
+                        <button class="student-detail-btn"
+                            data-student-id="${student.id}">
+                            ${escapeHTML(student.full_name || 'Tanpa nama')}
+                        </button>
+                    </td>
+                    <td>${completedCount}/${totalActivities}</td>
+                    <td>
+                        <div class="progress-track">
+                            <div class="progress-fill"
+                                style="width: ${progress}%"></div>
+                        </div>
+                        <small>${progress}%</small>
+                    </td>
+                    <td>${studentAttempts.length}</td>
+                    <td>${latestScore === '—' ? '—' : latestScore + '%'}</td>
+                </tr>
+            `;
+        });
+
+        tableBody.innerHTML = rows.join('');
+
+        tableBody.querySelectorAll('.student-detail-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                loadStudentDetail(
+                    button.dataset.studentId,
+                    button.textContent.trim()
+                );
+            });
+        });
+
+        // 9. Perbarui kartu ringkasan
+        document.getElementById('averageProgress').textContent =
+            progressStudentCount > 0
+                ? Math.round(totalProgress / progressStudentCount) + '%'
+                : '0%';
+
+        document.getElementById('averageScore').textContent =
+            scoreStudentCount > 0
+                ? Math.round(totalScore / scoreStudentCount) + '%'
+                : '—';
+
+        document.getElementById('totalAttempts').textContent =
+            (attempts || []).length;
+
+        // Perbarui nama dan avatar guru
+const teacherName = profile.full_name || 'Guru';
+
+document.getElementById('teacherName').textContent = teacherName;
+document.getElementById('teacherAvatar').textContent =
+    teacherName.charAt(0).toUpperCase();
+
+    } catch (error) {
+        console.error('Gagal memuat progres:', error);
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-state">
+                    Gagal memuat data. Periksa Console untuk detail.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[char]);
+}
+
+loadProgressData();
+
+async function loadStudentDetail(studentId, studentName) {
+    const modal = document.getElementById('studentDetailModal');
+    const activityList = document.getElementById('detailActivityList');
+
+    modal.style.display = 'flex';
+
+    document.getElementById('detailStudentName').textContent = studentName;
+    activityList.textContent = 'Memuat riwayat aktivitas...';
+
+    try {
+        // Ambil materi yang dipublikasikan dan tidak diarsipkan
+        const { data: materials, error: materialError } = await supabase
+            .from('materials')
+            .select('id')
+            .eq('status', 'published')
+            .eq('is_archived', false);
+
+        if (materialError) throw materialError;
+
+        const materialIds = (materials || []).map(item => item.id);
+
+        let activities = [];
+
+        if (materialIds.length > 0) {
+            const { data, error } = await supabase
+                .from('material_activities')
+                .select('id, title, material_id, position')
+                .in('material_id', materialIds)
+                .eq('status', 'published')
+                .eq('is_archived', false)
+                .order('position');
+
+            if (error) throw error;
+            activities = data || [];
+        }
+
+        // Ambil aktivitas yang telah diselesaikan murid
+        const { data: completed, error: completedError } = await supabase
+            .from('student_activity_progress')
+            .select('activity_id, completed_at')
+            .eq('student_id', studentId)
+            .not('completed_at', 'is', null);
+
+        if (completedError) throw completedError;
+
+        const completedMap = new Map(
+            (completed || []).map(item => [
+                item.activity_id,
+                item.completed_at
+            ])
+        );
+
+        const completedCount = activities.filter(
+            item => completedMap.has(item.id)
+        ).length;
+
+        const progress = activities.length > 0
+            ? Math.round(completedCount / activities.length * 100)
+            : 0;
+
+        // Ambil jumlah kuis yang telah dikumpulkan
+        const { data: attempts, error: attemptError } = await supabase
+            .from('quiz_attempts')
+            .select('id')
+            .eq('student_id', studentId)
+            .not('submitted_at', 'is', null);
+
+        if (attemptError) throw attemptError;
+
+        // Perbarui ringkasan detail
+        document.getElementById('detailProgress').textContent =
+            progress + '%';
+
+        document.getElementById('detailCompleted').textContent =
+            completedCount + '/' + activities.length;
+
+        document.getElementById('detailQuizCount').textContent =
+            (attempts || []).length;
+
+        // Tampilkan daftar aktivitas
+        if (activities.length === 0) {
+            activityList.textContent = 'Belum ada aktivitas yang tersedia.';
+        } else {
+            activityList.innerHTML = activities.map(activity => {
+                const isCompleted = completedMap.has(activity.id);
+
+                return `
+                    <div class="detail-activity-item">
+                        <strong>${escapeHTML(activity.title)}</strong>
+                        <div style="margin-top:6px; color:${isCompleted ? '#4d7c0f' : '#87917e'};">
+                            ${isCompleted ? '✓ Selesai' : '○ Belum selesai'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+    } catch (error) {
+        console.error('Gagal memuat detail murid:', error);
+        activityList.textContent = 'Gagal memuat riwayat aktivitas.';
+    }
+}
+
+// Tombol tutup detail
+document.getElementById('closeStudentDetail').addEventListener('click', () => {
+    document.getElementById('studentDetailModal').style.display = 'none';
+});
+
+// Tutup jika area luar modal diklik
+document.getElementById('studentDetailModal').addEventListener('click', event => {
+    if (event.target.id === 'studentDetailModal') {
+        event.currentTarget.style.display = 'none';
+    }
+});
+// ==========================================
+// ANALISIS JAWABAN EVALUASI AKHIR BAB
+// ==========================================
+
+const analysisChapterFilter =
+    document.getElementById('analysisChapterFilter');
+
+const analysisQuestionList =
+    document.getElementById('analysisQuestionList');
+
+let analysisData = [];
+
+function parseJSON(value) {
+    if (typeof value !== 'string') return value;
+
+    try {
+        return JSON.parse(value);
+    } catch {
+        return value;
+    }
+}
+
+
+function renderMathContent(content) {
+    content = parseJSON(content);
+
+    if (Array.isArray(content)) {
+        return content.map(block => {
+            if (block.type === 'equation') {
+                return `\\(${escapeHTML(block.value || '')}\\)`;
+            }
+
+            return escapeHTML(block.value || '');
+        }).join('');
+    }
+
+    if (content && typeof content === 'object') {
+        return escapeHTML(content.value || '');
+    }
+
+    return escapeHTML(content ?? '');
+}
+
+function getAnswerText(answer, question) {
+    answer = parseJSON(answer);
+
+    if (answer === null || answer === undefined || answer === '') {
+        return 'Tidak menjawab';
+    }
+
+    // Jawaban drag-and-drop
+    if (question?.question_type === 'drag_drop') {
+        const options = parseJSON(question.options) || {};
+        const cards = options.cards || [];
+        const targets = options.targets || [];
+
+        if (typeof answer !== 'object') {
+            return escapeHTML(String(answer));
+        }
+
+        return Object.entries(answer)
+            .map(([index, targetId]) => {
+                const card = cards[Number(index)];
+                const target = targets.find(
+                    item => item.id === String(targetId)
+                );
+
+                if (!card || !target) {
+                    return 'Pasangan jawaban tidak ditemukan';
+                }
+
+                return `
+                    <div class="analysis-drag-pair">
+                        <span>${renderMathContent(card.content || card.text)}</span>
+                        <span class="analysis-drag-arrow">→</span>
+                        <span>${renderMathContent(target.content || target.label)}</span>
+                    </div>
+                `;
+            })
+            .join('');
+    }
+
+    // Jawaban pilihan ganda
+    if (question?.question_type === 'multiple_choice') {
+        const options = parseJSON(question.options) || {};
+        const selected = options[answer];
+
+        if (selected !== undefined) {
+            return renderMathContent(selected);
+        }
+    }
+
+    // Jawaban benar/salah
+    if (question?.question_type === 'true_false') {
+        return normalizeText(answer) === 'true' ? 'Benar' :
+            normalizeText(answer) === 'false' ? 'Salah' :
+            escapeHTML(String(answer));
+    }
+
+    // Jawaban isian singkat
+    return renderMathContent(String(answer));
+}
+
+
+function normalizeText(value) {
+    return String(value ?? '').trim().toLowerCase();
+}
+
+function checkEvaluationAnswer(question, studentAnswer, key) {
+    if (!key) return false;
+
+    let answer = parseJSON(studentAnswer);
+    let correct = parseJSON(key.correct_answer);
+    let accepted = parseJSON(key.accepted_answers);
+
+    if (question.question_type === 'drag_drop') {
+        if (typeof answer === 'string') {
+            answer = parseJSON(answer);
+        }
+
+        if (typeof correct === 'string') {
+            correct = parseJSON(correct);
+        }
+
+        const correctList = Array.isArray(correct)
+            ? correct
+            : Object.values(correct || {});
+
+        if (!answer || typeof answer !== 'object' ||
+            !Array.isArray(correctList)) {
+            return false;
+        }
+
+        return correctList.every((card, index) =>
+            String(answer[index]) === String(card.targetId ?? card.target_id)
+        ) && Object.keys(answer).length === correctList.length;
+    }
+
+    if (question.question_type === 'short_answer') {
+        const acceptedList = Array.isArray(accepted)
+            ? accepted
+            : accepted !== null && accepted !== undefined
+                ? [accepted]
+                : [];
+
+        const correctList = Array.isArray(correct)
+            ? correct
+            : [correct];
+
+        return [...correctList, ...acceptedList].some(item =>
+            normalizeText(answer) === normalizeText(item)
+        );
+    }
+
+    return normalizeText(answer) === normalizeText(correct);
+}
+
+async function loadEvaluationAnalysis() {
+    analysisQuestionList.innerHTML =
+        '<div class="analysis-empty">Memuat analisis evaluasi...</div>';
+
+    try {
+        // 1. Ambil daftar BAB
+        const { data: chapters, error: chapterError } = await supabase
+            .from('chapters')
+            .select('id, title, position')
+            .eq('is_archived', false)
+            .order('position');
+
+        if (chapterError) throw chapterError;
+
+        analysisChapterFilter.innerHTML = `
+            <option value="">Pilih BAB</option>
+            ${(chapters || []).map(chapter => `
+                <option value="${chapter.id}">
+                    ${escapeHTML(chapter.title)}
+                </option>
+            `).join('')}
+        `;
+
+        // 2. Ambil percobaan evaluasi akhir yang sudah dinilai
+        const { data: attempts, error: attemptError } = await supabase
+            .from('quiz_attempts')
+            .select(`
+                id,
+                student_id,
+                quiz_id,
+                score,
+                total_points,
+                submitted_at,
+                quizzes!inner (
+                    id,
+                    title,
+                    quiz_type,
+                    chapter_id
+                )
+            `)
+            .eq('status', 'graded')
+            .not('submitted_at', 'is', null)
+            .eq('quizzes.quiz_type', 'final')
+            .order('submitted_at', { ascending: false });
+
+        if (attemptError) throw attemptError;
+
+        // 3. Ambil percobaan terakhir setiap murid untuk setiap BAB
+        const latestAttempts = new Map();
+
+        (attempts || []).forEach(attempt => {
+            const chapterId = attempt.quizzes?.chapter_id;
+
+            if (!chapterId) return;
+
+            const mapKey = `${attempt.student_id}_${chapterId}`;
+
+            if (!latestAttempts.has(mapKey)) {
+                latestAttempts.set(mapKey, attempt);
+            }
+        });
+
+        analysisData = Array.from(latestAttempts.values());
+
+        // 4. Ambil data murid
+        const studentIds = [
+            ...new Set(analysisData.map(item => item.student_id))
+        ];
+
+        let students = [];
+
+        if (studentIds.length > 0) {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('id, full_name')
+                .in('id', studentIds);
+
+            if (error) throw error;
+            students = data || [];
+        }
+
+        // 5. Ambil soal dan kunci jawaban
+        const quizIds = [
+            ...new Set(analysisData.map(item => item.quiz_id))
+        ];
+
+        let questions = [];
+        let keys = [];
+
+        if (quizIds.length > 0) {
+            const { data, error } = await supabase
+                .from('quiz_questions')
+                .select(`
+                    id,
+                    quiz_id,
+                    question_type,
+                    question_text,
+                    content,
+                    options,
+                    sort_order,
+                    points
+                `)
+                .in('quiz_id', quizIds)
+                .order('sort_order');
+
+            if (error) throw error;
+            questions = data || [];
+
+            const questionIds = questions.map(item => item.id);
+
+            if (questionIds.length > 0) {
+                const { data: keyData, error: keyError } = await supabase
+                    .from('quiz_answer_keys')
+                    .select('question_id, correct_answer, accepted_answers, explanation')
+                    .in('question_id', questionIds);
+
+                if (keyError) throw keyError;
+                keys = keyData || [];
+            }
+        }
+
+        // 6. Ambil seluruh jawaban murid
+        const attemptIds = analysisData.map(item => item.id);
+        let answers = [];
+
+        if (attemptIds.length > 0) {
+            const { data, error } = await supabase
+                .from('student_answers')
+                .select('attempt_id, question_id, answer')
+                .in('attempt_id', attemptIds);
+
+            if (error) throw error;
+            answers = data || [];
+        }
+
+        // 7. Gabungkan data untuk analisis
+        const studentMap = new Map(
+            students.map(student => [student.id, student.full_name])
+        );
+
+        const keyMap = new Map(
+            keys.map(key => [key.question_id, key])
+        );
+
+        const attemptMap = new Map(
+            analysisData.map(attempt => [attempt.id, attempt])
+        );
+
+        const answerMap = new Map(
+            answers.map(answer => [
+                `${answer.attempt_id}_${answer.question_id}`,
+                answer.answer
+            ])
+        );
+
+        const chapterResults = (chapters || []).map(chapter => {
+            const chapterAttempts = analysisData.filter(
+                attempt => attempt.quizzes?.chapter_id === chapter.id
+            );
+
+            const chapterQuizIds = [
+                ...new Set(chapterAttempts.map(item => item.quiz_id))
+            ];
+
+            const chapterQuestions = questions
+                .filter(question => chapterQuizIds.includes(question.quiz_id))
+                .sort((a, b) => a.sort_order - b.sort_order);
+
+            const questionResults = chapterQuestions.map(question => {
+                const key = keyMap.get(question.id);
+
+                const responses = chapterAttempts.map(attempt => {
+                    const answer = answerMap.get(
+                        `${attempt.id}_${question.id}`
+                    );
+
+                    const answered = answer !== undefined &&
+                        answer !== null && answer !== '';
+
+                    const isCorrect = answered
+                        ? checkEvaluationAnswer(question, answer, key)
+                        : false;
+
+                    return {
+                        studentName: studentMap.get(attempt.student_id) || 'Tanpa nama',
+                        answer,
+                        answered,
+                        isCorrect
+                    };
+                });
+
+                const wrongCount = responses.filter(
+                    response => !response.isCorrect
+                ).length;
+
+                return {
+                    question,
+                    responses,
+                    wrongCount,
+                    total: responses.length
+                };
+            });
+
+            return {
+                chapter,
+                attempts: chapterAttempts,
+                questions: questionResults
+            };
+        });
+
+        analysisData = chapterResults;
+
+        analysisChapterFilter.onchange = renderEvaluationAnalysis;
+
+        if (chapters && chapters.length > 0) {
+            analysisChapterFilter.value = chapters[0].id;
+        }
+
+        renderEvaluationAnalysis();
+
+    } catch (error) {
+        console.error('Gagal memuat analisis evaluasi:', error);
+
+        analysisQuestionList.innerHTML = `
+            <div class="analysis-empty">
+                Gagal memuat analisis: ${escapeHTML(error.message)}
+            </div>
+        `;
+    }
+}
+
+async function renderEvaluationAnalysis() {
+    const chapterId = analysisChapterFilter.value;
+
+    const result = analysisData.find(
+        item => item.chapter.id === chapterId
+    );
+
+    if (!result) {
+        document.getElementById('analysisStudentCount').textContent = '0';
+        document.getElementById('analysisQuestionCount').textContent = '0';
+        document.getElementById('analysisWrongAverage').textContent = '0%';
+
+        analysisQuestionList.innerHTML = `
+            <div class="analysis-empty">
+                Belum ada evaluasi akhir BAB yang dikerjakan.
+            </div>
+        `;
+        return;
+    }
+
+    const { attempts, questions } = result;
+
+    const totalWrong = questions.reduce(
+        (sum, item) => sum + item.wrongCount, 0
+    );
+
+    const totalResponses = questions.reduce(
+        (sum, item) => sum + item.total, 0
+    );
+
+    const wrongPercentage = totalResponses > 0
+        ? Math.round(totalWrong / totalResponses * 100)
+        : 0;
+
+    document.getElementById('analysisStudentCount').textContent =
+        attempts.length;
+
+    document.getElementById('analysisQuestionCount').textContent =
+        questions.length;
+
+    document.getElementById('analysisWrongAverage').textContent =
+        wrongPercentage + '%';
+
+    if (questions.length === 0) {
+        analysisQuestionList.innerHTML = `
+            <div class="analysis-empty">
+                Belum ada soal pada evaluasi ini.
+            </div>
+        `;
+        return;
+    }
+
+    const sortedQuestions = [...questions].sort(
+        (a, b) => b.wrongCount - a.wrongCount
+    );
+
+    analysisQuestionList.innerHTML = sortedQuestions.map((item, index) => {
+        const questionText = item.question.content
+    ? renderMathContent(item.question.content)
+    : escapeHTML(item.question.question_text || 'Soal tanpa judul');
+
+        const responseHTML = `
+    <div class="analysis-answer-table-wrapper">
+        <table class="analysis-answer-table">
+            <thead>
+                <tr>
+                    <th>Nama Murid</th>
+                    <th>Jawaban Murid</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${item.responses.map(response => `
+                    <tr>
+                        <td>
+                            <strong>${escapeHTML(response.studentName)}</strong>
+                        </td>
+                        <td>
+                            ${getAnswerText(response.answer, item.question)}
+                        </td>
+                        <td>
+                            <span class="${response.isCorrect ? 'answer-correct' : 'answer-wrong'}">
+                                ${response.isCorrect ? '✓ Benar' : '✕ Salah'}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+`;
+
+        return `
+            <div class="analysis-question">
+                <div class="analysis-question-header"
+                    onclick="this.parentElement.classList.toggle('open')">
+
+                    <div class="analysis-question-info">
+                        <strong>Soal ${index + 1}</strong>
+                        <small>${questionText}</small>
+                    </div>
+
+                    <span class="wrong-count">
+                        ${item.wrongCount}/${item.total} salah
+                    </span>
+                </div>
+
+                <div class="analysis-answer-details">
+                    <strong>Jawaban Seluruh Murid</strong>
+                    ${responseHTML || '<p>Belum ada jawaban.</p>'}
+                </div>
+            </div>
+        `;
+        }).join('');
+
+    // Render ulang rumus matematika
+    if (window.MathJax?.typesetPromise) {
+        await window.MathJax.typesetPromise([analysisQuestionList]);
+    }
+}
+
+// Jalankan analisis
+loadEvaluationAnalysis();
+// Fungsi keluar dari akun guru
+document.getElementById('teacherLogout').addEventListener('click', async function(event) {
+    event.preventDefault();
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        alert('Gagal keluar. Silakan coba lagi.');
+    } else {
+        window.location.href = 'login.html';
+    }
+});
+
+</script>
+</body>
+</html>
+
