@@ -288,6 +288,147 @@ math-field:focus-within {
     box-shadow: 0 5px 12px rgba(36, 75, 59, 0.15);
 }
 
+/* =================================
+   DAFTAR SOAL - PALETTE 2
+================================= */
+
+.question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.question-list > div:not(.empty-question) {
+    padding: 24px !important;
+    margin-bottom: 0 !important;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F6FAF6 100%) !important;
+    border: 1px solid #CDE8D4 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 5px 16px rgba(66, 105, 75, 0.07);
+    transition: 0.2s ease;
+}
+
+.question-list > div:not(.empty-question):hover {
+    border-color: #97C49E !important;
+    box-shadow: 0 8px 22px rgba(66, 105, 75, 0.11);
+    transform: translateY(-2px);
+}
+
+.question-list > div:not(.empty-question) h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #DCEBDD;
+    color: #526F50 !important;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.question-list > div:not(.empty-question) p {
+    margin: 10px 0;
+    color: #647568;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.question-list > div:not(.empty-question) p:first-of-type {
+    padding: 16px;
+    background: #F0F7F0;
+    border: 1px solid #E0EDE0;
+    border-radius: 12px;
+    color: #344B40;
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.question-list > div:not(.empty-question) button {
+    padding: 10px 17px !important;
+    margin: 14px 8px 0 0 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.question-list > div:not(.empty-question) button:first-of-type {
+    background: #6C9B76 !important;
+}
+
+.question-list > div:not(.empty-question) button:first-of-type:hover {
+    background: #526F50 !important;
+    transform: translateY(-1px);
+}
+
+.question-list > div:not(.empty-question) button:last-of-type {
+    background: #FCE8E6 !important;
+    color: #B94D45 !important;
+}
+
+.question-list > div:not(.empty-question) button:last-of-type:hover {
+    background: #F8D5D1 !important;
+}
+
+.empty-question {
+    padding: 45px 24px;
+    text-align: center;
+    border: 1px dashed #AFCDB4;
+    border-radius: 16px;
+    background: #F6FAF6;
+    color: #718078;
+}
+.question-preview-content {
+    padding: 16px;
+    background: #F0F7F0;
+    border: 1px solid #E0EDE0;
+    border-radius: 12px;
+    color: #344B40;
+    font-size: 15px;
+    line-height: 1.9;
+    overflow-wrap: anywhere;
+}
+
+.question-preview-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 10px 0;
+    padding: 12px 15px;
+    background: #F8FBF8;
+    border: 1px solid #E3EEE4;
+    border-radius: 10px;
+    color: #526F50;
+}
+
+.question-preview-option strong {
+    flex-shrink: 0;
+}
+
+.question-preview-option-content {
+    min-width: 0;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+.question-preview-content math-field,
+.question-preview-option-content math-field {
+    display: inline-block;
+    max-width: 100%;
+    color: #344B40;
+    vertical-align: middle;
+    font-size: 1.05em;
+}
+
+.question-preview-option-content {
+    flex: 1;
+}
+
+.question-preview-content {
+    min-height: 48px;
+}
     </style>
 </head>
 
@@ -345,7 +486,7 @@ math-field:focus-within {
             <p>Setiap langkah kecil membawamu lebih dekat pada pemahaman.</p>
         </div>
 
-        <a href="#" class="logout" id="logoutButton">
+        <a href="login.html" class="logout" id="logoutButton">
             ↪ &nbsp; Keluar
         </a>
     </div>
@@ -578,6 +719,68 @@ async function loadQuizInfo() {
 let editingQuestionId = null;
 let pendingDragDropEdit = null;
 // Memuat daftar soal dari Supabase
+function renderQuestionContent(container, content, fallbackText = '') {
+    container.innerHTML = '';
+
+    const items = Array.isArray(content) ? content : [];
+
+    if (items.length === 0) {
+        container.textContent = fallbackText || '(Pertanyaan kosong)';
+        return;
+    }
+
+    items.forEach(item => {
+        if (item.type === 'equation') {
+            const mathField = createMathField(item.value || '');
+
+            mathField.readOnly = true;
+            mathField.setAttribute('read-only', '');
+
+            mathField.style.cssText = `
+                display: inline-block;
+                width: auto;
+                min-width: 0;
+                min-height: 0;
+                height: auto;
+                padding: 0 3px;
+                border: none;
+                border-radius: 0;
+                background: transparent;
+                vertical-align: middle;
+                pointer-events: none;
+                font-size: 1em;
+            `;
+
+            container.appendChild(mathField);
+        } else if (item.type === 'text') {
+            container.appendChild(
+                document.createTextNode(item.value || '')
+            );
+        }
+    });
+}
+function parseStoredRichContent(savedValue) {
+    if (!savedValue) return [];
+
+    if (Array.isArray(savedValue)) {
+        return savedValue;
+    }
+
+    try {
+        const parsed = JSON.parse(savedValue);
+
+        if (Array.isArray(parsed)) {
+            return parsed;
+        }
+    } catch (error) {
+        // Data lama yang masih berupa teks biasa
+    }
+
+    return [{
+        type: 'text',
+        value: String(savedValue)
+    }];
+}
 
 async function loadQuestions() {
     const questionList = document.getElementById('questionList');
@@ -637,8 +840,14 @@ async function loadQuestions() {
             title.textContent = `Soal ${index + 1}`;
             title.style.color = '#365314';
 
-            const questionText = document.createElement('p');
-            questionText.textContent = question.question_text || '(Pertanyaan kosong)';
+            const questionText = document.createElement('div');
+questionText.className = 'question-preview-content';
+
+renderQuestionContent(
+    questionText,
+    question.content,
+    question.question_text || '(Pertanyaan kosong)'
+);
 
             const typeNames = {
                 multiple_choice: 'Pilihan Ganda',
@@ -657,16 +866,27 @@ async function loadQuestions() {
 
             if (question.question_type === 'multiple_choice') {
                 ['A', 'B', 'C', 'D'].forEach(key => {
-                    const option = document.createElement('p');
-                    const value = options[key];
+                   const option = document.createElement('div');
+option.className = 'question-preview-option';
 
-                    option.textContent = `${key}. ${
-                        Array.isArray(value)
-                            ? value.map(item => item.value || '').join('')
-                            : value || ''
-                    }`;
+const label = document.createElement('strong');
+label.textContent = `${key}.`;
 
-                    card.appendChild(option);
+const optionContent = document.createElement('div');
+optionContent.className = 'question-preview-option-content';
+
+const value = options[key];
+
+renderQuestionContent(
+    optionContent,
+    Array.isArray(value) ? value : null,
+    typeof value === 'string' ? value : ''
+);
+
+option.appendChild(label);
+option.appendChild(optionContent);
+
+card.appendChild(option);
                 });
             }
 
@@ -779,24 +999,62 @@ async function loadQuestions() {
             );
         });
     }
-
-    // 3. Kembalikan kunci jawaban
+    // 3. Restore answer key khusus pilihan ganda
+if (question.question_type === 'multiple_choice') {
     const correctRadio = questionFormContent.querySelector(
         `input[name="correctAnswer"][value="${answerKey?.correct_answer}"]`
     );
 
-    if (correctRadio) {
-        correctRadio.checked = true;
-    }
+    if (correctRadio) correctRadio.checked = true;
+}
 
-    // 4. Kembalikan poin soal
-    const pointsInput = questionFormContent.querySelector(
-        '.question-points'
+// 3b. Restore jawaban benar khusus Short Answer
+if (question.question_type === 'short_answer') {
+    const answerInput = [...questionFormContent.querySelectorAll('input')]
+        .find(input => input.placeholder === 'Masukkan jawaban benar...');
+
+    if (answerInput) {
+        answerInput.value = answerKey?.correct_answer || '';
+    }
+}
+
+// 4. Kembalikan poin soal
+const pointsInput = questionFormContent.querySelector(
+    '.question-points'
+);
+
+if (pointsInput) {
+    pointsInput.value = question.points || 1;
+}
+
+// 5. Kembalikan isi pembahasan
+// 5. Kembalikan isi pembahasan
+if (['multiple_choice', 'true_false', 'short_answer', 'drag_drop'].includes(question.question_type)) {
+    const explanationField = [
+        ...questionFormContent.querySelectorAll('.question-field')
+    ].find(field =>
+        field.querySelector('label')?.textContent.trim() === 'Pembahasan'
     );
 
-    if (pointsInput) {
-        pointsInput.value = question.points || 1;
-    }
+    const explanationEditor = explanationField?.querySelector(
+        '.question-text-editor'
+    );
+
+    console.log('CEK PEMBAHASAN DRAG DROP:', {
+    questionType: question.question_type,
+    answerKey: answerKey,
+    savedExplanation: answerKey?.explanation,
+    parsedExplanation: parseStoredRichContent(answerKey?.explanation),
+    editorFound: !!explanationEditor
+});
+
+if (explanationEditor) {
+    setEditorContent(
+        explanationEditor,
+        parseStoredRichContent(answerKey?.explanation)
+    );
+}
+}
 
 }, 150);
 });
@@ -1303,26 +1561,6 @@ function enableEquationDeletion(editor, saveCursorPosition) {
     answerField.appendChild(answerInput);
     questionFormContent.appendChild(answerField);
 
-    // Jawaban alternatif
-    const acceptedField = document.createElement('div');
-    acceptedField.className = 'question-field';
-
-    const acceptedLabel = document.createElement('label');
-    acceptedLabel.textContent = 'Jawaban Alternatif';
-
-    const acceptedInput = document.createElement('textarea');
-    acceptedInput.placeholder =
-        'Masukkan jawaban alternatif, pisahkan dengan koma...';
-    acceptedInput.style.width = '100%';
-    acceptedInput.style.minHeight = '80px';
-    acceptedInput.style.padding = '12px';
-    acceptedInput.style.border = '1px solid #d1d5db';
-    acceptedInput.style.borderRadius = '8px';
-
-    acceptedField.appendChild(acceptedLabel);
-    acceptedField.appendChild(acceptedInput);
-    questionFormContent.appendChild(acceptedField);
-
     // Pembahasan
     const explanationField = document.createElement('div');
     explanationField.className = 'question-field';
@@ -1361,13 +1599,10 @@ function enableEquationDeletion(editor, saveCursorPosition) {
 
         const questionContent = getEditorContent(questionEditor.editor);
         const explanation = getEditorContent(explanationEditor.editor);
+        console.log('HTML PEMBAHASAN:', explanationEditor.editor.innerHTML);
+        console.log('DATA PEMBAHASAN:', explanation);
 
         const correctAnswer = answerInput.value.trim();
-
-        const acceptedAnswers = acceptedInput.value
-            .split(',')
-            .map(item => item.trim())
-            .filter(item => item !== '');
 
         const points = Number(pointsInput.value);
 
@@ -1419,8 +1654,7 @@ function enableEquationDeletion(editor, saveCursorPosition) {
                     .from('quiz_answer_keys')
                     .update({
                         correct_answer: correctAnswer,
-                        accepted_answers: acceptedAnswers,
-                        explanation: explanationText
+                        explanation: JSON.stringify(explanation)
                     })
                     .eq('question_id', editingQuestionId);
 
@@ -1465,9 +1699,8 @@ function enableEquationDeletion(editor, saveCursorPosition) {
                     .insert({
                         question_id: savedQuestion.id,
                         correct_answer: correctAnswer,
-                        accepted_answers: acceptedAnswers,
-                        explanation: explanationText
-                    });
+                        explanation: JSON.stringify(explanation)
+                    })
 
                 if (keyError) throw keyError;
             }
@@ -1636,7 +1869,7 @@ function enableEquationDeletion(editor, saveCursorPosition) {
                     .from('quiz_answer_keys')
                     .update({
                         correct_answer: correctAnswer.value,
-                        explanation: explanationText
+                        explanation: JSON.stringify(explanation)
                     })
                     .eq('question_id', editingQuestionId);
 
@@ -1684,7 +1917,7 @@ function enableEquationDeletion(editor, saveCursorPosition) {
                     .insert({
                         question_id: savedQuestionId,
                         correct_answer: correctAnswer.value,
-                        explanation: explanationText
+                        explanation: JSON.stringify(explanation)
                     });
 
                 if (keyError) throw keyError;
@@ -1887,6 +2120,10 @@ cardEditor.editor.addEventListener('input', () => {
 });
 
             const targetSelect = document.createElement('select');
+            const placeholderOption = document.createElement('option');
+placeholderOption.value = '';
+placeholderOption.textContent = 'Pilih kelompok tujuan';
+targetSelect.appendChild(placeholderOption);
             targetSelect.style.width = '100%';
             targetSelect.style.padding = '10px';
             targetSelect.style.border = '1px solid #d1d5db';
@@ -1899,7 +2136,12 @@ cardEditor.editor.addEventListener('input', () => {
                 targetSelect.appendChild(option);
             });
 
-            targetSelect.value = card.targetId;
+            if (card.targetId && targets.some(target => target.id === card.targetId)) {
+    targetSelect.value = card.targetId;
+} else {
+    card.targetId = '';
+    targetSelect.value = '';
+}
 
             targetSelect.addEventListener('change', () => {
                 card.targetId = targetSelect.value;
@@ -1949,8 +2191,24 @@ cardEditor.editor.addEventListener('input', () => {
     cardsField.appendChild(addCardButton);
     questionFormContent.appendChild(cardsField);
 
-    // Poin soal
-    const pointsLabel = document.createElement('label');
+// Pembahasan
+const explanationField = document.createElement('div');
+explanationField.className = 'question-field';
+
+const explanationLabel = document.createElement('label');
+explanationLabel.textContent = 'Pembahasan';
+
+const explanationEditor = createRichTextEditor(
+    'Tuliskan pembahasan jawaban di sini...'
+);
+
+explanationField.appendChild(explanationLabel);
+explanationField.appendChild(explanationEditor.container);
+
+questionFormContent.appendChild(explanationField);
+
+// Poin soal
+const pointsLabel = document.createElement('label');
     pointsLabel.textContent = 'Poin Soal';
 
     const pointsInput = document.createElement('input');
@@ -2045,6 +2303,7 @@ if (pendingDragDropEdit) {
     saveButton.addEventListener('click', async () => {
 
         const questionContent = getEditorContent(questionEditor.editor);
+        const explanation = getEditorContent(explanationEditor.editor);
         const points = Number(pointsInput.value);
 
         const questionText = questionContent
@@ -2084,7 +2343,15 @@ if (
             alert('Poin soal minimal 1.');
             return;
         }
+const hasInvalidTarget = cards.some(card =>
+    !card.targetId ||
+    !targets.some(target => target.id === card.targetId)
+);
 
+if (hasInvalidTarget) {
+    alert('Pilih kelompok tujuan untuk setiap kartu sebelum menyimpan soal.');
+    return;
+}
      const dragDropData = {
     targets: targets.map(target => ({
         id: target.id,
@@ -2098,14 +2365,15 @@ if (
     })),
 
     cards: cards.map(card => ({
-        text: card.text.trim(),
-        content: card.content || [
-            {
-                type: 'text',
-                value: card.text.trim()
-            }
-        ]
-    }))
+    text: card.text.trim(),
+    content: card.content || [
+        {
+            type: 'text',
+            value: card.text.trim()
+        }
+    ],
+    targetId: card.targetId
+}))
 };
 
 // Pemetaan jawaban benar disimpan terpisah
@@ -2144,7 +2412,7 @@ const dragDropAnswerKey = cards.map(card => ({
                 .update({
                     correct_answer: JSON.stringify(dragDropAnswerKey),
                     accepted_answers: [],
-                    explanation: ''
+                    explanation: JSON.stringify(explanation)
                 })
                 .eq('question_id', editingQuestionId);
 
@@ -2190,8 +2458,8 @@ const dragDropAnswerKey = cards.map(card => ({
                         question_id: savedQuestion.id,
                         correct_answer: JSON.stringify(dragDropAnswerKey),
                         accepted_answers: [],
-                        explanation: ''
-                    });
+                        explanation: JSON.stringify(explanation)
+                    })
 
                 if (keyError) throw keyError;
             }
@@ -2373,11 +2641,6 @@ saveButton.addEventListener('click', async () => {
             .join(' ')
             .trim();
 
-        const explanationText = explanation
-            .map(item => item.value)
-            .join(' ')
-            .trim();
-
         // Memperbarui data soal
         const { error: questionUpdateError } = await supabase
             .from('quiz_questions')
@@ -2396,7 +2659,7 @@ saveButton.addEventListener('click', async () => {
             .from('quiz_answer_keys')
             .update({
                 correct_answer: correctAnswer.value,
-                explanation: explanationText
+                explanation: JSON.stringify(explanation)
             })
             .eq('question_id', editingQuestionId);
 
@@ -2431,11 +2694,6 @@ saveButton.addEventListener('click', async () => {
             .join(' ')
             .trim();
 
-        const explanationText = explanation
-            .map(item => item.value)
-            .join(' ')
-            .trim();
-
         // Menyimpan soal
         const { data: savedQuestion, error: questionError } = await supabase
             .from('quiz_questions')
@@ -2459,7 +2717,7 @@ saveButton.addEventListener('click', async () => {
             .insert({
                 question_id: savedQuestion.id,
                 correct_answer: correctAnswer.value,
-                explanation: explanationText
+                explanation: JSON.stringify(explanation)
             });
 
         if (answerKeyError) throw answerKeyError;

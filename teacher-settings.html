@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan Guru | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/notification.css">
+
+    <style>
+        .settings-welcome {
+            background: linear-gradient(120deg, #657E47, #6C9B76, #97C49E);
+            color: white;
+            padding: 28px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .settings-welcome h2 {
+            margin: 0 0 8px;
+        }
+
+        .settings-welcome p {
+            margin: 0;
+            opacity: .9;
+        }
+
+        .settings-section {
+            background: white;
+            border: 1px solid #e5eadf;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 22px;
+        }
+
+        .settings-section h3 {
+            color: #405c36;
+            margin: 0 0 6px;
+        }
+
+        .settings-description {
+            color: #84917f;
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: #CDE8D4;
+            color: #405c36;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .profile-header h4 {
+            margin: 0 0 5px;
+            color: #405c36;
+        }
+
+        .profile-header p {
+            margin: 0;
+            color: #84917f;
+            font-size: 13px;
+        }
+
+        .settings-field {
+            margin-bottom: 18px;
+        }
+
+        .settings-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #52634b;
+            margin-bottom: 8px;
+        }
+
+        .settings-field input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dce6d8;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .settings-field input:focus {
+            border-color: #6C9B76;
+        }
+
+        .settings-button {
+            background: #6C9B76;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .settings-button:hover {
+            background: #657E47;
+        }
+
+        .account-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #edf1e9;
+            gap: 15px;
+        }
+
+        .account-info:last-child {
+            border-bottom: none;
+        }
+
+        .account-info span:first-child {
+            color: #84917f;
+            font-size: 13px;
+        }
+
+        .account-info span:last-child {
+            color: #405c36;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-button {
+            background: #fff1ef;
+            color: #c45b50;
+            border: 1px solid #f3d6d1;
+            padding: 11px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .settings-section {
+                padding: 18px;
+            }
+
+            .account-info {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+    <a href="teacher.html" class="brand">
+        <span class="brand-icon">∑</span>
+        <span>mathcademy<span class="brand-dot">.</span></span>
+    </a>
+
+    <div class="menu-label">MENU UTAMA</div>
+
+    <nav class="navigation">
+
+        <a href="teacher.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </a>
+
+        <a href="materials.html" class="nav-item">
+            <span class="nav-icon">▤</span>
+            Kelola Materi
+        </a>
+
+        <a href="quizzes.html" class="nav-item">
+            <span class="nav-icon">✎</span>
+            Kelola Kuis
+        </a>
+
+        <a href="students.html" class="nav-item">
+            <span class="nav-icon">♙</span>
+            Data Murid
+        </a>
+
+        <a href="progress.html" class="nav-item">
+            <span class="nav-icon">▥</span>
+            Progres & Nilai
+        </a>
+
+    </nav>
+
+    <div class="menu-label second-label">LAINNYA</div>
+
+    <nav class="navigation">
+
+        <a href="teacher-settings.html" class="nav-item active">
+            <span class="nav-icon">⚙</span>
+            Pengaturan
+        </a>
+
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Tampilan Murid
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="help-card">
+            <div class="help-icon">✦</div>
+            <strong>Semangat mengajar!</strong>
+            <p>Bangun pengalaman belajar matematika yang menyenangkan.</p>
+        </div>
+
+        <a href="#" class="logout" id="teacherLogout">
+            ↪ &nbsp; Keluar
+        </a>
+
+    </div>
+
+</aside>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+    <header class="topbar">
+
+    <button
+        type="button"
+        class="sidebar-toggle"
+        id="sidebarToggle"
+        aria-label="Buka menu navigasi"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+    <div>
+        <p class="breadcrumb">Pengaturan / Guru</p>
+            <h3>Pengaturan Akun</h3>
+        </div>
+
+        <div class="topbar-right">
+            <div class="profile">
+                <div class="avatar" id="teacherAvatar">G</div>
+                <div>
+                    <strong id="teacherName">Nama Guru</strong>
+                    <span>Pengajar Mathcademy</span>
+                </div>
+                <span class="dropdown">⌄</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="settings-welcome">
+        <h2>Pengaturan Akun Guru ⚙️</h2>
+        <p>Kelola informasi profil dan keamanan akun Mathcademy milikmu.</p>
+    </section>
+
+    <!-- PROFIL GURU -->
+    <section class="settings-section">
+        <h3>Profil Guru</h3>
+        <p class="settings-description">
+            Informasi identitas yang digunakan pada akun Mathcademy.
+        </p>
+
+        <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">G</div>
+            <div>
+                <h4 id="profileDisplayName">Nama Guru</h4>
+                <p>Pengajar Mathcademy</p>
+            </div>
+        </div>
+
+        <form id="profileForm">
+            <div class="settings-field">
+                <label for="fullName">Nama Lengkap</label>
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Masukkan nama lengkap"
+                    required
+                >
+            </div>
+
+            <div class="settings-field">
+                <label for="email">Email Akun</label>
+                <input
+                    type="email"
+                    id="email"
+                    readonly
+                >
+            </div>
+
+            <button type="submit" class="settings-button">
+                Simpan Perubahan
+            </button>
+        </form>
+    </section>
+
+    <!-- KEAMANAN AKUN -->
+    <section class="settings-section">
+        <h3>Keamanan Akun</h3>
+        <p class="settings-description">
+            Perbarui kata sandi untuk menjaga keamanan akunmu.
+        </p>
+
+        <form id="passwordForm">
+            <div class="settings-field">
+                <label for="newPassword">Kata Sandi Baru</label>
+                <input
+                    type="password"
+                    id="newPassword"
+                    placeholder="Masukkan kata sandi baru"
+                    minlength="6"
+                    required
+                >
+            </div>
+
+            <div class="settings-field">
+                <label for="confirmPassword">Konfirmasi Kata Sandi</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Ulangi kata sandi baru"
+                    minlength="6"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="settings-button">
+                Ubah Kata Sandi
+            </button>
+        </form>
+    </section>
+
+    <!-- INFORMASI AKUN -->
+    <section class="settings-section">
+        <h3>Informasi Akun</h3>
+        <p class="settings-description">
+            Informasi mengenai status akun yang sedang digunakan.
+        </p>
+
+        <div class="account-info">
+            <span>Jenis Akun</span>
+            <span>Guru</span>
+        </div>
+
+        <div class="account-info">
+            <span>Platform</span>
+            <span>Mathcademy</span>
+        </div>
+
+        <div class="account-info">
+            <span>Status Akun</span>
+            <span>Aktif</span>
+        </div>
+    </section>
+
+</main>
+</div>
+
+<script type="module">
+  import { supabase } from './supabase.js';
+import { initTeacherNotifications } from './js/notification.js';
+
+    async function loadTeacherProfile() {
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('full_name, role')
+            .eq('id', user.id)
+            .single();
+
+        if (error || !profile || profile.role !== 'teacher') {
+            alert('Data akun guru tidak dapat ditemukan.');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const teacherName = profile.full_name || 'Guru';
+
+        document.getElementById('teacherName').textContent = teacherName;
+        document.getElementById('teacherAvatar').textContent = teacherName.charAt(0).toUpperCase();
+
+        document.getElementById('profileDisplayName').textContent = teacherName;
+        document.getElementById('profileAvatar').textContent = teacherName.charAt(0).toUpperCase();
+
+        document.getElementById('fullName').value = profile.full_name || '';
+        document.getElementById('email').value = user.email || '';
+        // Inisialisasi sistem notifikasi guru
+await initTeacherNotifications(user);
+    }
+
+loadTeacherProfile();
+
+// SIMPAN PERUBAHAN PROFIL
+document.getElementById('profileForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const newName = document.getElementById('fullName').value.trim();
+
+    if (!newName) {
+        alert('Nama lengkap tidak boleh kosong.');
+        return;
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        alert('Sesi login berakhir. Silakan login kembali.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const { error } = await supabase
+        .from('profiles')
+        .update({ full_name: newName })
+        .eq('id', user.id);
+
+    if (error) {
+        console.error(error);
+        alert('Gagal memperbarui profil: ' + error.message);
+        return;
+    }
+
+    document.getElementById('teacherName').textContent = newName;
+    document.getElementById('teacherAvatar').textContent = newName.charAt(0).toUpperCase();
+    document.getElementById('profileDisplayName').textContent = newName;
+    document.getElementById('profileAvatar').textContent = newName.charAt(0).toUpperCase();
+
+    alert('Profil berhasil diperbarui!');
+});
+// UBAH KATA SANDI
+document.getElementById('passwordForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (newPassword.length < 6) {
+        alert('Kata sandi minimal 6 karakter.');
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        alert('Konfirmasi kata sandi tidak sesuai.');
+        return;
+    }
+
+    const { error } = await supabase.auth.updateUser({
+        password: newPassword
+    });
+
+    if (error) {
+        console.error(error);
+        alert('Gagal mengubah kata sandi: ' + error.message);
+        return;
+    }
+
+    alert('Kata sandi berhasil diperbarui!');
+
+    document.getElementById('passwordForm').reset();
+});
+// LOGOUT GURU
+const teacherLogout = document.getElementById('teacherLogout');
+
+if (teacherLogout) {
+    teacherLogout.addEventListener('click', async function (event) {
+        event.preventDefault();
+
+        const konfirmasi = confirm('Apakah kamu yakin ingin keluar dari akun?');
+
+        if (!konfirmasi) return;
+
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            alert('Gagal keluar. Silakan coba lagi.');
+            console.error(error);
+            return;
+        }
+
+        window.location.href = 'login.html';
+    });
+}
+</script>
+<script src="js/sidebar.js" defer></script>
+</body>
+</html>

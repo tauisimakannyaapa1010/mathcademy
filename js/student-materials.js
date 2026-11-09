@@ -1,8 +1,9 @@
 
 import { supabase } from '../supabase.js';
+import { initStudentNotifications } from './notification.js';
 
 const chapterList = document.getElementById('chapterList');
-const logoutButton = document.getElementById('logoutButton');
+const logoutButton = document.getElementById('studentLogout');
 const selectedChapterId = new URLSearchParams(window.location.search).get('chapter');
 
 // Mencegah teks dari database dibaca sebagai HTML
@@ -80,9 +81,11 @@ const visibleChapters = selectedChapterId
     // Mengambil subbab
     const { data: materials, error: materialError } = await supabase
         .from('materials')
-        .select('id, title, description, chapter_id')
+        .select('id, title, description, chapter_id, position')
         .eq('status', 'published')
-        .eq('is_archived', false);
+        .eq('is_archived', false)
+        .order('position', { ascending: true });
+        
 
     if (materialError) {
         console.error(materialError);
@@ -94,7 +97,7 @@ const visibleChapters = selectedChapterId
     // Mengambil aktivitas yang sudah dipublikasikan
     const { data: activities, error: activityError } = await supabase
         .from('material_activities')
-        .select('id, material_id, title, position')
+        .select('id, material_id, title, content, position')
         .eq('status', 'published')
         .eq('is_archived', false)
         .order('position', { ascending: true });
@@ -123,17 +126,71 @@ const visibleChapters = selectedChapterId
     const completedActivityIds = new Set(
         (progress || []).map(item => item.activity_id)
     );
+    // Mengambil jawaban mini kuis murid
+const { data: quizAnswers, error: quizAnswersError } = await supabase
+    .from('student_activity_answers')
+    .select('activity_id, block_id, is_correct')
+    .eq('student_id', user.id);
+
+if (quizAnswersError) {
+    console.error(quizAnswersError);
+    chapterList.innerHTML =
+        '<div class="empty-message">Gagal memuat jawaban kuis.</div>';
+    return;
+}
+
+// Mengumpulkan jawaban mini kuis yang benar
+const correctQuizAnswers = new Set(
+    (quizAnswers || [])
+        .filter(answer => answer.is_correct === true)
+        .map(answer => `${answer.activity_id}_${answer.block_id}`)
+);
+
+// Memeriksa apakah seluruh mini kuis aktivitas sudah dijawab benar
+function hasPassedActivityQuizzes(activity) {
+    let blocks = activity.content;
+
+    if (typeof blocks === 'string') {
+        try {
+            blocks = JSON.parse(blocks);
+        } catch {
+            blocks = [];
+        }
+    }
+
+    if (!Array.isArray(blocks)) {
+        blocks = blocks?.blocks || [];
+    }
+
+    const quizBlocks = blocks
+    .map((block, index) => ({
+        ...block,
+        id: block.id || `block-${index}`
+    }))
+    .filter(block =>
+        ['multiple-choice', 'short-answer', 'drag-drop'].includes(block.type)
+    );
+
+    // Jika tidak ada mini kuis, gunakan status penyelesaian aktivitas
+    if (quizBlocks.length === 0) {
+        return completedActivityIds.has(activity.id);
+    }
+
+    return quizBlocks.every(block =>
+        correctQuizAnswers.has(`${activity.id}_${block.id}`)
+    );
+}
 
     // Menyusun BAB, subbab, dan aktivitas
     // Tombol untuk kembali melihat semua BAB
 const backButton = selectedChapterId
     ? `
         <button
-            class="activity-button"
+            class="back-to-chapters-button"
             onclick="window.location.href='student-materials.html'"
-            style="margin-bottom: 20px;"
         >
-            ← Kembali ke Semua BAB
+            <span>←</span>
+            Kembali ke Semua BAB
         </button>
     `
     : '';
@@ -147,8 +204,8 @@ const chapterMaterialIds = chapterMaterials.map(
     material => material.id
 );
 
-const chapterActivities = activities.filter(
-    activity => chapterMaterialIds.includes(activity.material_id)
+const chapterActivities = chapterMaterials.flatMap(material =>
+    activities.filter(activity => activity.material_id === material.id)
 );
 
 const totalChapterActivities = chapterActivities.length;
@@ -181,10 +238,22 @@ const chapterProgressPercentage = totalChapterActivities > 0
 
             const activityHTML = materialActivities.length > 0
     ? materialActivities.map((activity, activityIndex) => {
-        const isCompleted = completedActivityIds.has(activity.id);
-        const isUnlocked =
-            activityIndex === 0 ||
-            completedActivityIds.has(materialActivities[activityIndex - 1].id);
+       const isCompleted = completedActivityIds.has(activity.id);
+
+// Menentukan posisi aktivitas dalam seluruh BAB
+const globalActivityIndex = chapterActivities.findIndex(
+    item => item.id === activity.id
+);
+
+// Mengambil aktivitas sebelumnya, termasuk dari subbab sebelumnya
+const previousActivity = globalActivityIndex > 0
+    ? chapterActivities[globalActivityIndex - 1]
+    : null;
+
+// Aktivitas pertama BAB terbuka.
+// Aktivitas berikutnya menunggu seluruh mini kuis sebelumnya benar.
+const isUnlocked = globalActivityIndex === 0 ||
+    (previousActivity && hasPassedActivityQuizzes(previousActivity));
 
         let buttonHTML = '';
 
@@ -314,5 +383,6 @@ logoutButton.addEventListener('click', async (event) => {
 const user = await checkStudent();
 
 if (user) {
+    await initStudentNotifications(user);
     await loadStudentMaterials();
 }

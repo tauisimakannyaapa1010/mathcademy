@@ -1,0 +1,175 @@
+/* =====================================
+   MATHCADEMY - RESPONSIVE GLOBAL
+   Fondasi untuk semua ukuran perangkat
+===================================== */
+
+/* Mencegah elemen melebar keluar layar */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Mencegah halaman mengalami scroll horizontal */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Gambar dan media mengikuti lebar wadah */
+img,
+video,
+iframe {
+    max-width: 100%;
+}
+
+/* Form tidak melewati batas layar */
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+}
+/* =====================================
+   HAMBURGER SIDEBAR
+===================================== */
+
+/* Default: tombol dan overlay disembunyikan */
+.sidebar-toggle,
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* Tampilan tablet dan mobile */
+@media (max-width: 760px) {
+
+    /* Tombol hamburger */
+    .app .sidebar-toggle,
+    .dashboard-container .sidebar-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        color: #365314;
+        font-size: 23px;
+        cursor: pointer;
+    }
+
+    /* Sidebar menjadi menu geser */
+    .app .sidebar,
+    .dashboard-container .sidebar {
+        width: 250px;
+        height: 100vh;
+        padding: 30px 20px 22px;
+        align-items: stretch;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1001;
+    }
+
+    .app .sidebar.is-open,
+    .dashboard-container .sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    /* Kembalikan isi sidebar secara lengkap */
+    .app .brand,
+    .dashboard-container .brand {
+        margin: 0 0 55px 5px;
+    }
+
+    .app .brand > span:last-child,
+    .dashboard-container .brand > span:last-child {
+        font-size: 22px;
+    }
+
+    .app .menu-label,
+    .dashboard-container .menu-label {
+        font-size: 10px;
+    }
+
+    .app .nav-item,
+    .app .nav-item:not(.active),
+    .app .nav-item.active,
+    .dashboard-container .nav-item,
+    .dashboard-container .nav-item:not(.active),
+    .dashboard-container .nav-item.active {
+        font-size: 13px;
+    }
+
+    .app .navigation,
+    .dashboard-container .navigation {
+        width: 100%;
+    }
+
+    .app .nav-item,
+    .dashboard-container .nav-item {
+        justify-content: flex-start;
+        padding: 13px 14px;
+    }
+
+    .app .nav-icon,
+    .dashboard-container .nav-icon {
+        font-size: 19px;
+    }
+
+    .app .second-label,
+    .app .sidebar-bottom,
+    .dashboard-container .second-label,
+    .dashboard-container .sidebar-bottom {
+        display: block;
+    }
+
+    /* Konten menggunakan lebar layar */
+    .app .main-content,
+    .dashboard-container .main-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 0 16px;
+    }
+
+    /* Overlay */
+    .app .sidebar-overlay,
+    .dashboard-container .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 1000;
+    }
+
+    .app .sidebar-overlay.is-visible,
+    .dashboard-container .sidebar-overlay.is-visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+ /* Posisi elemen topbar */
+.app .topbar,
+.dashboard-container .topbar {
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+/* Judul mengambil ruang yang tersedia */
+.app .breadcrumb,
+.dashboard-container .breadcrumb {
+    flex: 1;
+}
+
+/* Notifikasi dan avatar tetap di kanan */
+.dashboard-container .topbar-right {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+}

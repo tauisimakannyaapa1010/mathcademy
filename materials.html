@@ -6,52 +6,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Materi | Mathcademy</title>
 
-    <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/notification.css">
 
     <style>
-        .materials-welcome {
-            background: linear-gradient(120deg, #365314, #4d7c0f);
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 28px;
-        }
+/* =================================
+   WELCOME - PALET 2
+================================= */
 
-        .materials-welcome h1 {
-            font-size: 26px;
-            margin-bottom: 10px;
-        }
+.materials-welcome {
+    background: linear-gradient(
+        120deg,
+        #526B43 0%,
+        #6C9B76 55%,
+        #97C49E 100%
+    );
+    color: #ffffff;
+    padding: 32px;
+    border-radius: 22px;
+    margin-bottom: 28px;
+    box-shadow: 0 10px 25px rgba(82, 107, 67, .13);
+    position: relative;
+    overflow: hidden;
+}
 
-        .materials-welcome p {
-            color: #ecfccb;
-            margin: 0;
-            line-height: 1.6;
-        }
+.materials-welcome::after {
+    content: "∑";
+    position: absolute;
+    right: 35px;
+    top: -25px;
+    font-size: 150px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, .10);
+    pointer-events: none;
+}
 
-        .materials-summary {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 28px;
-        }
+.materials-welcome h1 {
+    font-size: 26px;
+    font-weight: 750;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+}
 
-        .summary-card {
-            background: white;
-            padding: 22px;
-            border: 1px solid #edf0e8;
-            border-radius: 16px;
-        }
+.materials-welcome p {
+    color: #edf6ed;
+    margin: 0;
+    line-height: 1.7;
+    font-size: 14px;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+}
 
-        .summary-card p {
-            color: #87917e;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
+/* =================================
+   RINGKASAN MATERI
+================================= */
 
-        .summary-card h2 {
-            color: #365314;
-            font-size: 28px;
-        }
+.materials-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: linear-gradient(145deg, #ffffff, #f3f8f2);
+    padding: 23px;
+    border: 1px solid #dce9dd;
+    border-radius: 18px;
+    box-shadow: 0 4px 15px rgba(82, 107, 67, .05);
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(
+        180deg,
+        #80A32F,
+        #6C9B76
+    );
+}
+
+.summary-card p {
+    color: #748574;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.summary-card h2 {
+    color: #526B43;
+    font-size: 30px;
+    font-weight: 750;
+    margin: 0;
+}
 
         .material-section {
             background: white;
@@ -146,6 +202,139 @@
             cursor: pointer;
         }
 
+/* TOOLBAR MATERI - FRESH & CLEAN */
+.material-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin: 32px 0 24px;
+}
+
+.toolbar-heading h2 {
+    color: #365314;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    letter-spacing: -0.4px;
+}
+
+.toolbar-heading p {
+    color: #87917e;
+    font-size: 13px;
+    margin: 0;
+}
+
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 7px 15px 7px 10px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.toolbar-icon {
+    width: 27px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+
+/* TAMBAH BAB */
+.toolbar-primary {
+    background: linear-gradient(135deg, #80a32f 0%, #6c9b76 100%);
+    color: #ffffff;
+    border-color: transparent;
+}
+
+.toolbar-primary .toolbar-icon {
+    background: rgba(255, 255, 255, .2);
+    color: #ffffff;
+}
+
+.toolbar-primary:hover {
+    background: linear-gradient(135deg, #657e47 0%, #80a32f 100%);
+}
+
+/* ARSIP */
+.toolbar-secondary {
+    background: linear-gradient(135deg, #cde8d4 0%, #97c49e 100%);
+    color: #426b4b;
+    border-color: transparent;
+}
+
+.toolbar-secondary .toolbar-icon {
+    background: rgba(255, 255, 255, .45);
+    color: #52785b;
+}
+
+.toolbar-secondary:hover {
+    background: linear-gradient(135deg, #badcc2 0%, #80a32f 100%);
+    color: #ffffff;
+}
+
+/* KELOLA URUTAN */
+.toolbar-outline {
+    background: linear-gradient(135deg, #e5edd9 0%, #bad17a 100%);
+    color: #52634a;
+    border-color: transparent;
+}
+
+.toolbar-outline .toolbar-icon {
+    background: rgba(255, 255, 255, .45);
+    color: #657e47;
+}
+
+.toolbar-outline:hover {
+    background: linear-gradient(135deg, #bad17a 0%, #97c49e 100%);
+    color: #365314;
+}
+
+
+.toolbar-btn:active {
+    transform: scale(.98);
+}
+
+.toolbar-btn:focus-visible {
+    outline: 3px solid rgba(108, 155, 118, .2);
+    outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+    .material-toolbar {
+        align-items: flex-start;
+    }
+
+    .toolbar-actions {
+        width: 100%;
+    }
+
+    .toolbar-btn {
+        flex: 1;
+    }
+}
+
+
         @media (max-width: 700px) {
             .materials-summary {
                 grid-template-columns: 1fr;
@@ -155,6 +344,633 @@
                 padding: 18px;
             }
         }
+        /* =================================
+   DAFTAR MATERI - PALET 2
+================================= */
+
+/* Kartu BAB */
+#chapters-container .material-section {
+    background: #ffffff;
+    border: 1px solid #dce9dd;
+    border-radius: 20px;
+    padding: 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 16px rgba(101, 126, 71, 0.06);
+}
+
+/* Header BAB */
+#chapters-container .material-section > div:first-child {
+    padding-bottom: 18px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e6eee4;
+}
+
+/* Judul BAB */
+#chapters-container .material-section h2 {
+    color: #526b43;
+    font-size: 19px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+}
+
+/* Deskripsi BAB */
+#chapters-container .section-description {
+    color: #7b8977;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* Daftar subbab */
+#chapters-container .material-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Kartu subbab */
+#chapters-container .material-item {
+    background: #fbfdfb;
+    border: 1px solid #e1ebe1;
+    border-radius: 15px;
+    padding: 18px;
+    gap: 14px;
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+#chapters-container .material-item:hover {
+    border-color: #a9c9ad;
+    box-shadow: 0 4px 12px rgba(108, 155, 118, 0.08);
+}
+
+/* Nomor subbab */
+#chapters-container .material-number {
+    background: #e4f1e5;
+    color: #52785b;
+    border-radius: 11px;
+    width: 40px;
+    height: 40px;
+}
+
+/* Judul subbab */
+#chapters-container .material-info h3 {
+    color: #405b46;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Deskripsi subbab */
+#chapters-container .material-info p {
+    color: #879487;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* Area aktivitas */
+#chapters-container .material-item > div[style*="width: 100%"] {
+    background: #f1f7f1 !important;
+    border: 1px solid #e2ede2;
+    border-radius: 13px !important;
+    padding: 16px !important;
+    margin-top: 8px !important;
+}
+
+/* Judul aktivitas pembelajaran */
+#chapters-container .material-item h4 {
+    color: #526b43 !important;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 14px !important;
+}
+
+/* Baris aktivitas */
+#chapters-container .material-item > div[style*="width: 100%"] > div {
+    border: 1px solid #e3ebe3 !important;
+    border-radius: 10px !important;
+    padding: 12px 14px !important;
+    margin-bottom: 9px !important;
+}
+
+/* Nomor aktivitas */
+#chapters-container .material-item > div[style*="width: 100%"] span:first-child {
+    background: #dcebdc !important;
+    color: #52785b !important;
+}
+/* =================================
+   TOMBOL AKSI - PALET 2
+================================= */
+
+/* Tombol tambah subbab */
+#chapters-container .add-subbab-btn,
+#chapters-container .add-activity-btn {
+    background: linear-gradient(135deg, #6C9B76, #97C49E) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 9px !important;
+    padding: 9px 15px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease;
+}
+
+/* Tombol edit */
+#chapters-container .edit-subbab-btn {
+    background: #eaf3e9 !important;
+    color: #52785b !important;
+    border: 1px solid #d5e6d5 !important;
+    border-radius: 9px !important;
+    padding: 9px 13px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* Tombol arsip */
+#chapters-container .archive-chapter-btn,
+#chapters-container .archive-subbab-btn {
+    background: #f5f7ed !important;
+    color: #74834d !important;
+    border: 1px solid #e2e8d2 !important;
+    border-radius: 9px !important;
+    padding: 9px 13px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* Efek hover tombol */
+#chapters-container .add-subbab-btn:hover,
+#chapters-container .add-activity-btn:hover {
+    background: linear-gradient(135deg, #5d8967, #80b58b) !important;
+    transform: translateY(-1px);
+}
+
+#chapters-container .edit-subbab-btn:hover {
+    background: #dcebdc !important;
+}
+
+#chapters-container .archive-chapter-btn:hover,
+#chapters-container .archive-subbab-btn:hover {
+    background: #eaf0dc !important;
+}
+
+/* =================================
+   DROPDOWN STATUS
+================================= */
+
+#chapters-container .chapter-status-select,
+#chapters-container .subbab-status-select,
+#chapters-container .activity-status-select {
+    background-color: #f5faf5 !important;
+    color: #526b43 !important;
+    border: 1px solid #d5e5d5 !important;
+    border-radius: 9px !important;
+    padding: 8px 30px 8px 11px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Saat dropdown dipilih */
+#chapters-container .chapter-status-select:focus,
+#chapters-container .subbab-status-select:focus,
+#chapters-container .activity-status-select:focus {
+    border-color: #80a987 !important;
+    box-shadow: 0 0 0 3px rgba(151, 196, 158, 0.2);
+}
+
+/* Pilihan dropdown */
+#chapters-container select option {
+    background: #ffffff;
+    color: #526b43;
+}
+/* Tombol Buka Editor */
+#chapters-container .open-activity-editor-btn {
+    background: linear-gradient(135deg, #6C9B76, #97C49E) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 9px !important;
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#chapters-container .open-activity-editor-btn:hover {
+    background: linear-gradient(135deg, #5d8967, #80b58b) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(108, 155, 118, 0.18);
+}
+/* =================================
+   HALAMAN ARSIP - PALET 2
+================================= */
+
+/* Area utama arsip */
+#archive-container {
+    padding: 8px 0;
+    color: #526b43;
+}
+
+/* Judul utama */
+#archive-container > h2 {
+    color: #405b46;
+    font-size: 22px;
+    font-weight: 750;
+    letter-spacing: -0.5px;
+    margin-bottom: 26px;
+}
+
+/* Judul kategori BAB dan Subbab */
+#archive-container > h3 {
+    color: #657e47;
+    font-size: 15px;
+    font-weight: 700;
+    margin: 26px 0 14px !important;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1ebe1;
+}
+
+/* Kartu materi yang diarsipkan */
+#archive-container .material-section {
+    background: #ffffff;
+    border: 1px solid #dce9dd;
+    border-radius: 17px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(101, 126, 71, 0.05);
+    transition: all 0.2s ease;
+}
+
+/* Efek hover kartu */
+#archive-container .material-section:hover {
+    border-color: #a9c9ad;
+    box-shadow: 0 5px 15px rgba(108, 155, 118, 0.09);
+}
+
+/* Judul BAB dan Subbab */
+#archive-container .material-section h3 {
+    color: #405b46;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+/* Deskripsi */
+#archive-container .material-section p {
+    color: #879487;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 14px;
+}
+
+/* Label status arsip */
+#archive-container .material-status {
+    display: inline-flex;
+    align-items: center;
+    background: #edf4e9;
+    color: #657e47;
+    border: 1px solid #dce8d3;
+    border-radius: 20px;
+    padding: 6px 11px;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+/* Tombol pulihkan */
+#archive-container .restore-subbab-btn {
+    background: linear-gradient(135deg, #6C9B76, #97C49E) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 9px !important;
+    padding: 9px 15px !important;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Hover tombol pulihkan */
+#archive-container .restore-subbab-btn:hover {
+    background: linear-gradient(135deg, #5d8967, #80b58b) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(108, 155, 118, 0.18);
+}
+/* Tombol Pulihkan BAB */
+#archive-container .restore-chapter-btn {
+    background: linear-gradient(135deg, #6C9B76, #97C49E) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 9px !important;
+    padding: 9px 15px !important;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#archive-container .restore-chapter-btn:hover {
+    background: linear-gradient(135deg, #5d8967, #80b58b) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(108, 155, 118, 0.18);
+}
+/* =========================================
+   MODAL POP-UP MATHCADEMY - PALET 2
+========================================= */
+
+/* Latar belakang modal */
+.modal-overlay {
+    background: rgba(37, 55, 39, 0.48) !important;
+    backdrop-filter: blur(4px);
+}
+
+/* Kotak modal */
+.modal-content {
+    background: #ffffff !important;
+    border: 1px solid #e2ebdf !important;
+    border-radius: 20px !important;
+    padding: 28px !important;
+    box-shadow: 0 18px 55px rgba(55, 78, 51, 0.18) !important;
+}
+
+/* Header modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e7eee2;
+}
+
+.modal-header h2,
+.modal-content > h2 {
+    color: #657E47 !important;
+    font-size: 19px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+}
+
+/* Tombol tutup */
+.modal-header button {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px !important;
+    background: #CDE8D4 !important;
+    color: #526B43 !important;
+    border: none !important;
+    font-size: 23px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-header button:hover {
+    background: #BAD17A !important;
+    color: #405B46 !important;
+    transform: rotate(90deg);
+}
+
+/* Deskripsi modal */
+.modal-description,
+.modal-content > p {
+    color: #7b8977;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 22px;
+}
+
+/* Label form */
+.modal-content .form-group label {
+    display: block;
+    color: #526B43;
+    font-size: 13px;
+    font-weight: 650;
+    margin-bottom: 8px;
+}
+
+/* Input dan textarea */
+.modal-content .form-group input,
+.modal-content .form-group textarea {
+    width: 100%;
+    background: #fbfdfb;
+    color: #405B46;
+    border: 1px solid #dce9dd;
+    border-radius: 11px;
+    padding: 12px 14px;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.modal-content .form-group input:focus,
+.modal-content .form-group textarea:focus {
+    border-color: #97C49E;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(151, 196, 158, 0.2);
+}
+
+.modal-content .form-group input::placeholder,
+.modal-content .form-group textarea::placeholder {
+    color: #a2afa0;
+}
+
+/* Jarak antarform */
+.modal-content .form-group {
+    margin-bottom: 18px;
+}
+
+/* Area tombol */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+/* Tombol batal dan tutup */
+.modal-actions button:not(
+    #confirm-delete-subbab,
+    #confirm-delete-chapter,
+    #confirm-delete-activity
+) {
+    border-radius: 10px !important;
+    padding: 10px 16px !important;
+    font-size: 12px !important;
+    font-weight: 650 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Tombol batal */
+.modal-actions button[id^="cancel-"] {
+    background: #edf5ed !important;
+    color: #657E47 !important;
+    border: 1px solid #dce9dd !important;
+}
+
+.modal-actions button[id^="cancel-"]:hover {
+    background: #CDE8D4 !important;
+}
+
+/* Tombol aksi utama */
+.modal-actions .add-material-btn,
+.modal-actions #save-reorder-manager,
+.modal-actions #confirm-archive,
+.modal-actions #confirm-archive-subbab,
+.modal-actions #close-archive-success,
+.modal-actions #confirm-delete-subbab,
+.modal-actions #confirm-delete-chapter,
+.modal-actions #confirm-delete-activity,
+.modal-actions #confirm-add-activity {
+    background: linear-gradient(135deg, #80A32F, #657E47) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px 17px !important;
+    font-size: 12px !important;
+    font-weight: 650 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-actions .add-material-btn:hover,
+.modal-actions #save-reorder-manager:hover,
+.modal-actions #confirm-archive:hover,
+.modal-actions #confirm-archive-subbab:hover,
+.modal-actions #close-archive-success:hover {
+    background: linear-gradient(135deg, #657E47, #526B43) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(101, 126, 71, 0.18);
+}
+
+/* Tombol hapus tetap merah */
+.modal-actions #confirm-delete-subbab,
+.modal-actions #confirm-delete-chapter,
+.modal-actions #confirm-delete-activity {
+    background: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+.modal-actions #confirm-delete-subbab:hover,
+.modal-actions #confirm-delete-chapter:hover,
+.modal-actions #confirm-delete-activity:hover {
+    background: #b91c1c !important;
+    transform: translateY(-1px);
+}
+
+/* Ikon berhasil diarsipkan */
+#archive-success-modal .modal-content > div:first-child {
+    color: #80A32F !important;
+}
+
+/* Modal berhasil */
+#archive-success-modal h2 {
+    color: #657E47 !important;
+}
+
+/* Tab kelola urutan */
+.reorder-tabs .reorder-tab {
+    background: #edf5ed;
+    color: #657E47;
+    border: 1px solid #dce9dd;
+    border-radius: 9px;
+    padding: 9px 15px;
+    font-size: 12px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.reorder-tabs .reorder-tab.active {
+    background: #657E47;
+    color: #ffffff;
+    border-color: #657E47;
+}
+
+/* Tampilan modal di layar kecil */
+@media (max-width: 600px) {
+    .modal-content {
+        width: calc(100% - 28px);
+        max-width: 100%;
+        padding: 21px !important;
+        border-radius: 17px !important;
+    }
+
+    .modal-actions {
+        gap: 8px;
+    }
+
+    .modal-actions button {
+        flex: 1;
+    }
+}
+/* =========================================
+   UKURAN KHUSUS MODAL KELOLA URUTAN
+========================================= */
+
+#reorder-manager-modal .modal-content {
+    width: 720px !important;
+    max-width: calc(100% - 32px) !important;
+    height: 80vh !important;
+    max-height: 680px !important;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Deskripsi tetap di atas */
+#reorder-manager-modal .modal-description {
+    flex-shrink: 0;
+}
+
+/* Tab kategori */
+#reorder-manager-modal .reorder-tabs {
+    flex-shrink: 0;
+}
+
+/* Area daftar yang bisa di-scroll */
+#reorder-manager-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 4px 8px 12px 0;
+}
+
+/* Scrollbar */
+#reorder-manager-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+#reorder-manager-content::-webkit-scrollbar-track {
+    background: #edf5ed;
+    border-radius: 10px;
+}
+
+#reorder-manager-content::-webkit-scrollbar-thumb {
+    background: #97C49E;
+    border-radius: 10px;
+}
+
+/* Tombol bawah tetap di tempat */
+#reorder-manager-modal .modal-actions {
+    flex-shrink: 0;
+    padding-top: 15px;
+    margin-top: 12px;
+    border-top: 1px solid #e7eee2;
+}
+
+/* Ukuran di layar kecil */
+@media (max-width: 600px) {
+    #reorder-manager-modal .modal-content {
+        width: calc(100% - 24px) !important;
+        height: 85vh !important;
+        min-height: 0;
+    }
+}
     </style>
 </head>
 
@@ -200,7 +1016,7 @@
     <div class="menu-label second-label">LAINNYA</div>
 
     <nav class="navigation">
-        <a href="#" class="nav-item">
+        <a href="teacher-settings.html" class="nav-item">
             <span class="nav-icon">⚙</span>
             Pengaturan
         </a>
@@ -218,7 +1034,7 @@
             <p>Bangun pengalaman belajar matematika yang menyenangkan.</p>
         </div>
 
-        <a href="#" class="logout" id="teacherLogout">
+        <a href="login.html" class="logout" id="teacherLogout">
             ↪ &nbsp; Keluar
         </a>
     </div>
@@ -233,15 +1049,16 @@
                 <h3>Kelola Materi</h3>
             </div>
 
-            <div class="profile">
-                <div class="avatar">G</div>
-                <div>
-                    <strong>Guru</strong>
-                    <span>Pengajar Mathcademy</span>
-                </div>
-                <span class="dropdown">⌄</span>
-            </div>
-
+<div class="topbar-right">
+    <div class="profile">
+        <div class="avatar" id="teacherAvatar">G</div>
+        <div>
+            <strong id="teacherName">Memuat...</strong>
+            <span>Pengajar Mathcademy</span>
+        </div>
+        <span class="dropdown">⌄</span>
+    </div>
+</div>
         </header>
 
         <section class="materials-welcome">
@@ -268,18 +1085,40 @@
             </div>
 
         </section>
-       <!-- TOMBOL PENGELOLAAN MATERI -->
-        <div class="material-actions" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <!-- TOMBOL PENGELOLAAN MATERI -->
+<div class="material-toolbar">
 
-            <button class="add-material-btn" id="add-chapter-btn">
-                + Tambah BAB
-            </button>
-
-            <button class="add-material-btn" id="show-archive-btn">
-                <i class="fas fa-archive"></i> Arsip
-            </button>
-
+    <div class="toolbar-heading">
+        <div>
+            <h2>Daftar Materi</h2>
+            <p>Kelola BAB dan susunan pembelajaran Mathcademy.</p>
         </div>
+    </div>
+
+    <div class="toolbar-actions">
+
+        <button class="toolbar-btn toolbar-primary" id="add-chapter-btn">
+            <span class="toolbar-icon">＋</span>
+            <span>Tambah BAB</span>
+        </button>
+
+        <button class="toolbar-btn toolbar-secondary" id="show-archive-btn">
+            <span class="toolbar-icon">▤</span>
+            <span>Arsip</span>
+        </button>
+
+        <button
+            type="button"
+            class="toolbar-btn toolbar-outline"
+            id="open-reorder-manager"
+        >
+            <span class="toolbar-icon">↕</span>
+            <span>Kelola Urutan</span>
+        </button>
+
+    </div>
+
+</div>
 
         <!-- DAFTAR BAB AKTIF -->
         <div id="chapters-container">
@@ -484,6 +1323,155 @@
 
 </div>
 <!-- AKHIR MODAL KONFIRMASI ARSIP SUBBAB -->
+ 
+<!-- MODAL KONFIRMASI HAPUS SUBBAB -->
+<div class="modal-overlay" id="delete-subbab-modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Hapus Subbab?</h2>
+            <button type="button" id="close-delete-subbab">&times;</button>
+        </div>
+
+        <p class="modal-description">
+            Subbab ini beserta seluruh aktivitas di dalamnya akan dihapus permanen.
+            Apakah kamu yakin?
+        </p>
+
+        <div class="modal-actions">
+
+            <button type="button" id="cancel-delete-subbab">
+                Batal
+            </button>
+
+            <button
+                type="button"
+                id="confirm-delete-subbab"
+                style="background: #dc2626; color: white; border: none;"
+            >
+                Ya, Hapus Permanen
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- AKHIR MODAL KONFIRMASI HAPUS SUBBAB -->
+<!-- MODAL KONFIRMASI HAPUS BAB -->
+<div class="modal-overlay" id="delete-chapter-modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Hapus BAB?</h2>
+
+        <p>
+            BAB ini beserta seluruh subbab dan aktivitas di dalamnya
+            akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.
+        </p>
+
+        <div class="modal-actions">
+            <button type="button" id="cancel-delete-chapter">
+                Batal
+            </button>
+
+            <button
+                type="button"
+                id="confirm-delete-chapter"
+                style="background: #dc2626; color: white; border: none;"
+            >
+                Ya, Hapus Permanen
+            </button>
+        </div>
+    </div>
+</div>
+<!-- AKHIR MODAL KONFIRMASI HAPUS BAB -->
+<!-- MODAL ATUR URUTAN SUBBAB -->
+<div class="modal-overlay" id="reorder-subbab-modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Atur Urutan Subbab</h2>
+            <button type="button" id="close-reorder-subbab">&times;</button>
+        </div>
+
+        <p class="modal-description">
+            Gunakan tombol panah untuk mengubah posisi subbab.
+            Urutan ini juga akan ditampilkan kepada murid.
+        </p>
+
+        <div id="reorder-subbab-list"></div>
+
+        <div class="modal-actions">
+            <button type="button" id="cancel-reorder-subbab">
+                Batal
+            </button>
+
+            <button
+                type="button"
+                id="save-reorder-subbab"
+                style="background: #365314; color: white; border: none;"
+            >
+                Simpan Urutan
+            </button>
+        </div>
+
+    </div>
+
+</div>
+<!-- MODAL KELOLA URUTAN -->
+<div class="modal-overlay" id="reorder-manager-modal">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Kelola Urutan Materi</h2>
+            <button type="button" id="close-reorder-manager">&times;</button>
+        </div>
+
+        <p class="modal-description">
+            Atur urutan BAB, Subbab, dan Aktivitas agar materi tampil secara berurutan kepada murid.
+        </p>
+
+        <!-- TAB PENGURUTAN -->
+        <div class="reorder-tabs" style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
+            <button type="button" class="reorder-tab active" data-tab="bab">
+                BAB
+            </button>
+
+            <button type="button" class="reorder-tab" data-tab="subbab">
+                Subbab
+            </button>
+
+            <button type="button" class="reorder-tab" data-tab="aktivitas">
+                Aktivitas
+            </button>
+        </div>
+
+        <!-- KONTEN TAB -->
+        <div id="reorder-manager-content">
+            <p>Pilih kategori untuk mengatur urutan materi.</p>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" id="cancel-reorder-manager">
+                Tutup
+            </button>
+            <button type="button" id="save-reorder-manager" class="btn-primary">
+                Simpan Perubahan
+            </button>
+            <button
+                type="button"
+                id="save-reorder-manager"
+                style="background:#365314; color:white; border:none;"
+            >
+                Simpan Urutan
+            </button>
+        </div>
+
+    </div>
+</div>
+<!-- AKHIR MODAL ATUR URUTAN SUBBAB -->
+
 <!-- MODAL TAMBAH AKTIVITAS -->
 <div class="modal-overlay" id="add-activity-modal">
 
@@ -537,6 +1525,43 @@
 
 </div>
 <!-- AKHIR MODAL TAMBAH AKTIVITAS -->
+
+
+<!-- MODAL KONFIRMASI HAPUS AKTIVITAS -->
+<div class="modal-overlay" id="delete-activity-modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Hapus Aktivitas?</h2>
+            <button type="button" id="close-delete-activity">&times;</button>
+        </div>
+
+        <p class="modal-description">
+            Aktivitas ini akan dihapus permanen. Apakah kamu yakin?
+        </p>
+
+        <div class="modal-actions">
+
+            <button type="button" id="cancel-delete-activity">
+                Batal
+            </button>
+
+            <button
+                type="button"
+                id="confirm-delete-activity"
+                style="background: #dc2626; color: white; border: none;"
+            >
+                Ya, Hapus Permanen
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- AKHIR MODAL KONFIRMASI HAPUS AKTIVITAS -->
+
 
     </main>
 <!-- MODAL KONFIRMASI ARSIP -->
@@ -609,5 +1634,6 @@
 <!-- AKHIR MODAL BERHASIL DIARSIPKAN -->
 </div>
 <script type="module" src="js/materials.js"></script>
+<script src="js/sidebar.js" defer></script>
 </body>
 </html>

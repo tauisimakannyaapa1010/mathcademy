@@ -123,24 +123,6 @@
             color: #475569;
         }
 
-        @media (max-width: 768px) {
-            .editor-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .block-panel {
-                border-right: none;
-                border-bottom: 1px solid #e2e8f0;
-            }
-
-            .editor-workspace {
-                padding: 18px;
-            }
-
-            .editor-canvas {
-                padding: 20px;
-            }
-        }
         
 /* =================================
    TOMBOL KONTROL BLOK PEMBELAJARAN
@@ -325,6 +307,530 @@
     align-items: flex-start;
     gap: 10px;
 }
+/* =================================
+   ACTIVITY EDITOR - CLEAN REDESIGN
+================================= */
+
+body {
+    background: #f5f7f6;
+    color: #33413a;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.editor-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e8eeea;
+    padding: 16px 28px;
+    box-shadow: 0 2px 8px rgba(30, 50, 40, 0.03);
+}
+
+.editor-header h1 {
+    color: #405b49;
+    font-size: 19px;
+    font-weight: 650;
+}
+
+/* Layout utama */
+.editor-layout {
+    grid-template-columns: 235px minmax(0, 1fr);
+    gap: 0;
+    background: #f5f7f6;
+}
+
+/* Panel blok */
+.block-panel {
+    background: #ffffff;
+    border-right: 1px solid #e8eeea;
+    padding: 24px 18px;
+}
+
+.block-panel h2,
+.block-panel h3 {
+    color: #405b49;
+    font-size: 14px;
+}
+
+/* Pilihan blok */
+.block-option {
+    background: #f7f9f7;
+    border: 1px solid #edf1ed;
+    border-radius: 9px;
+    transition: 0.2s ease;
+}
+
+.block-option:hover {
+    background: #edf4ee;
+    border-color: #a9c5ae;
+    color: #405b49;
+}
+
+/* Area kerja */
+.editor-workspace {
+    padding: 32px;
+    min-width: 0;
+}
+
+.activity-heading {
+    margin-bottom: 24px;
+}
+
+.activity-heading h2 {
+    color: #354b3c;
+    font-size: 23px;
+    font-weight: 650;
+}
+
+/* Kanvas editor */
+.editor-canvas {
+    max-width: 1000px;
+    margin: 0 auto;
+    min-height: 600px;
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #e8eeea;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(30, 50, 40, 0.035);
+}
+
+/* Semua blok aktivitas */
+.activity-block {
+    background: #ffffff !important;
+    border: 1px solid #e7ece8 !important;
+    border-radius: 11px !important;
+    padding: 22px !important;
+    margin-bottom: 18px !important;
+    box-shadow: 0 2px 7px rgba(30, 50, 40, 0.025);
+}
+
+/* Judul blok */
+.activity-block strong {
+    color: #405b49 !important;
+}
+
+/* Tombol umum */
+.activity-block button {
+    border-radius: 7px;
+    transition: 0.2s ease;
+}
+
+.activity-block button:hover {
+    filter: brightness(0.96);
+}
+
+/* Form */
+.activity-block input,
+.activity-block textarea,
+.activity-block select {
+    border: 1px solid #dce5de;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #34443a;
+    outline: none;
+}
+
+.activity-block input:focus,
+.activity-block textarea:focus,
+.activity-block select:focus {
+    border-color: #91b49a;
+    box-shadow: 0 0 0 3px rgba(145, 180, 154, 0.12);
+}
+
+/* Tampilan kosong */
+.empty-editor {
+    color: #819087;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.empty-editor h2 {
+    color: #405b49;
+    font-size: 20px;
+}
+
+
+
+/* HEADER PANEL KOMPONEN */
+.component-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.component-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: #edf4ee;
+    color: #557b5d;
+    font-size: 21px;
+}
+
+.component-header h3 {
+    margin: 0 0 5px;
+    color: #405b49;
+    font-size: 16px;
+    font-weight: 650;
+}
+
+.component-header p {
+    margin: 0;
+    color: #87948a;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* PENCARIAN KOMPONEN */
+.component-search {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 12px;
+    height: 40px;
+    margin-bottom: 25px;
+    border: 1px solid #e5ebe6;
+    border-radius: 9px;
+    background: #fafcfb;
+    color: #87948a;
+}
+
+.component-search:focus-within {
+    border-color: #97c49e;
+    background: #fff;
+}
+
+.component-search span {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.component-search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #405b49;
+    font-size: 12px;
+}
+
+.component-search input::placeholder {
+    color: #a2ada5;
+}
+
+/* =================================
+   EDITOR DENGAN SCROLL TERPISAH
+================================= */
+
+/* Desktop: halaman tidak ikut scroll */
+@media (min-width: 769px) {
+
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Header editor tetap di atas */
+    .editor-header {
+        position: relative;
+        z-index: 100;
+        height: 68px;
+        min-height: 68px;
+        box-sizing: border-box;
+    }
+
+    /* Membatasi layout sesuai tinggi layar */
+    .editor-layout {
+        height: calc(100vh - 68px);
+        min-height: 0;
+        overflow: hidden;
+        grid-template-columns: 235px minmax(0, 1fr);
+    }
+
+    /* Sidebar memiliki scroll sendiri */
+    .block-panel {
+        height: 100%;
+        min-height: 0;
+        box-sizing: border-box;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd9ce transparent;
+    }
+
+    /* Area penyuntingan memiliki scroll sendiri */
+    .editor-workspace {
+        height: 100%;
+        min-height: 0;
+        box-sizing: border-box;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd9ce transparent;
+    }
+
+}
+
+/* Mobile: kembali ke scroll halaman biasa */
+@media (max-width: 768px) {
+
+    html,
+    body {
+        height: auto;
+        overflow: auto;
+    }
+
+    .editor-layout {
+        height: auto;
+        min-height: calc(100vh - 68px);
+        overflow: visible;
+    }
+
+    .block-panel {
+        height: auto;
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .editor-workspace {
+        height: auto;
+        overflow: visible;
+    }
+
+}
+/* Menyatukan header dengan area editor */
+.editor-header {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid #e8eeea;
+}
+
+.editor-layout {
+    margin: 0 !important;
+    padding-top: 0 !important;
+    gap: 0 !important;
+}
+
+.block-panel,
+.editor-workspace {
+    margin-top: 0 !important;
+}
+/* =================================
+   HEADER MATHCADEMY - PALET 2
+================================= */
+
+.editor-header {
+    background: #ffffff;
+    border-bottom: 1px solid #CDE8D4;
+    padding: 14px 28px;
+    box-shadow: 0 3px 12px rgba(108, 155, 118, 0.07);
+}
+
+/* Judul editor */
+.editor-header h1,
+.editor-header h2 {
+    color: #657E47 !important;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+}
+
+/* Tombol kembali */
+.editor-header .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border: 1px solid #CDE8D4;
+    border-radius: 11px;
+    background: #F3F8F3;
+    color: #6C9B76 !important;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.editor-header .back-button:hover {
+    background: #EAF4EC;
+    border-color: #97C49E;
+    color: #557D60 !important;
+    transform: translateX(-2px);
+}
+
+/* Tombol simpan */
+#save-activity-btn {
+    padding: 11px 23px;
+    border: 1px solid #6C9B76 !important;
+    border-radius: 11px;
+    background: linear-gradient(
+        135deg,
+        #6C9B76,
+        #97C49E
+    ) !important;
+    color: #ffffff !important;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    box-shadow: 0 4px 10px rgba(108, 155, 118, 0.18);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+#save-activity-btn:hover {
+    background: linear-gradient(
+        135deg,
+        #5D8B68,
+        #7EAE87
+    ) !important;
+    box-shadow: 0 6px 14px rgba(108, 155, 118, 0.25);
+    transform: translateY(-2px);
+}
+
+#save-activity-btn:active {
+    transform: scale(0.97);
+}
+
+/* Tampilan mobile */
+@media (max-width: 768px) {
+    .editor-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 13px;
+        padding: 16px 18px;
+    }
+
+    .editor-header .back-button {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+
+    .editor-header #save-activity-btn {
+        grid-column: 2;
+        grid-row: 1;
+        padding: 10px 17px;
+        font-size: 13px;
+    }
+
+    .editor-header h1,
+    .editor-header h2 {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        text-align: center;
+        font-size: 19px;
+    }
+}
+/* Highlight tombol toolbar saat aktif */
+[data-command].active {
+    background: #CDE8D4 !important;
+    color: #365E40 !important;
+    border-color: #6C9B76 !important;
+    box-shadow: 0 0 0 1px #6C9B76;
+}
+
+/* Efek hover tombol toolbar */
+[data-command]:hover {
+    background: #EAF4EC;
+}
+
+/* Transisi tombol */
+[data-command] {
+    transition: all 0.2s ease;
+}
+/* =================================
+   MOBILE COMPONENT DRAWER
+================================= */
+
+/* Tombol komponen: hanya tampil di mobile */
+.mobile-component-toggle {
+    display: none;
+}
+
+/* Overlay di belakang panel */
+.component-overlay {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .mobile-component-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 14px 18px 0;
+        padding: 11px 17px;
+        border: 1px solid #CDE8D4;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #6C9B76;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 7px rgba(30, 50, 40, 0.05);
+    }
+
+    .editor-layout {
+        position: relative;
+        display: block;
+    }
+
+    .block-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1001;
+        width: min(290px, 85vw);
+        height: 100dvh;
+        max-height: none;
+        box-sizing: border-box;
+        overflow-y: auto;
+        border: none;
+        border-radius: 0 16px 16px 0;
+        box-shadow: 8px 0 30px rgba(30, 50, 40, 0.12);
+        transform: translateX(-110%);
+        transition: transform 0.3s ease;
+    }
+
+    .block-panel.mobile-open {
+        transform: translateX(0);
+    }
+
+    .component-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(25, 40, 30, 0.35);
+    }
+
+    .component-overlay.active {
+        display: block;
+    }
+
+    .editor-workspace {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+}
+/* Lapisan khusus keyboard MathLive */
+#mathlive-keyboard-layer {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 2000;
+    pointer-events: none;
+}
+
     </style>
 </head>
 
@@ -353,17 +859,35 @@
     Simpan
 </button>
     </header>
+<!-- Tombol buka panel komponen (khusus mobile) -->
+<button type="button" class="mobile-component-toggle" id="mobile-component-toggle">
+    ☰ Komponen
+</button>
 
+<!-- Latar belakang saat panel terbuka -->
+<div class="component-overlay" id="component-overlay"></div>
     <div class="editor-layout">
 
         <!-- PANEL PILIHAN BLOK -->
        
         <aside class="block-panel">
 
-            <h3>Blok Pembelajaran</h3>
-            <p style="color: #64748b; font-size: 13px;">
-                Pilih blok untuk menyusun aktivitas.
-            </p>
+           <div class="component-header">
+    <div class="component-icon">✦</div>
+    <div>
+        <h3>Panel Komponen</h3>
+        <p>Pilih elemen untuk aktivitasmu</p>
+    </div>
+</div>
+
+<div class="component-search">
+    <span>⌕</span>
+    <input
+        type="text"
+        id="component-search"
+        placeholder="Cari komponen..."
+    >
+</div>
 
             <div class="block-category">Konten</div>
 
@@ -449,6 +973,7 @@
         </main>
 
     </div>
+    <div id="mathlive-keyboard-layer"></div>
 
 
 <script>
@@ -505,6 +1030,117 @@ loadActivity();
     // Mengambil area kerja dan panel blok
     const editorCanvas = document.querySelector('.editor-canvas');
     const blockPanel = document.querySelector('.block-panel');
+// Mengatur keyboard MathLive dan posisi scroll editor
+customElements.whenDefined('math-field').then(() => {
+    const keyboardLayer = document.getElementById(
+        'mathlive-keyboard-layer'
+    );
+
+    const workspace = document.querySelector('.editor-workspace');
+
+    if (!window.mathVirtualKeyboard || !keyboardLayer || !workspace) {
+        return;
+    }
+
+    // Tempatkan keyboard pada lapisan terpisah
+    window.mathVirtualKeyboard.container = keyboardLayer;
+
+    let keyboardOpen = false;
+    let activeMathField = null;
+
+    let savedWorkspaceScroll = 0;
+    let savedWindowScroll = 0;
+
+    // Simpan posisi sebelum keyboard muncul
+    document.addEventListener('focusin', (event) => {
+        if (
+            event.target.matches('math-field') &&
+            !keyboardOpen
+        ) {
+            activeMathField = event.target;
+
+            savedWorkspaceScroll = workspace.scrollTop;
+            savedWindowScroll = window.scrollY;
+        }
+    });
+
+    // Deteksi keyboard dibuka atau ditutup
+    window.mathVirtualKeyboard.addEventListener(
+        'geometrychange',
+        () => {
+            const keyboardHeight =
+                window.mathVirtualKeyboard.boundingRect.height;
+
+            // Keyboard dibuka
+            if (keyboardHeight > 0 && !keyboardOpen) {
+                keyboardOpen = true;
+
+                requestAnimationFrame(() => {
+                    if (activeMathField) {
+                        activeMathField.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                });
+            }
+
+            // Keyboard ditutup
+            else if (keyboardHeight === 0 && keyboardOpen) {
+                keyboardOpen = false;
+
+                requestAnimationFrame(() => {
+                    workspace.scrollTo({
+                        top: savedWorkspaceScroll,
+                        behavior: 'auto'
+                    });
+
+                    window.scrollTo({
+                        top: savedWindowScroll,
+                        behavior: 'auto'
+                    });
+
+                    activeMathField = null;
+                });
+            }
+        }
+    );
+});
+    
+// Pencarian komponen pada panel editor
+const componentSearch = document.getElementById('component-search');
+
+componentSearch.addEventListener('input', function () {
+    const keyword = this.value.toLowerCase().trim();
+
+    document.querySelectorAll('.block-option').forEach(option => {
+        const text = option.textContent.toLowerCase();
+
+        option.style.display = text.includes(keyword)
+            ? ''
+            : 'none';
+    });
+
+    // Sembunyikan kategori jika semua komponennya tidak cocok
+    document.querySelectorAll('.block-category').forEach(category => {
+        let next = category.nextElementSibling;
+        let hasVisibleOption = false;
+
+        while (next && !next.classList.contains('block-category')) {
+            if (
+                next.classList.contains('block-option') &&
+                next.style.display !== 'none'
+            ) {
+                hasVisibleOption = true;
+            }
+
+            next = next.nextElementSibling;
+        }
+
+        category.style.display = hasVisibleOption ? '' : 'none';
+    });
+});
+
 
 // Mengamankan teks sebelum ditampilkan sebagai HTML
 function escapeHTML(text) {
@@ -1123,7 +1759,50 @@ if (Array.isArray(item.content)) {
 
     textEditor.addEventListener('keyup', saveCursorPosition);
     textEditor.addEventListener('mouseup', saveCursorPosition);
+    // Memperbarui highlight toolbar sesuai format kursor
+function updateToolbarState() {
 
+    if (!isEditing) return;
+
+    textToolbar.querySelectorAll('[data-command]').forEach(button => {
+
+        const command = button.dataset.command;
+
+        let isActive = false;
+
+        try {
+            isActive = document.queryCommandState(command);
+        } catch (error) {
+            isActive = false;
+        }
+
+        button.classList.toggle('active', isActive);
+
+    });
+
+    // Menyesuaikan dropdown paragraf dan heading
+    const format = document.queryCommandValue('formatBlock')
+        .replace(/[<>]/g, '')
+        .toUpperCase();
+
+    if (['P', 'H1', 'H2'].includes(format)) {
+        formatSelect.value = format;
+    }
+}
+
+// Memantau perubahan posisi kursor dan seleksi teks
+document.addEventListener('selectionchange', () => {
+
+    const selection = window.getSelection();
+
+    if (
+        selection.rangeCount > 0 &&
+        textEditor.contains(selection.getRangeAt(0).commonAncestorContainer)
+    ) {
+        updateToolbarState();
+    }
+
+});
     // Mengaktifkan tombol format teks
 textToolbar.addEventListener('mousedown', (event) => {
 
@@ -1153,7 +1832,8 @@ textToolbar.addEventListener('click', (event) => {
 
     document.execCommand(button.dataset.command, false, null);
 
-    saveCursorPosition();
+saveCursorPosition();
+updateToolbarState();
 
 });
 
@@ -1406,9 +2086,13 @@ textEditor.addEventListener('keydown', (event) => {
         editButton.textContent = isEditing ? 'Selesai' : 'Edit';
 
         if (isEditing) {
-            titleInput.focus();
-        }
-
+    titleInput.focus();
+    updateToolbarState();
+} else {
+    textToolbar.querySelectorAll('[data-command]').forEach(button => {
+        button.classList.remove('active');
+    });
+}
     });
 
 
@@ -3385,11 +4069,7 @@ const savedTargets = targetElements.map(editor => ({
     targetId: cardTargetElements[index].value
 }));
 
-    // Validasi judul
-    if (!title) {
-        alert('Judul aktivitas Drag and Drop belum diisi.');
-        return;
-    }
+  
 
     // Validasi area tujuan
     if (
@@ -3595,6 +4275,28 @@ else if (blockType === 'divider') {
 }
 
 });
+// =================================
+// MOBILE COMPONENT DRAWER
+// =================================
+
+const mobileComponentToggle = document.getElementById('mobile-component-toggle');
+const componentOverlay = document.getElementById('component-overlay');
+const blockPanelElement = document.querySelector('.block-panel');
+
+function openComponentDrawer() {
+    blockPanelElement.classList.add('mobile-open');
+    componentOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeComponentDrawer() {
+    blockPanelElement.classList.remove('mobile-open');
+    componentOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+mobileComponentToggle.addEventListener('click', openComponentDrawer);
+componentOverlay.addEventListener('click', closeComponentDrawer);
 </script>
 </body>
 </html>

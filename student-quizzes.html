@@ -6,159 +6,276 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Latihan & Kuis | Mathcademy</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/notification.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        .quiz-welcome {
-            background: linear-gradient(120deg, #ecfccb, #d1fae5, #ccfbf1);
-            padding: 32px;
-            border-radius: 22px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
+       .quiz-welcome {
+    background: linear-gradient(
+        115deg,
+        #6C9B76 0%,
+        #97C49E 48%,
+        #BAD17A 100%
+    );
+    padding: 38px 40px;
+    border-radius: 24px;
+    margin-bottom: 34px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(108, 155, 118, .16);
+}
 
-        .quiz-welcome h1 {
-            color: #365314;
-            font-size: 28px;
-            margin: 8px 0;
-        }
+.quiz-welcome h1 {
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: 700;
+    margin: 10px 0;
+    letter-spacing: -.5px;
+}
 
-        .quiz-welcome p {
-            color: #52634a;
-            max-width: 550px;
-        }
+.quiz-welcome p {
+    color: rgba(255, 255, 255, .92);
+    max-width: 570px;
+    font-size: 15px;
+    line-height: 1.8;
+}
 
-        .quiz-welcome .decoration {
-            position: absolute;
-            right: 45px;
-            top: 20px;
-            font-size: 75px;
-            color: #65a30d;
-            opacity: .35;
-        }
+.quiz-welcome .decoration {
+    position: absolute;
+    right: 55px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-12deg);
+    font-size: 105px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, .28);
+    text-shadow: 0 8px 25px rgba(69, 107, 77, .12);
+    pointer-events: none;
+}
 
-        .quiz-section-heading {
-            margin-bottom: 20px;
-        }
+  .quiz-section-heading {
+    margin-bottom: 24px;
+    padding: 4px 0;
+}
 
-        .quiz-section-heading h2 {
-            color: #263b24;
-            margin: 5px 0;
-        }
+.quiz-section-heading .eyebrow {
+    color: #6C9B76;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
 
-        .quiz-section-heading p {
-            color: #718096;
-        }
+.quiz-section-heading h2 {
+    color: #456B4D;
+    margin: 5px 0 7px;
+    font-size: 23px;
+    font-weight: 600;
+}
 
-        .student-quiz-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 22px;
-        }
+.quiz-section-heading p {
+    color: #718477;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0;
+}
+       .student-quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(min(100%, 320px), 360px)
+    );
+    gap: 24px;
+    align-items: stretch;
+    justify-content: start;
+}
 
-        .student-quiz-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            overflow: hidden;
-            transition: .2s ease;
-        }
+    .student-quiz-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(
+        90deg,
+        #6C9B76,
+        #97C49E,
+        #BAD17A,
+        #80A32F
+    );
+    z-index: 3;
+}
 
-        .student-quiz-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(54, 83, 20, .09);
-        }
+.student-quiz-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 28px rgba(69, 107, 77, .13);
+}
+.student-quiz-art {
+    min-height: 135px;
+    background: linear-gradient(
+        135deg,
+        #CDE8D4,
+        #97C49E,
+        #6C9B76
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
 
-        .student-quiz-art {
-            min-height: 135px;
-            background: linear-gradient(135deg, #ecfccb, #d1fae5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+.student-quiz-art::after {
+    content: "";
+    position: absolute;
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .16);
+    right: -35px;
+    bottom: -75px;
+}
 
-        .student-quiz-art .math-icon {
-            font-size: 55px;
-            font-weight: 800;
-            color: #4d7c0f;
-        }
+.student-quiz-art .math-icon {
+    width: 88px;
+    height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, .55);
+    font-size: 39px;
+    font-weight: 600;
+    color: #456B4D;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 6px 18px rgba(69, 107, 77, .10);
+}
+.student-quiz-art .math-icon {
+    transition: transform .3s ease, box-shadow .3s ease;
+}
 
-        .student-quiz-art .quiz-tag {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: white;
-            color: #4d7c0f;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-        }
+.student-quiz-card:hover .math-icon {
+    transform: translateY(-3px) rotate(-4deg);
+    box-shadow: 0 10px 22px rgba(69, 107, 77, .16);
+}
 
-        .student-quiz-info {
-            padding: 22px;
-        }
+.student-quiz-art .quiz-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(255, 255, 255, .85);
+    color: #456B4D;
+    padding: 7px 12px;
+    border: 1px solid rgba(255, 255, 255, .7);
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .7px;
+    z-index: 2;
+}
 
-        .student-quiz-info h3 {
-            color: #365314;
-            margin-bottom: 9px;
-        }
+.student-quiz-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 175px;
+}
 
-        .student-quiz-info p {
-            color: #718096;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 18px;
-        }
+.student-quiz-info h3 {
+    color: #456B4D;
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.5;
+}
 
-        .student-quiz-button {
-            display: block;
-            text-align: center;
-            text-decoration: none;
-            background: #84cc16;
-            color: #365314;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 700;
-        }
+.student-quiz-info p {
+    color: #718477;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0 0 18px;
+    flex: 1;
+}
 
-        .student-quiz-button:hover {
-            background: #a3e635;
-        }
+.student-quiz-button {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: linear-gradient(110deg, #6C9B76, #80A32F);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s ease;
+    box-shadow: 0 4px 12px rgba(108, 155, 118, .18);
+}
 
-        .quiz-empty {
-            background: white;
-            border: 1px dashed #cbd5e1;
-            border-radius: 18px;
-            padding: 45px 20px;
-            text-align: center;
-            color: #718096;
-            grid-column: 1 / -1;
-        }
+.student-quiz-button:hover {
+    background: linear-gradient(110deg, #557D5D, #657E47);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(108, 155, 118, .25);
+}
 
-        .quiz-empty .empty-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-        }
+       .quiz-empty {
+    background: #F8FBF8;
+    border: 1px dashed #BAD7BF;
+    border-radius: 18px;
+    padding: 45px 20px;
+    text-align: center;
+    color: #718477;
+    grid-column: 1 / -1;
+}
 
-        .quiz-error {
-            color: #b91c1c;
-        }
+.quiz-empty .empty-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    color: #6C9B76;
+}
+
+.quiz-empty h3 {
+    color: #456B4D;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.quiz-empty p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.quiz-error {
+    color: #B45353;
+}
 
         @media (max-width: 600px) {
-            .quiz-welcome {
-                padding: 24px;
-            }
+    .quiz-welcome {
+        padding: 26px 22px;
+        border-radius: 20px;
+    }
 
-            .quiz-welcome .decoration {
-                right: 15px;
-                font-size: 45px;
-            }
-        }
+    .quiz-welcome h1 {
+        font-size: 24px;
+    }
+
+    .quiz-welcome p {
+        font-size: 13px;
+        max-width: 85%;
+    }
+
+    .quiz-welcome .decoration {
+        right: 12px;
+        top: auto;
+        bottom: 8px;
+        transform: rotate(-12deg);
+        font-size: 58px;
+    }
+}
+
     </style>
 </head>
 
@@ -182,17 +299,17 @@
             <a href="student-quizzes.html" class="nav-item active">
                 <span class="nav-icon">✎</span> Latihan & Kuis
             </a>
-            <a href="index.html#nilai" class="nav-item">
+            <a href="my-scores.html" class="nav-item">
                 <span class="nav-icon">▥</span> Nilai Saya
             </a>
         </nav>
 
         <div class="menu-label second-label">LAINNYA</div>
         <nav class="navigation">
-            <a href="#" class="nav-item">
+            <a href="settings.html" class="nav-item">
                 <span class="nav-icon">⚙</span> Pengaturan
             </a>
-            <a href="#" class="nav-item">
+            <a href="help.html" class="nav-item">
                 <span class="nav-icon">ⓘ</span> Bantuan
             </a>
         </nav>
@@ -203,7 +320,7 @@
                 <strong>Terus semangat!</strong>
                 <p>Setiap langkah kecil membawamu lebih dekat pada pemahaman.</p>
             </div>
-            <a href="#" class="logout" id="logoutButton">
+            <a href="login.html" class="logout" id="logoutButton">
                 ↪ &nbsp; Keluar
             </a>
         </div>
@@ -263,7 +380,8 @@
 </div>
 
 <script type="module">
-    import { supabase } from './supabase.js';
+import { supabase } from './supabase.js';
+import { initStudentNotifications } from './js/notification.js';
 
     const logoutButton = document.getElementById('logoutButton');
     const quizList = document.getElementById('studentQuizList');
@@ -290,6 +408,7 @@
             document.getElementById('studentName').textContent = name;
             document.getElementById('studentAvatar').textContent =
                 name.charAt(0).toUpperCase();
+                await initStudentNotifications(user);
         }
     }
 
@@ -394,5 +513,6 @@
 
     await loadStudentQuizzes();
 </script>
+<script src="js/sidebar.js" defer></script>
 </body>
 </html>

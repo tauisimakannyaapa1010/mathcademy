@@ -12,6 +12,7 @@ const params = new URLSearchParams(window.location.search);
 const activityId = params.get('activityId');
 
 let currentUser = null;
+let isInitialMathJaxRendering = true;
 let currentMaterialId = null;
 
 // Status aktivitas
@@ -147,12 +148,44 @@ if (progressError) {
 
 isReadOnly = !!existingProgress;
 
-        // Memeriksa urutan aktivitas dalam subbab
+  // Memeriksa urutan aktivitas dalam seluruh BAB
+
+// Mengambil BAB tempat subbab saat ini berada
+const { data: currentMaterial, error: currentMaterialError } =
+    await supabase
+        .from('materials')
+        .select('chapter_id')
+        .eq('id', currentMaterialId)
+        .single();
+
+if (currentMaterialError) {
+    throw currentMaterialError;
+}
+
+// Mengambil seluruh subbab dalam BAB yang sama
+const { data: chapterMaterials, error: chapterMaterialsError } =
+    await supabase
+        .from('materials')
+        .select('id')
+        .eq('chapter_id', currentMaterial.chapter_id)
+        .eq('status', 'published')
+        .eq('is_archived', false)
+        .order('position', { ascending: true });
+
+if (chapterMaterialsError) {
+    throw chapterMaterialsError;
+}
+
+const chapterMaterialIds = chapterMaterials.map(
+    material => material.id
+);
+
+// Mengambil seluruh aktivitas dalam BAB tersebut
 const { data: allActivities, error: allActivitiesError } =
     await supabase
         .from('material_activities')
-        .select('id')
-        .eq('material_id', currentMaterialId)
+        .select('id, material_id, content, position')
+        .in('material_id', chapterMaterialIds)
         .eq('status', 'published')
         .eq('is_archived', false)
         .order('position', { ascending: true });
@@ -161,34 +194,93 @@ if (allActivitiesError) {
     throw allActivitiesError;
 }
 
+// Menyusun aktivitas berdasarkan urutan subbab dan aktivitas
+const orderedActivities = chapterMaterials.flatMap(material =>
+    allActivities.filter(
+        activity => activity.material_id === material.id
+    )
+);
+
 // Menentukan posisi aktivitas saat ini
-const currentIndex = allActivities.findIndex(
+const currentIndex = orderedActivities.findIndex(
     activity => activity.id === activityId
 );
 
-// Jika bukan aktivitas pertama, periksa aktivitas sebelumnya
+// Memeriksa aktivitas sebelumnya
 if (currentIndex > 0) {
-    const previousActivityId = allActivities[currentIndex - 1].id;
+    const previousActivity = orderedActivities[currentIndex - 1];
 
-    const { data: previousProgress, error: previousProgressError } =
-        await supabase
-            .from('student_activity_progress')
-            .select('activity_id')
-            .eq('student_id', currentUser.id)
-            .eq('material_id', currentMaterialId)
-            .eq('activity_id', previousActivityId)
-            .maybeSingle();
+    let previousBlocks = previousActivity.content;
 
-    if (previousProgressError) {
-        throw previousProgressError;
+    if (typeof previousBlocks === 'string') {
+        try {
+            previousBlocks = JSON.parse(previousBlocks);
+        } catch {
+            previousBlocks = [];
+        }
     }
 
-    if (!previousProgress) {
+    if (!Array.isArray(previousBlocks)) {
+        previousBlocks = previousBlocks?.blocks || [];
+    }
+
+    const quizBlocks = previousBlocks
+        .map((block, index) => ({
+            ...block,
+            id: block.id || `block-${index}`
+        }))
+        .filter(block =>
+            ['multiple-choice', 'short-answer', 'drag-drop']
+                .includes(block.type)
+        );
+
+    let previousActivityPassed = false;
+
+    if (quizBlocks.length > 0) {
+        const { data: previousAnswers, error: previousAnswersError } =
+            await supabase
+                .from('student_activity_answers')
+                .select('block_id, is_correct')
+                .eq('student_id', currentUser.id)
+                .eq('activity_id', previousActivity.id);
+
+        if (previousAnswersError) {
+            throw previousAnswersError;
+        }
+
+        const correctBlockIds = new Set(
+            (previousAnswers || [])
+                .filter(answer => answer.is_correct === true)
+                .map(answer => answer.block_id)
+        );
+
+        previousActivityPassed = quizBlocks.every(block =>
+            correctBlockIds.has(block.id)
+        );
+
+    } else {
+        const { data: previousProgress, error: previousProgressError } =
+            await supabase
+                .from('student_activity_progress')
+                .select('activity_id')
+                .eq('student_id', currentUser.id)
+                .eq('material_id', previousActivity.material_id)
+                .eq('activity_id', previousActivity.id)
+                .maybeSingle();
+
+        if (previousProgressError) {
+            throw previousProgressError;
+        }
+
+        previousActivityPassed = !!previousProgress;
+    }
+
+    if (!previousActivityPassed) {
         activityContent.innerHTML = '';
         completeButton.style.display = 'none';
 
         showMessage(
-            '🔒 Aktivitas ini masih terkunci. Selesaikan aktivitas sebelumnya terlebih dahulu, ya!'
+            '🔒 Aktivitas ini masih terkunci. Jawab seluruh mini kuis pada aktivitas sebelumnya dengan benar terlebih dahulu, ya!'
         );
 
         return;
@@ -262,6 +354,7 @@ if (isReadOnly) {
         // Render ulang rumus matematika
         if (window.MathJax) {
             await MathJax.typesetPromise([activityContent]);
+            isInitialMathJaxRendering = false;
         }
 
         if (!isReadOnly) {
@@ -280,6 +373,7 @@ function renderBlock(block, index) {
 if (!block.id) {
     block.id = `block-${index}`;
 }
+    console.log('DATA BLOK AKTIVITAS:', block);
     console.log('DATA BLOK AKTIVITAS:', block);
     const wrapper = document.createElement('section');
     wrapper.className = 'student-activity-block';
@@ -435,7 +529,34 @@ else if (block.type === 'drag-drop') {
 else if (block.type === 'short-answer') {
     renderShortAnswer(block, wrapper);
 }
+// BLOK EMBED CODE
+else if (block.type === 'embed') {
 
+    const embedFrame = document.createElement('iframe');
+
+    embedFrame.className = 'student-embed-frame';
+    embedFrame.title = 'Aktivitas Interaktif';
+
+    embedFrame.style.cssText = `
+        display: block;
+        width: 100%;
+        min-height: 450px;
+        border: 1px solid #d9e8e3;
+        border-radius: 12px;
+        background: white;
+    `;
+
+    // Menjalankan kode HTML, CSS, dan JavaScript
+    // dalam iframe terisolasi
+    embedFrame.setAttribute(
+        'sandbox',
+        'allow-scripts allow-forms'
+    );
+
+    embedFrame.srcdoc = block.code || '';
+
+    wrapper.appendChild(embedFrame);
+}
 else {
     console.warn('Tipe blok belum didukung:', block.type);
     return;
@@ -496,21 +617,23 @@ async function renderShortAnswer(block, wrapper) {
             answerInput.style.border = '2px solid #65a30d';
             answerInput.style.color = '#365314';
 
-            feedback.textContent =
-                '✓ Jawabanmu benar! ' +
-                (block.explanation || 'Jawabanmu tepat.');
-
-            feedback.className = 'answer-feedback correct';
+            renderFeedback(
+                feedback,
+                '✓ Jawabanmu benar!',
+                block.explanation || 'Jawabanmu tepat.'
+            );
         } else if (previousAnswer) {
             answerInput.style.background = '#fef2f2';
             answerInput.style.border = '2px solid #ef4444';
             answerInput.style.color = '#b91c1c';
 
-            feedback.textContent =
+            renderFeedback(
+                feedback,
                 'Jawaban terakhir yang kamu pilih belum tepat. ' +
                 'Jawaban yang benar adalah: ' +
                 correctAnswer + '. ' +
-                (block.explanation || '');
+                (block.explanation || '')
+            );
 
             feedback.className = 'answer-feedback incorrect';
         } else {
@@ -572,10 +695,11 @@ async function renderShortAnswer(block, wrapper) {
             answerInput.style.border = '2px solid #65a30d';
             answerInput.style.color = '#365314';
 
-            feedback.textContent =
-                '✓ Benar! ' +
-                (block.explanation || 'Jawabanmu tepat.');
-
+            renderFeedback(
+                feedback,
+                '✓ Jawabanmu benar!',
+                block.explanation || 'Jawabanmu tepat.'
+            );
             feedback.className = 'answer-feedback correct';
 
             submitButton.disabled = true;
@@ -644,6 +768,31 @@ function renderRichContent(element, content) {
         el.replaceWith(math);
     });
 }
+// Menampilkan feedback sekaligus merender rumus matematika
+function renderFeedback(element, title, explanation) {
+    if (window.MathJax?.typesetClear) {
+        MathJax.typesetClear([element]);
+    }
+
+    element.innerHTML = '';
+
+    const heading = document.createElement('div');
+    heading.className = 'feedback-title';
+    heading.textContent = title;
+
+    const description = document.createElement('div');
+    description.className = 'feedback-explanation';
+
+    renderRichContent(description, explanation || '');
+
+    element.append(heading, description);
+
+    if (!isInitialMathJaxRendering && window.MathJax?.typesetPromise) {
+        MathJax.typesetPromise([element]).catch(error => {
+            console.error('Gagal merender rumus feedback:', error);
+        });
+    }
+}
 // Sanitasi HTML dari editor teks guru
 function sanitizeHTML(html) {
     const template = document.createElement('template');
@@ -689,8 +838,8 @@ async function renderMultipleChoice(block, wrapper) {
     const optionsContainer = document.createElement('div');
     optionsContainer.className = 'student-options';
 
-    const feedback = document.createElement('p');
-    feedback.className = 'answer-feedback';
+const feedback = document.createElement('div');
+feedback.className = 'answer-feedback';
 
     let answered = false;
     const previousAnswer = savedAnswers.get(blockId);
@@ -778,8 +927,11 @@ async function renderMultipleChoice(block, wrapper) {
                 button.style.border = '2px solid #65a30d';
                 button.style.color = '#365314';
 
-                feedback.textContent =
-                    'Benar! ' + (block.explanation || 'Jawabanmu tepat.');
+                renderFeedback(
+                    feedback,
+                    '✓ Jawabanmu benar!',
+                    block.explanation || 'Jawabanmu tepat.'
+                );
                 feedback.className = 'answer-feedback correct';
 
                 optionsContainer.querySelectorAll('button').forEach(btn => {
@@ -807,18 +959,23 @@ async function renderMultipleChoice(block, wrapper) {
             const correctOption = block.options?.[Number(correctIndex)] || '';
 
             if (previousAnswer.is_correct) {
-                feedback.textContent =
-                    '✓ Jawabanmu benar! ' +
-                    (block.explanation || 'Jawabanmu tepat.');
+             renderFeedback(
+                feedback,
+                '✓ Jawabanmu benar!',
+                block.explanation || 'Jawabanmu tepat.'
+            );
                 feedback.className = 'answer-feedback correct';
             } else {
-                feedback.textContent =
-                    'Jawaban terakhir yang kamu pilih belum tepat. ' +
-                    'Jawaban yang benar adalah: ' +
-                    correctOption + '. ' +
-                    (block.explanation || '');
-                feedback.className = 'answer-feedback incorrect';
-            }
+            renderFeedback(
+                feedback,
+                'Jawaban terakhir yang kamu pilih belum tepat. ' +
+                'Jawaban yang benar adalah: ' +
+                correctOption + '. ' +
+                (block.explanation || '')
+            );
+
+            feedback.className = 'answer-feedback incorrect';
+        }
         } else {
             feedback.textContent =
                 'Tidak ada jawaban tersimpan untuk soal ini.';
@@ -857,8 +1014,8 @@ function renderDragDrop(block, wrapper) {
     const targetsContainer = document.createElement('div');
     targetsContainer.className = 'drop-targets';
 
-    const feedback = document.createElement('p');
-    feedback.className = 'answer-feedback';
+const feedback = document.createElement('div');
+feedback.className = 'answer-feedback';
 
     const cards = block.cards || [];
     const targets = block.targets || [];
@@ -1048,9 +1205,11 @@ function renderDragDrop(block, wrapper) {
                 challengeCompleted = true;
             }
 
-            feedback.textContent =
-                'Hebat! Semua pasangan sudah benar. ' +
-                (block.explanation || 'Kamu berhasil!');
+            renderFeedback(
+                feedback,
+                '✓ Semua pasangan sudah benar!',
+                block.explanation || 'Kamu berhasil!'
+            );
             feedback.className = 'answer-feedback correct';
 
             cardElements.forEach(card => {
@@ -1097,18 +1256,26 @@ function renderDragDrop(block, wrapper) {
         });
 
         if (previousAnswer?.is_correct) {
-            feedback.textContent =
-                '✓ Semua pasangan sudah benar! ' +
-                (block.explanation || 'Kamu berhasil menyelesaikan aktivitas ini.');
+            renderFeedback(
+                    feedback,
+                    '✓ Semua pasangan sudah benar!',
+                    block.explanation || 'Kamu berhasil menyelesaikan aktivitas ini.'
+                );
+
             feedback.className = 'answer-feedback correct';
 
             challengeCompleted = true;
-        } else if (previousAnswer) {
-            feedback.textContent =
+        }
+        else if (previousAnswer) {
+            renderFeedback(
+                feedback,
                 'Ini adalah susunan jawaban terakhir yang kamu simpan. ' +
-                (block.explanation || 'Perhatikan kembali pasangan yang ditandai.');
+                (block.explanation || 'Perhatikan kembali pasangan yang ditandai.')
+            );
+
             feedback.className = 'answer-feedback incorrect';
-        } else {
+        }
+        else {
             feedback.textContent =
                 'Tidak ada susunan jawaban yang tersimpan untuk aktivitas ini.';
             feedback.className = 'answer-feedback incorrect';

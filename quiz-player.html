@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <script defer src="https://cdn.jsdelivr.net/npm/mathlive"></script>
 </head>
-<body>
+<body class="quiz-player-page">
 
     <main class="quiz-player-container">
         <header class="quiz-header">
@@ -130,7 +130,39 @@ function renderTextWithMath(container, text) {
         );
     }
 }
+// Menampilkan pembahasan yang tersimpan dalam format blok editor
+function renderExplanationContent(container, explanation) {
+    container.innerHTML = '';
 
+    if (!explanation) {
+        container.textContent = 'Belum ada pembahasan untuk soal ini.';
+        return;
+    }
+
+    let content = explanation;
+
+    // Jika pembahasan berbentuk JSON string, ubah menjadi array
+    if (typeof content === 'string') {
+        try {
+            const parsed = JSON.parse(content);
+
+            if (Array.isArray(parsed)) {
+                content = parsed;
+            }
+        } catch (error) {
+            // Jika bukan JSON, tetap tampilkan sebagai teks biasa
+        }
+    }
+
+    // Jika berbentuk array blok, render setiap blok
+    if (Array.isArray(content)) {
+        renderQuestionContent(container, content);
+        return;
+    }
+
+    // Jika berbentuk teks biasa
+    renderTextWithMath(container, String(content));
+}
 // Menampilkan konten teks dan rumus terstruktur
 function renderQuestionContent(container, content, fallbackText = '') {
     container.innerHTML = '';
@@ -148,6 +180,7 @@ function renderQuestionContent(container, content, fallbackText = '') {
         }
     });
 }
+
 
 // Menampilkan jawaban benar dalam format yang sesuai
 function renderReviewAnswer(container, answer) {
@@ -240,12 +273,13 @@ try {
     correctAnswer = [];
 }
 
-        console.log('DATA REVIEW DRAG DROP:', {
+       console.log('DETAIL REVIEW DRAG DROP:', JSON.stringify({
     cards,
     targets,
     correctAnswer,
-    studentAnswer: result.answer
-});
+    studentAnswer: result.answer,
+    fullResult: result
+}, null, 2));
 
     function createArrangement(title, mapping, isCorrectArrangement) {
         const section = document.createElement('div');
@@ -401,29 +435,18 @@ function renderQuizReview(results) {
             const answerContent = document.createElement('div');
             answerContent.className = 'quiz-review-answer-content';
 
-            let correctAnswerDisplay = result.correct_answer;
-
-if (result.question_type === 'multiple_choice') {
-    const optionData = question.options || {};
-
-    if (
-        Object.prototype.hasOwnProperty.call(
-            optionData,
-            String(result.correct_answer)
-        )
-    ) {
-        correctAnswerDisplay = optionData[String(result.correct_answer)];
-    }
+          if (result.question_type === 'multiple_choice') {
+    answerContent.textContent = String(result.correct_answer).toUpperCase();
+} else {
+    renderReviewAnswer(answerContent, result.correct_answer);
 }
-
-renderReviewAnswer(answerContent, correctAnswerDisplay);
 
             correctAnswer.appendChild(answerTitle);
             correctAnswer.appendChild(answerContent);
 
             answerArea.appendChild(correctAnswer);
         }
-
+console.log('DATA PEMBAHASAN MURID:', result.explanation);
         // Pembahasan
         const review = document.createElement('div');
         review.className = 'quiz-question-review';
@@ -440,9 +463,9 @@ renderReviewAnswer(answerContent, correctAnswerDisplay);
         const explanation = document.createElement('div');
         explanation.className = 'quiz-review-explanation';
 
-        renderTextWithMath(
+        renderExplanationContent(
             explanation,
-            result.explanation || 'Belum ada pembahasan untuk soal ini.'
+            result.explanation
         );
 
         review.appendChild(status);
@@ -666,13 +689,18 @@ if (question.question_type === 'multiple_choice') {
         radio.name = `answer-${question.id}`;
         radio.value = key;
 
-        const optionContent = document.createElement('div');
-        optionContent.className = 'quiz-option-content';
+        const optionLetter = document.createElement('span');
+optionLetter.className = 'quiz-option-letter';
+optionLetter.textContent = `${key}.`;
 
-        renderQuestionContent(optionContent, content);
+const optionContent = document.createElement('div');
+optionContent.className = 'quiz-option-content';
 
-        label.appendChild(radio);
-        label.appendChild(optionContent);
+renderQuestionContent(optionContent, content);
+
+label.appendChild(radio);
+label.appendChild(optionLetter);
+label.appendChild(optionContent);
         options.appendChild(label);
     });
 

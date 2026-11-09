@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -14,193 +13,483 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
+        :root {
+            --aquadulce: #6C9B76;
+            --aroma: #97C49E;
+            --winter: #CDE8D4;
+            --tarragon: #BAD17A;
+            --ghalet: #657E47;
+            --dark: #304535;
+            --muted: #89968B;
+            --white: #ffffff;
+        }
+
         body {
             min-height: 100vh;
-            background: #f7fee7;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 25px;
+            padding: 20px;
+            background:
+                radial-gradient(circle at 10% 10%, #e5f2e7 0, transparent 30%),
+                radial-gradient(circle at 90% 90%, #edf4df 0, transparent 30%),
+                #f6f8f4;
         }
 
-        .login-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            max-width: 950px;
-            width: 100%;
-            min-height: 560px;
-            background: white;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 15px 45px rgba(54, 83, 20, 0.10);
-        }
+ .login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    max-width: 900px;
+    min-height: 0;
+    height: auto;
+    background: var(--white);
+    border: 1px solid #e9eee8;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 55px rgba(65, 103, 72, 0.11);
+}
+
+        /* PANEL KIRI */
 
         .login-left {
-            background: linear-gradient(145deg, #365314, #65a30d);
-            color: white;
-            padding: 55px 45px;
+            position: relative;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            padding: 32px 36px;
+            color: white;
+            background: linear-gradient(
+                145deg,
+                #657E47 0%,
+                #6C9B76 52%,
+                #97C49E 100%
+            );
+        }
+
+        .login-left::before,
+        .login-left::after {
+            content: "";
+            position: absolute;
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .login-left::before {
+            width: 340px;
+            height: 340px;
+            right: -140px;
+            top: -100px;
+        }
+
+        .login-left::after {
+            width: 260px;
+            height: 260px;
+            right: -100px;
+            bottom: -110px;
         }
 
         .brand {
+            position: relative;
+            z-index: 1;
             font-size: 27px;
             font-weight: 800;
+            letter-spacing: -1px;
         }
 
         .brand span {
-            color: #bef264;
+            color: var(--tarragon);
+        }
+
+        .left-content {
+            position: relative;
+            z-index: 1;
+            margin: auto 0;
+            padding: 55px 0;
+        }
+
+        .left-tag {
+            display: inline-block;
+            padding: 8px 14px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 30px;
+            background: rgba(255,255,255,0.12);
+            font-size: 12px;
+            letter-spacing: 0.5px;
         }
 
         .login-left h1 {
-            font-size: 34px;
-            line-height: 1.3;
-            margin-bottom: 18px;
+            max-width: 400px;
+            font-size: clamp(30px, 3.2vw, 39px);
+            line-height: 1.25;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
         }
 
         .login-left p {
-            color: #ecfccb;
-            line-height: 1.8;
+            max-width: 390px;
+            color: #eff7ed;
+            font-size: 14px;
+            line-height: 1.9;
         }
 
         .math-decoration {
-            font-size: 65px;
-            font-weight: 800;
-            color: #d9f99d;
-            text-align: center;
-            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 38px;
         }
 
+        .math-chip {
+            padding: 15px 19px;
+            border: 1px solid rgba(255,255,255,0.23);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.13);
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            backdrop-filter: blur(8px);
+            transform: rotate(-4deg);
+        }
+
+        .math-chip:nth-child(2) {
+            transform: translateY(-12px) rotate(4deg);
+            background: rgba(205,232,212,0.2);
+        }
+
+        .math-chip:nth-child(3) {
+            transform: rotate(-2deg);
+        }
+
+        .left-footer {
+            position: relative;
+            z-index: 1;
+            color: rgba(255,255,255,0.75);
+            font-size: 11px;
+        }
+
+        /* PANEL KANAN */
+
         .login-right {
-            padding: 55px 45px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            padding: 30px 40px;
+        }
+
+        .form-heading {
+            margin-bottom: 32px;
+        }
+
+        .form-heading .eyebrow {
+            color: var(--aquadulce);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
         }
 
         .login-right h2 {
-            font-size: 28px;
-            color: #26351d;
+            color: var(--dark);
+            font-size: 30px;
+            letter-spacing: -0.8px;
             margin-bottom: 10px;
         }
 
         .subtitle {
-            color: #87917e;
-            margin-bottom: 30px;
-            line-height: 1.6;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
         }
 
         .role-label,
         .field-label {
             display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #365314;
-            margin-bottom: 10px;
+            color: #526454;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 11px;
         }
 
         .role-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 25px;
+            margin-bottom: 26px;
         }
 
         .role-option {
-            border: 1.5px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 14px;
+            border: 1.5px solid #e7ede7;
+            border-radius: 14px;
+            background: #fff;
             cursor: pointer;
-            text-align: center;
-            color: #526047;
-            transition: 0.2s;
+            color: #667368;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .role-option:hover {
+            border-color: var(--aroma);
+            background: #f8fbf7;
         }
 
         .role-option input {
-            display: none;
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .role-option:has(input:checked) {
-            border-color: #84cc16;
-            background: #f7fee7;
-            color: #365314;
-            font-weight: 700;
+            border-color: var(--aquadulce);
+            background: #f0f7f0;
+            color: var(--ghalet);
+            box-shadow: 0 0 0 3px rgba(151,196,158,0.13);
         }
 
-        .role-option .role-icon {
-            display: block;
-            font-size: 25px;
-            margin-bottom: 7px;
+        .role-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            border-radius: 11px;
+            background: #edf5ed;
+            font-size: 18px;
+        }
+
+        .role-option:has(input:checked) .role-icon {
+            background: var(--winter);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 21px;
+        }
+
+        .input-wrapper {
+            position: relative;
         }
 
         .form-group input {
             width: 100%;
-            padding: 14px;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
+            padding: 15px 16px;
+            border: 1px solid #e3eae3;
+            border-radius: 12px;
             outline: none;
-            font-size: 14px;
+            background: #fbfcfa;
+            color: var(--dark);
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .form-group input::placeholder {
+            color: #aab5aa;
         }
 
         .form-group input:focus {
-            border-color: #84cc16;
+            border-color: var(--aquadulce);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(151,196,158,0.15);
         }
 
         .login-button {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
+            margin-top: 5px;
             border: none;
-            border-radius: 10px;
-            background: #84cc16;
-            color: #26351d;
-            font-size: 15px;
+            border-radius: 12px;
+            background: linear-gradient(110deg, #6C9B76, #657E47);
+            color: white;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 5px;
+            box-shadow: 0 7px 18px rgba(101,126,71,0.2);
+            transition: 0.2s ease;
         }
 
         .login-button:hover {
-            background: #a3e635;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(101,126,71,0.28);
+        }
+
+        .login-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #loginMessage {
+            color: #dc5555;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 14px;
         }
 
         .register-text {
+            margin-top: 27px;
             text-align: center;
-            margin-top: 25px;
-            color: #87917e;
-            font-size: 14px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
         }
 
-        .register-text a {
-            color: #65a30d;
+        .register-text span {
+            display: block;
+            color: var(--ghalet);
             font-weight: 700;
-            text-decoration: none;
         }
 
-        @media (max-width: 700px) {
+        /* TABLET */
+
+@media (max-width: 850px) {
+    .login-container {
+    height: auto;
+    min-height: 0;
+    max-width: 700px;
+    grid-template-columns: 0.85fr 1.15fr;
+}
+
+    .login-left {
+        padding: 30px 25px;
+    }
+
+    .login-right {
+        padding: 30px 28px;
+    }
+
+    .login-left h1 {
+        font-size: 27px;
+    }
+
+    .left-content {
+        padding: 25px 0;
+    }
+
+    .math-decoration {
+        gap: 8px;
+        margin-top: 22px;
+    }
+
+    .math-chip {
+        padding: 10px;
+        font-size: 15px;
+    }
+
+    .form-heading {
+        margin-bottom: 22px;
+    }
+
+    .role-options {
+        margin-bottom: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .register-text {
+        margin-top: 18px;
+    }
+}
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+            body {
+                padding: 18px 20px;
+                align-items: flex-start;
+            }
+
             .login-container {
                 grid-template-columns: 1fr;
+                max-width: 430px;
+                min-height: auto;
+                border-radius: 22px;
             }
 
             .login-left {
-                padding: 30px;
-                min-height: 250px;
+                min-height: 225px;
+                padding: 27px 25px;
+            }
+
+            .brand {
+                font-size: 23px;
+            }
+
+            .left-content {
+                padding: 28px 0 10px;
+            }
+
+            .left-tag {
+                padding: 6px 11px;
+                margin-bottom: 14px;
+                font-size: 10px;
             }
 
             .login-left h1 {
+                max-width: 320px;
                 font-size: 25px;
+                margin-bottom: 10px;
+            }
+
+            .login-left p {
+                font-size: 12px;
+                line-height: 1.7;
             }
 
             .math-decoration {
                 display: none;
             }
 
+            .left-footer {
+                display: none;
+            }
+
             .login-right {
-                padding: 35px 25px;
+                padding: 35px 25px 32px;
+            }
+
+            .form-heading {
+                margin-bottom: 27px;
+            }
+
+            .login-right h2 {
+                font-size: 26px;
+            }
+
+            .role-option {
+                padding: 11px 9px;
+                gap: 8px;
+            }
+
+            .role-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-right {
+                padding: 30px 18px;
+            }
+
+            .role-options {
+                gap: 8px;
+            }
+
+            .role-option {
+                font-size: 12px;
             }
         }
     </style>
@@ -213,62 +502,93 @@
     <section class="login-left">
         <div class="brand">mathcademy<span>.</span></div>
 
-        <div>
+        <div class="left-content">
+            <div class="left-tag">✦ YOUR LEARNING SPACE</div>
+
             <h1>Belajar Matematika dengan Cara yang Lebih Menyenangkan.</h1>
+
             <p>
                 Jelajahi konsep matematika, selesaikan tantangan interaktif,
-                dan pantau perkembangan belajarmu.
+                dan pantau perkembangan belajarmu bersama Mathcademy.
             </p>
-            <div class="math-decoration">x² + y²</div>
+
+            <div class="math-decoration">
+                <div class="math-chip">x² + y²</div>
+                <div class="math-chip">2x + 3</div>
+                <div class="math-chip">a + b</div>
+            </div>
         </div>
 
-        <p>© 2026 Mathcademy. Learn, Explore, and Grow.</p>
+        <div class="left-footer">
+            © 2026 Mathcademy. Learn, Explore, and Grow.
+        </div>
     </section>
 
     <section class="login-right">
 
-        <h2>Selamat Datang!</h2>
-        <p class="subtitle">
-            Masuk ke akun Mathcademy untuk melanjutkan aktivitas pembelajaran.
-        </p>
+        <div class="form-heading">
+            <div class="eyebrow">WELCOME BACK</div>
+            <h2>Selamat Datang!</h2>
+            <p class="subtitle">
+                Masuk ke akun Mathcademy untuk melanjutkan aktivitas pembelajaran.
+            </p>
+        </div>
 
         <form id="loginForm">
+
             <label class="role-label">Masuk sebagai</label>
 
             <div class="role-options">
                 <label class="role-option">
                     <input type="radio" name="role" value="student" checked>
                     <span class="role-icon">🎓</span>
-                    Murid
+                    <span>Murid</span>
                 </label>
 
                 <label class="role-option">
                     <input type="radio" name="role" value="teacher">
                     <span class="role-icon">👩‍🏫</span>
-                    Guru
+                    <span>Guru</span>
                 </label>
             </div>
 
             <div class="form-group">
-                <label class="field-label">Email</label>
-                <input type="email" id="email" placeholder="Masukkan email" required>
+                <label class="field-label" for="email">Email</label>
+                <div class="input-wrapper">
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Masukkan email"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="field-label">Kata Sandi</label>
-                <input type="password" id="password" placeholder="Masukkan kata sandi" required>
+                <label class="field-label" for="password">Kata Sandi</label>
+                <div class="input-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Masukkan kata sandi"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
             </div>
 
-            <p id="loginMessage" role="alert" style="color: #dc2626; font-size: 13px; margin-bottom: 15px;"></p>
+            <p id="loginMessage" role="alert"></p>
 
             <button type="submit" class="login-button" id="loginButton">
-                Masuk ke Mathcademy
+                Masuk ke Mathcademy →
             </button>
+
         </form>
 
         <p class="register-text">
             Belum memiliki akun?
-            <span style="color: #65a30d; font-weight: 700;">Hubungi guru untuk mendapatkan akun.</span>
+            <span>Hubungi guru untuk mendapatkan akun.</span>
         </p>
 
     </section>
@@ -333,7 +653,10 @@
             loginMessage.textContent = error.message;
         } finally {
             loginButton.disabled = false;
-            loginButton.textContent = 'Masuk ke Mathcademy';
+            loginButton.textContent = 'Masuk ke Mathcademy →';
         }
     });
 </script>
+
+</body>
+</html>

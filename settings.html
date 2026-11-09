@@ -7,23 +7,92 @@
     <title>Pengaturan | Mathcademy</title>
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/notification.css">
 </head>
 
-<body class="settings-page">
+<body class="student-dashboard settings-page">
+    <div class="app">
 
-    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+<aside class="sidebar">
+    <a href="#" class="brand">
+        <span class="brand-icon">∑</span>
+        <span>mathcademy<span class="brand-dot">.</span></span>
+    </a>
 
+    <div class="menu-label">MENU UTAMA</div>
+    <nav class="navigation">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">⌂</span> Dashboard
+        </a>
+        <a href="student-materials.html" class="nav-item">
+            <span class="nav-icon">▤</span> Materi Belajar
+        </a>
+        <a href="student-quizzes.html" class="nav-item">
+            <span class="nav-icon">✎</span> Latihan & Kuis
+        </a>
+        <a href="my-scores.html" class="nav-item">
+            <span class="nav-icon">▥</span> Nilai Saya
+        </a>
+    </nav>
+
+    <div class="menu-label second-label">LAINNYA</div>
+    <nav class="navigation">
+        <a href="settings.html" class="nav-item active">
+            <span class="nav-icon">⚙</span> Pengaturan
+        </a>
+        <a href="help.html" class="nav-item">
+            <span class="nav-icon">ⓘ</span> Bantuan
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="help-card">
+            <div class="help-icon">✦</div>
+            <strong>Terus semangat!</strong>
+            <p>Setiap langkah kecil membawamu lebih dekat pada pemahaman.</p>
+        </div>
+
+        <a href="login.html" class="logout" id="logoutButton">
+            ↪ &nbsp; Keluar
+        </a>
+    </div>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <!-- KONTEN UTAMA -->
         <main class="main-content">
 
-            <header class="topbar">
-                <div>
-                    <p class="breadcrumb">
-                        <a id="backDashboard" href="index.html">← Kembali ke Dashboard</a>
-                        / Pengaturan
-                    </p>
-                    <h3>Pengaturan</h3>
-                </div>
-            </header>
+            <!-- TOPBAR -->
+<header class="topbar">
+    <button
+        type="button"
+        class="sidebar-toggle"
+        id="sidebarToggle"
+        aria-label="Buka menu navigasi"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+    <div class="breadcrumb">
+        Halaman / <strong>Pengaturan</strong>
+    </div>
+
+    <div class="topbar-right">
+
+        <div class="profile">
+            <div class="avatar" id="studentAvatar">M</div>
+            <div>
+                <strong id="studentName">Nama Murid</strong>
+                <span>Siswa</span>
+            </div>
+            <span class="dropdown">⌄</span>
+        </div>
+    </div>
+</header>
+
+            <div class="settings-container">
 
             <section class="progress-welcome">
                 <h1>Pengaturan Akun ⚙️</h1>
@@ -37,6 +106,13 @@
 
     <div class="form-group">
         <label>Kata Sandi Baru</label>
+        <label for="currentPassword">Kata Sandi Saat Ini</label>
+<input
+    type="password"
+    id="currentPassword"
+    placeholder="Masukkan kata sandi saat ini"
+    required
+>
         <input
             type="password"
             id="newPassword"
@@ -96,25 +172,6 @@
 
     <p id="profileMessage"></p>
 </section>
-<section class="progress-section" id="studentPreferences">
-    <h2>Preferensi Tampilan Belajar</h2>
-    <p>Atur ukuran teks agar nyaman saat membaca materi.</p>
-
-    <div class="form-group">
-        <label for="textSize">Ukuran Teks</label>
-        <select id="textSize">
-            <option value="small">Kecil</option>
-            <option value="normal" selected>Normal</option>
-            <option value="large">Besar</option>
-        </select>
-    </div>
-
-    <button type="button" class="btn-primary" id="saveTextSize">
-        Simpan Preferensi
-    </button>
-
-    <p id="textSizeMessage"></p>
-</section>
 <section class="progress-section">
     <h2>Tentang Mathcademy</h2>
 
@@ -128,12 +185,13 @@
     <p><strong>Platform:</strong> Mathcademy</p>
 </section>
 
+                  </div>
         </main>
-
     </div>
+
 <script type="module">
 import { supabase } from './supabase.js';
-
+import { initStudentNotifications } from './js/notification.js';
 // Ambil elemen halaman
 const fullNameInput = document.getElementById('fullName');
 const userEmailInput = document.getElementById('userEmail');
@@ -141,7 +199,24 @@ const userRoleInput = document.getElementById('userRole');
 const saveButton = document.getElementById('saveProfile');
 const profileMessage = document.getElementById('profileMessage');
 
+const studentNameElement = document.getElementById('studentName');
+const studentAvatarElement = document.getElementById('studentAvatar');
+
 let currentUser = null;
+
+// Memperbarui nama dan avatar di topbar
+function updateStudentHeader(name) {
+    const studentName = name || 'Murid';
+
+    if (studentNameElement) {
+        studentNameElement.textContent = studentName;
+    }
+
+    if (studentAvatarElement) {
+        studentAvatarElement.textContent =
+            studentName.trim().charAt(0).toUpperCase() || 'M';
+    }
+}
 
 // Memuat profil pengguna
 async function loadProfile() {
@@ -165,28 +240,15 @@ async function loadProfile() {
         if (error) throw error;
 
         fullNameInput.value = profile.full_name || '';
-        userEmailInput.value = user.email || '';
+userEmailInput.value = user.email || '';
+
+updateStudentHeader(profile.full_name);
 
         userRoleInput.value = profile.role === 'teacher'
             ? 'Guru'
             : 'Murid';
-            // Preferensi tampilan khusus murid
-const preferences = document.getElementById('studentPreferences');
-
-if (profile.role === 'student') {
-    preferences.style.display = 'block';
-
-    const savedSize = localStorage.getItem(
-        `textSize_${user.id}`
-    ) || 'normal';
-
-    document.getElementById('textSize').value = savedSize;
-    document.body.style.fontSize =
-        savedSize === 'small' ? '14px' :
-        savedSize === 'large' ? '18px' : '16px';
-} else {
-    preferences.style.display = 'none';
-}
+            return user;
+          
 
     } catch (error) {
         console.error('Gagal memuat profil:', error);
@@ -207,15 +269,24 @@ saveButton.addEventListener('click', async () => {
     saveButton.textContent = 'Menyimpan...';
 
     try {
-        const { error } = await supabase
-            .from('profiles')
-            .update({ full_name: newName })
-            .eq('id', currentUser.id);
+        const { data, error } = await supabase
+    .from('profiles')
+    .update({ full_name: newName })
+    .eq('id', currentUser.id)
+    .select('id, full_name')
+    .maybeSingle();
 
-        if (error) throw error;
+if (error) throw error;
+
+if (!data) {
+    throw new Error(
+        'Profil tidak ditemukan atau tidak memiliki izin untuk diperbarui.'
+    );
+}
 
         profileMessage.textContent = 'Profil berhasil diperbarui!';
         profileMessage.style.color = '#15803d';
+        updateStudentHeader(data.full_name);
 
     } catch (error) {
         console.error('Gagal menyimpan profil:', error);
@@ -233,13 +304,14 @@ const changePasswordButton = document.getElementById('changePassword');
 
 changePasswordButton.addEventListener('click', async () => {
     const newPassword = document.getElementById('newPassword').value;
+    const currentPassword = document.getElementById('currentPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const passwordMessage = document.getElementById('passwordMessage');
 
-    if (!newPassword || !confirmPassword) {
-        passwordMessage.textContent = 'Semua kolom harus diisi.';
-        return;
-    }
+    if (!currentPassword || !newPassword || !confirmPassword) {
+    passwordMessage.textContent = 'Semua kolom harus diisi.';
+    return;
+}
 
     if (newPassword.length < 6) {
         passwordMessage.textContent = 'Kata sandi minimal 6 karakter.';
@@ -255,14 +327,19 @@ changePasswordButton.addEventListener('click', async () => {
     changePasswordButton.textContent = 'Memproses...';
 
     const { error } = await supabase.auth.updateUser({
-        password: newPassword
-    });
+    password: newPassword,
+    current_password: currentPassword
+});
 
     if (error) {
-        console.error(error);
-        passwordMessage.textContent = 'Gagal mengubah kata sandi.';
-        passwordMessage.style.color = '#dc2626';
-    } else {
+    console.error('Detail error ubah password:', error);
+
+    passwordMessage.textContent =
+        'Gagal: ' + error.message;
+
+    passwordMessage.style.color = '#dc2626';
+}
+    else {
         passwordMessage.textContent = 'Kata sandi berhasil diubah!';
         passwordMessage.style.color = '#15803d';
 
@@ -273,22 +350,14 @@ changePasswordButton.addEventListener('click', async () => {
     changePasswordButton.disabled = false;
     changePasswordButton.textContent = 'Ubah Kata Sandi';
 });
-document.getElementById('saveTextSize').addEventListener('click', () => {
-    const size = document.getElementById('textSize').value;
 
-    if (!currentUser) return;
-
-    localStorage.setItem(`textSize_${currentUser.id}`, size);
-
-    document.body.style.fontSize =
-        size === 'small' ? '14px' :
-        size === 'large' ? '18px' : '16px';
-
-    document.getElementById('textSizeMessage').textContent =
-        'Preferensi berhasil disimpan!';
-});
 // Jalankan saat halaman dibuka
-loadProfile();
+const profile = await loadProfile();
+
+if (profile) {
+    await initStudentNotifications(profile);
+}
 </script>
+<script src="js/sidebar.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,46 @@
+<!-- TOMBOL NOTIFIKASI -->
+<button
+    type="button"
+    class="notification-button"
+    id="notificationButton"
+    aria-label="Notifikasi"
+    title="Notifikasi"
+>
+    <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+        <path d="M10 21h4"></path>
+    </svg>
+
+    <span class="notification-badge" id="notificationBadge" hidden>0</span>
+</button>
+
+<!-- PANEL NOTIFIKASI -->
+<div class="notification-panel" id="notificationPanel" hidden>
+    <div class="notification-header">
+        <div>
+            <strong>Notifikasi</strong>
+            <span>Informasi terbaru Mathcademy</span>
+        </div>
+
+        <button
+            type="button"
+            id="markAllNotificationsRead"
+            class="mark-all-read"
+        >
+            Tandai semua dibaca
+        </button>
+    </div>
+
+    <div class="notification-list" id="notificationList">
+        <div class="notification-empty">Belum ada notifikasi.</div>
+    </div>
+</div>

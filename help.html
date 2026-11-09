@@ -1,0 +1,1010 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bantuan | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <style>
+/* =====================================
+   HELP PAGE - PALET 2
+===================================== */
+
+.help-page {
+    padding: 28px 32px 40px;
+}
+
+/* WELCOME BANNER */
+.help-welcome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 38px 42px;
+    border-radius: 24px;
+    background: linear-gradient(
+        120deg,
+        #6C9B76,
+        #97C49E,
+        #CDE8D4
+    );
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(108, 155, 118, 0.15);
+}
+
+.help-welcome::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.13);
+    right: 75px;
+    top: -125px;
+}
+
+.help-welcome-text {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+}
+
+.help-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #657E47;
+    margin-bottom: 10px;
+}
+
+.help-welcome .help-eyebrow {
+    color: rgba(255,255,255,0.85);
+}
+
+.help-welcome h1 {
+    font-size: clamp(24px, 3vw, 32px);
+    margin: 0 0 12px;
+    line-height: 1.3;
+    color: #fff;
+}
+
+.help-welcome p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.92);
+    margin: 0;
+    max-width: 540px;
+}
+
+.help-welcome-icon {
+    position: relative;
+    z-index: 1;
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 26px;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 48px;
+    color: #fff;
+}
+
+/* SECTION HEADING */
+.help-section-heading {
+    margin: 38px 0 22px;
+}
+
+.help-section-heading h2 {
+    font-size: 22px;
+    color: #365B42;
+    margin: 0 0 7px;
+}
+
+.help-section-heading p {
+    font-size: 13px;
+    color: #7A8C7D;
+    margin: 0;
+}
+
+/* CATEGORY GRID */
+.help-category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.help-category-card {
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+    padding: 24px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #FFFFFF, #F4FAF5);
+    border: 1px solid #E0EEE2;
+    text-decoration: none;
+    box-shadow: 0 5px 18px rgba(69, 105, 76, 0.05);
+    transition: 0.25s ease;
+}
+
+.help-category-card:hover {
+    transform: translateY(-4px);
+    border-color: #97C49E;
+    box-shadow: 0 12px 25px rgba(69, 105, 76, 0.11);
+}
+
+.help-category-icon {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.icon-mengenal {
+    color: #557F5E;
+    background: linear-gradient(135deg, #CDE8D4, #EAF5EC);
+}
+
+.icon-panduan {
+    color: #657E47;
+    background: linear-gradient(135deg, #DCE8BB, #F0F5DF);
+}
+
+.icon-kuis {
+    color: #6C9B76;
+    background: linear-gradient(135deg, #D5EADF, #EAF5EF);
+}
+
+.icon-faq {
+    color: #78934C;
+    background: linear-gradient(135deg, #E5EDC9, #F5F7E9);
+}
+
+.help-category-card > div:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+}
+
+.help-category-card h3 {
+    color: #365B42;
+    font-size: 15px;
+    margin: 3px 0 8px;
+}
+
+.help-category-card p {
+    color: #7A8C7D;
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.help-card-arrow {
+    color: #80A32F;
+    font-size: 22px;
+    font-weight: 600;
+    align-self: center;
+}
+/* =====================================
+   HELP DETAIL SECTION
+===================================== */
+
+.help-detail-section {
+    margin-top: 52px;
+    scroll-margin-top: 30px;
+}
+
+.help-detail-heading {
+    margin-bottom: 22px;
+}
+
+.help-detail-heading h2 {
+    color: #365B42;
+    font-size: 22px;
+    margin: 0 0 9px;
+}
+
+.help-detail-heading p {
+    color: #7A8C7D;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.help-info-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.help-info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+    padding: 22px;
+    border-radius: 18px;
+    background: #FFFFFF;
+    border: 1px solid #E2EEE4;
+    box-shadow: 0 5px 16px rgba(69, 105, 76, 0.04);
+    transition: 0.25s ease;
+}
+
+.help-info-card:hover {
+    border-color: #97C49E;
+    box-shadow: 0 8px 20px rgba(69, 105, 76, 0.09);
+}
+
+.help-info-number {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #CDE8D4, #EAF5EC);
+    color: #557F5E;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.help-info-card h3 {
+    color: #365B42;
+    font-size: 14px;
+    margin: 2px 0 8px;
+}
+
+.help-info-card p {
+    color: #7A8C7D;
+    font-size: 12px;
+    line-height: 1.8;
+    margin: 0;
+}
+/* =====================================
+   LEARNING GUIDE
+===================================== */
+
+.help-learning-steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.help-step-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+    padding: 23px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #FFFFFF, #F5FAF5);
+    border: 1px solid #E2EEE4;
+    box-shadow: 0 5px 16px rgba(69, 105, 76, 0.04);
+    transition: 0.25s ease;
+}
+
+.help-step-card:hover {
+    transform: translateY(-3px);
+    border-color: #97C49E;
+    box-shadow: 0 9px 20px rgba(69, 105, 76, 0.09);
+}
+
+.help-step-number {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #6C9B76, #97C49E);
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 800;
+    box-shadow: 0 4px 10px rgba(108, 155, 118, 0.18);
+}
+
+.help-step-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.help-step-label {
+    display: block;
+    color: #80A32F;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.1px;
+    margin: 2px 0 8px;
+}
+
+.help-step-content h3 {
+    color: #365B42;
+    font-size: 14px;
+    margin: 0 0 8px;
+}
+
+.help-step-content p {
+    color: #7A8C7D;
+    font-size: 12px;
+    line-height: 1.8;
+    margin: 0;
+}
+/* =====================================
+   QUIZ & ASSESSMENT
+===================================== */
+
+.help-quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.help-quiz-card {
+    padding: 25px;
+    border-radius: 19px;
+    background: linear-gradient(135deg, #FFFFFF, #F3F9F4);
+    border: 1px solid #E0EEE2;
+    box-shadow: 0 5px 16px rgba(69, 105, 76, 0.05);
+    transition: 0.25s ease;
+}
+
+.help-quiz-card:hover {
+    transform: translateY(-3px);
+    border-color: #97C49E;
+    box-shadow: 0 10px 22px rgba(69, 105, 76, 0.09);
+}
+
+.help-quiz-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 15px;
+    margin-bottom: 17px;
+    background: linear-gradient(135deg, #CDE8D4, #EAF5EC);
+    color: #557F5E;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.help-quiz-card:nth-child(2) .help-quiz-icon {
+    background: linear-gradient(135deg, #DCE8BB, #F0F5DF);
+    color: #657E47;
+}
+
+.help-quiz-card:nth-child(3) .help-quiz-icon {
+    background: linear-gradient(135deg, #D5EADF, #EAF5EF);
+    color: #6C9B76;
+}
+
+.help-quiz-card:nth-child(4) .help-quiz-icon {
+    background: linear-gradient(135deg, #E5EDC9, #F5F7E9);
+    color: #78934C;
+}
+
+.help-quiz-card h3 {
+    color: #365B42;
+    font-size: 15px;
+    margin: 0 0 9px;
+}
+
+.help-quiz-card p {
+    color: #7A8C7D;
+    font-size: 12px;
+    line-height: 1.8;
+    margin: 0;
+}
+/* =====================================
+   FAQ ACCORDION
+===================================== */
+
+.help-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.help-faq-item {
+    background: linear-gradient(135deg, #FFFFFF, #F6FAF6);
+    border: 1px solid #E0EEE2;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.25s ease;
+}
+
+.help-faq-item[open] {
+    border-color: #97C49E;
+    box-shadow: 0 7px 18px rgba(69, 105, 76, 0.07);
+}
+
+.help-faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 23px;
+    color: #365B42;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+}
+
+.help-faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.help-faq-item summary::marker {
+    content: "";
+}
+
+.faq-toggle {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #EAF5EC;
+    color: #557F5E;
+    font-size: 20px;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.help-faq-item[open] .faq-toggle {
+    background: linear-gradient(135deg, #6C9B76, #97C49E);
+    color: #FFFFFF;
+    transform: rotate(180deg);
+}
+
+.faq-toggle::before {
+    content: "+";
+}
+
+.help-faq-item[open] .faq-toggle::before {
+    content: "−";
+}
+
+.help-faq-item p {
+    padding: 0 23px 20px;
+    margin: 0;
+    color: #7A8C7D;
+    font-size: 12px;
+    line-height: 1.9;
+    max-width: 850px;
+}
+
+.help-faq-item summary:hover {
+    background: rgba(205, 232, 212, 0.18);
+}
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .help-page {
+        padding: 22px 18px 32px;
+    }
+    .help-quiz-grid {
+    grid-template-columns: 1fr;
+}
+
+    .help-welcome {
+        padding: 28px 24px;
+    }
+
+    .help-welcome-icon {
+        width: 65px;
+        height: 65px;
+        font-size: 34px;
+    }
+
+    .help-category-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .help-welcome-icon {
+        display: none;
+    }
+
+    .help-category-card {
+        padding: 19px;
+        gap: 13px;
+    }
+
+    .help-category-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR MURID -->
+    <aside class="sidebar">
+
+        <a href="index.html" class="brand">
+            <span class="brand-icon">∑</span>
+            <span>mathcademy<span class="brand-dot">.</span></span>
+        </a>
+
+        <div class="menu-label">MENU UTAMA</div>
+
+        <nav class="navigation">
+
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+            <a href="student-materials.html" class="nav-item">
+            <span class="nav-icon">▤</span> Materi Belajar
+            </a>
+            <a href="student-quizzes.html" class="nav-item">
+                <span class="nav-icon">✎</span> Latihan & Kuis
+            </a>
+
+            <a href="progress.html" class="nav-item">
+                <span class="nav-icon">▥</span>
+                Progres & Nilai
+            </a>
+
+        </nav>
+
+        <div class="menu-label second-label">LAINNYA</div>
+
+        <nav class="navigation">
+
+            <a href="settings.html" class="nav-item">
+                <span class="nav-icon">⚙</span>
+                Pengaturan
+            </a>
+
+            <a href="help.html" class="nav-item active">
+                <span class="nav-icon">?</span>
+                Bantuan
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="help-card">
+                <div class="help-icon">✦</div>
+                <strong>Semangat belajar!</strong>
+                <p>Terus belajar dan temukan hal baru bersama Mathcademy.</p>
+            </div>
+
+            <a href="login.html" class="logout" id="studentLogout">
+                ↪ &nbsp; Keluar
+            </a>
+
+        </div>
+
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- KONTEN UTAMA -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+<header class="topbar">
+
+    <button
+        type="button"
+        class="sidebar-toggle"
+        id="sidebarToggle"
+        aria-label="Buka menu navigasi"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+    <div>
+        <p class="breadcrumb">Dashboard / Bantuan</p>
+        <h3>Pusat Bantuan</h3>
+    </div>
+
+<div class="topbar-right">
+    <div class="profile">
+        <div class="avatar" id="studentAvatar">M</div>
+        <div>
+            <strong id="studentName">Murid</strong>
+            <span>Pelajar Mathcademy</span>
+        </div>
+        <span class="dropdown">⌄</span>
+    </div>
+</div>
+
+        </header>
+
+       <!-- KONTEN BANTUAN -->
+<section class="help-page">
+
+    <!-- WELCOME -->
+    <div class="help-welcome">
+        <div class="help-welcome-text">
+            <span class="help-eyebrow">PUSAT BANTUAN MATHCADEMY</span>
+            <h1>Hai, ada yang bisa kami bantu?</h1>
+            <p>
+                Temukan panduan dan informasi untuk membantumu belajar
+                dengan lebih mudah dan nyaman di Mathcademy.
+            </p>
+        </div>
+
+        <div class="help-welcome-icon">✦</div>
+    </div>
+
+    <!-- KATEGORI BANTUAN -->
+    <div class="help-section-heading">
+        <div>
+            <span class="help-eyebrow">PANDUAN PENGGUNA</span>
+            <h2>Jelajahi Pusat Bantuan</h2>
+            <p>Pilih topik yang ingin kamu ketahui.</p>
+        </div>
+    </div>
+
+    <div class="help-category-grid">
+
+        <a href="#mengenal" class="help-category-card">
+            <div class="help-category-icon icon-mengenal">✧</div>
+            <div>
+                <h3>Mengenal Mathcademy</h3>
+                <p>Kenali fitur dan bagian-bagian yang tersedia di Mathcademy.</p>
+            </div>
+            <span class="help-card-arrow">→</span>
+        </a>
+
+        <a href="#panduan" class="help-category-card">
+            <div class="help-category-icon icon-panduan">▤</div>
+            <div>
+                <h3>Panduan Belajar</h3>
+                <p>Pelajari langkah-langkah menggunakan materi dan aktivitas pembelajaran.</p>
+            </div>
+            <span class="help-card-arrow">→</span>
+        </a>
+
+        <a href="#kuis" class="help-category-card">
+            <div class="help-category-icon icon-kuis">✓</div>
+            <div>
+                <h3>Kuis dan Penilaian</h3>
+                <p>Ketahui cara mengerjakan kuis dan melihat hasil penilaian.</p>
+            </div>
+            <span class="help-card-arrow">→</span>
+        </a>
+
+        <a href="#faq" class="help-category-card">
+            <div class="help-category-icon icon-faq">?</div>
+            <div>
+                <h3>Pertanyaan Umum</h3>
+                <p>Temukan jawaban dari pertanyaan yang sering diajukan.</p>
+            </div>
+            <span class="help-card-arrow">→</span>
+        </a>
+
+    </div>
+
+<!-- DETAIL MENGENAL MATHCADEMY -->
+<section class="help-detail-section" id="mengenal">
+
+    <div class="help-detail-heading">
+        <span class="help-eyebrow">01 — MENGENAL MATHCADEMY</span>
+        <h2>Kenalan dengan Mathcademy</h2>
+        <p>Yuk, kenali beberapa bagian utama yang akan kamu gunakan selama belajar.</p>
+    </div>
+
+    <div class="help-info-list">
+
+        <div class="help-info-card">
+            <div class="help-info-number">01</div>
+            <div>
+                <h3>Dashboard</h3>
+                <p>
+                    Halaman utama yang menampilkan ringkasan aktivitas belajarmu,
+                    informasi pembelajaran, serta akses menuju fitur Mathcademy.
+                </p>
+            </div>
+        </div>
+
+        <div class="help-info-card">
+            <div class="help-info-number">02</div>
+            <div>
+                <h3>Materi Saya</h3>
+                <p>
+                    Tempat untuk menemukan BAB, subbab, dan aktivitas pembelajaran
+                    matematika yang tersedia. Kamu bisa membuka materi dan
+                    menyelesaikan aktivitas secara bertahap.
+                </p>
+            </div>
+        </div>
+
+        <div class="help-info-card">
+            <div class="help-info-number">03</div>
+            <div>
+                <h3>Progres & Nilai</h3>
+                <p>
+                    Halaman untuk memantau perkembangan belajarmu, melihat
+                    aktivitas yang telah diselesaikan, serta hasil kuis dan penilaian.
+                </p>
+            </div>
+        </div>
+
+        <div class="help-info-card">
+            <div class="help-info-number">04</div>
+            <div>
+                <h3>Pengaturan</h3>
+                <p>
+                    Bagian untuk mengelola informasi akun dan pengaturan
+                    yang tersedia pada akunmu.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+</section>
+<!-- DETAIL PANDUAN BELAJAR -->
+<section class="help-detail-section" id="panduan">
+
+    <div class="help-detail-heading">
+        <span class="help-eyebrow">02 — PANDUAN BELAJAR</span>
+        <h2>Mulai perjalanan belajarmu</h2>
+        <p>Ikuti langkah-langkah berikut agar pengalaman belajarmu di Mathcademy lebih terarah.</p>
+    </div>
+
+    <div class="help-learning-steps">
+
+        <div class="help-step-card">
+            <div class="help-step-number">1</div>
+            <div class="help-step-content">
+                <span class="help-step-label">LANGKAH PERTAMA</span>
+                <h3>Buka halaman Materi Saya</h3>
+                <p>
+                    Pilih menu <strong>Materi Saya</strong> pada sidebar untuk
+                    melihat daftar materi matematika yang tersedia.
+                </p>
+            </div>
+        </div>
+
+        <div class="help-step-card">
+            <div class="help-step-number">2</div>
+            <div class="help-step-content">
+                <span class="help-step-label">LANGKAH KEDUA</span>
+                <h3>Pilih BAB dan subbab</h3>
+                <p>
+                    Buka BAB yang ingin dipelajari, kemudian pilih subbab
+                    sesuai urutan pembelajaran.
+                </p>
+            </div>
+        </div>
+
+        <div class="help-step-card">
+            <div class="help-step-number">3</div>
+            <div class="help-step-content">
+                <span class="help-step-label">LANGKAH KETIGA</span>
+                <h3>Pelajari setiap aktivitas</h3>
+                <p>
+                    Baca penjelasan materi, amati contoh, dan ikuti aktivitas
+                    interaktif yang tersedia. Kerjakan setiap pertanyaan
+                    dengan teliti.
+                </p>
+            </div>
+        </div>
+
+        <div class="help-step-card">
+            <div class="help-step-number">4</div>
+            <div class="help-step-content">
+                <span class="help-step-label">LANGKAH KEEMPAT</span>
+                <h3>Selesaikan pembelajaran</h3>
+                <p>
+                    Ikuti aktivitas sampai selesai. Perhatikan umpan balik
+                    yang muncul untuk membantumu memahami materi.
+                </p>
+            </div>
+        </div>
+
+        <div class="help-step-card">
+            <div class="help-step-number">5</div>
+            <div class="help-step-content">
+                <span class="help-step-label">LANGKAH KELIMA</span>
+                <h3>Pantau progres belajarmu</h3>
+                <p>
+                    Kunjungi menu <strong>Progres & Nilai</strong> untuk
+                    melihat perkembangan aktivitas dan hasil penilaianmu.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+<!-- DETAIL KUIS DAN PENILAIAN -->
+<section class="help-detail-section" id="kuis">
+
+    <div class="help-detail-heading">
+        <span class="help-eyebrow">03 — KUIS DAN PENILAIAN</span>
+        <h2>Uji pemahamanmu!</h2>
+        <p>Ketahui cara mengerjakan kuis dan memahami hasil belajarmu.</p>
+    </div>
+
+    <div class="help-quiz-grid">
+
+        <div class="help-quiz-card">
+            <div class="help-quiz-icon">✎</div>
+            <h3>Mengerjakan Kuis</h3>
+            <p>
+                Buka kuis yang tersedia, baca setiap pertanyaan dengan teliti,
+                lalu pilih atau susun jawaban sesuai instruksi.
+            </p>
+        </div>
+
+        <div class="help-quiz-card">
+            <div class="help-quiz-icon">◎</div>
+            <h3>Memahami Umpan Balik</h3>
+            <p>
+                Perhatikan umpan balik setelah menjawab. Gunakan informasi
+                tersebut untuk mengetahui bagian yang sudah dipahami dan
+                bagian yang masih perlu dipelajari.
+            </p>
+        </div>
+
+        <div class="help-quiz-card">
+            <div class="help-quiz-icon">★</div>
+            <h3>Melihat Hasil Penilaian</h3>
+            <p>
+                Kunjungi menu Progres & Nilai untuk melihat hasil kuis
+                dan perkembangan pencapaian belajarmu.
+            </p>
+        </div>
+
+        <div class="help-quiz-card">
+            <div class="help-quiz-icon">↻</div>
+            <h3>Belajar Kembali</h3>
+            <p>
+                Jika masih ada jawaban yang kurang tepat, pelajari kembali
+                materi terkait agar pemahamanmu semakin baik.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+<!-- DETAIL PERTANYAAN UMUM -->
+<section class="help-detail-section" id="faq">
+
+    <div class="help-detail-heading">
+        <span class="help-eyebrow">04 — PERTANYAAN UMUM</span>
+        <h2>Ada yang ingin kamu tanyakan?</h2>
+        <p>Berikut beberapa pertanyaan yang mungkin membantumu.</p>
+    </div>
+
+    <div class="help-faq-list">
+
+        <details class="help-faq-item">
+            <summary>
+                Bagaimana cara mulai belajar di Mathcademy?
+                <span class="faq-toggle"></span>
+            </summary>
+            <p>
+                Buka menu Materi Saya, pilih BAB dan subbab yang ingin
+                dipelajari, kemudian ikuti aktivitas pembelajaran yang tersedia.
+            </p>
+        </details>
+
+        <details class="help-faq-item">
+            <summary>
+                Apakah aktivitas pembelajaran harus dikerjakan berurutan?
+                <span class="faq-toggle"></span>
+            </summary>
+            <p>
+                Ikuti urutan pembelajaran yang tersedia agar kamu dapat
+                memahami materi secara bertahap.
+            </p>
+        </details>
+
+        <details class="help-faq-item">
+            <summary>
+                Bagaimana cara mengetahui progres belajar saya?
+                <span class="faq-toggle"></span>
+            </summary>
+            <p>
+                Buka menu Progres & Nilai untuk melihat perkembangan
+                aktivitas pembelajaran dan hasil penilaianmu.
+            </p>
+        </details>
+
+        <details class="help-faq-item">
+            <summary>
+                Apa yang harus dilakukan jika jawaban kuis salah?
+                <span class="faq-toggle"></span>
+            </summary>
+            <p>
+                Perhatikan umpan balik yang diberikan, pahami letak kesalahan,
+                lalu pelajari kembali materi yang berkaitan.
+            </p>
+        </details>
+
+        <details class="help-faq-item">
+            <summary>
+                Apakah saya bisa melihat hasil kuis yang sudah dikerjakan?
+                <span class="faq-toggle"></span>
+            </summary>
+            <p>
+                Kamu dapat melihat hasil penilaian melalui menu
+                Progres & Nilai apabila hasil kuis tersebut sudah tersedia.
+            </p>
+        </details>
+
+        <details class="help-faq-item">
+            <summary>
+                Bagaimana jika saya mengalami kendala saat belajar?
+                <span class="faq-toggle"></span>
+            </summary>
+            <p>
+                Coba muat ulang halaman dan pastikan koneksi internetmu stabil.
+                Jika kendala masih terjadi, hubungi guru untuk mendapatkan bantuan.
+            </p>
+        </details>
+
+    </div>
+
+</section>
+
+    </main>
+
+</div>
+<script type="module">
+import { supabase } from './supabase.js';
+import { initStudentNotifications } from './js/notification.js';
+
+async function initHelpPage() {
+    const { data: { user }, error: authError } =
+        await supabase.auth.getUser();
+
+    if (authError || !user) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('full_name, role')
+        .eq('id', user.id)
+        .single();
+
+    if (error || !profile || profile.role !== 'student') {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const studentName = profile.full_name || 'Murid';
+
+    document.getElementById('studentName').textContent = studentName;
+    document.getElementById('studentAvatar').textContent =
+        studentName.trim().charAt(0).toUpperCase() || 'M';
+
+    await initStudentNotifications(user);
+}
+
+initHelpPage();
+</script>
+
+<script src="js/sidebar.js" defer></script>
+</body>
+</html>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Kuis | Mathcademy</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/notification.css">
 
     <style>
         .quiz-header {
@@ -106,6 +107,324 @@
             text-align: center;
             color: #64748b;
         }
+        
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+}
+
+.quiz-header h1 {
+    color: #405B46;
+    font-size: 25px;
+    font-weight: 750;
+    margin-bottom: 7px;
+}
+
+.quiz-header p {
+    color: #829080;
+    font-size: 13px;
+}
+
+.btn-create {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 21px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #80A32F, #657E47);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 5px 14px rgba(101, 126, 71, 0.18);
+    cursor: pointer;
+    transition: all .25s ease;
+}
+
+.btn-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(101, 126, 71, 0.25);
+}
+
+.quiz-card {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: #fff;
+    padding: 23px 25px;
+    border-radius: 17px;
+    margin-bottom: 15px;
+    border: 1px solid #e5ede3;
+    box-shadow: 0 3px 12px rgba(66, 91, 65, .035);
+    transition: all .25s ease;
+}
+
+.quiz-card:hover {
+    border-color: #BAD17A;
+    box-shadow: 0 7px 20px rgba(66, 91, 65, .07);
+    transform: translateY(-2px);
+    z-index: 50;
+}
+.quiz-dropdown-menu {
+    z-index: 9999;
+}
+
+.quiz-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.quiz-card h3 {
+    color: #405B46;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 8px 0;
+}
+
+.quiz-card p {
+    color: #849181;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.quiz-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 11px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.quiz-status.published {
+    background: #e8f3e8;
+    color: #52784e;
+}
+
+.quiz-status.draft {
+    background: #f3f1df;
+    color: #8a8042;
+}
+
+.quiz-action {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+}
+
+.btn-detail {
+    background: #edf5ed;
+    color: #657E47;
+    border: 1px solid #dce9dd;
+    padding: 9px 15px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.btn-detail:hover {
+    background: #CDE8D4;
+}
+
+.quiz-empty {
+    background: #fff;
+    border: 1px dashed #cbdcc8;
+    border-radius: 16px;
+    padding: 42px 20px;
+    text-align: center;
+    color: #829080;
+}
+
+@media (max-width: 650px) {
+    .quiz-card {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .quiz-action {
+        width: 100%;
+    }
+
+    .quiz-header h1 {
+        font-size: 21px;
+    }
+}
+
+/* DROPDOWN KELOLA KUIS */
+.quiz-dropdown {
+    position: relative;
+}
+
+.quiz-dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    min-width: 140px;
+    padding: 11px 14px;
+    background: #edf5ed;
+    color: #526B43;
+    border: 1px solid #dce9dd;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.quiz-dropdown-toggle:hover {
+    background: #CDE8D4;
+    border-color: #97C49E;
+}
+
+.dropdown-arrow {
+    font-size: 16px;
+    transition: transform .2s ease;
+}
+
+.quiz-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 190px;
+    padding: 7px;
+    background: #fff;
+    border: 1px solid #e2ebdf;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(55, 78, 51, .14);
+    z-index: 100;
+}
+
+.quiz-dropdown-menu.show {
+    display: block;
+    animation: quizDropdownIn .18s ease;
+}
+
+@keyframes quizDropdownIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.quiz-dropdown-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 12px;
+    background: transparent;
+    color: #526B43;
+    border: none;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.quiz-dropdown-menu button:hover {
+    background: #edf5ed;
+    color: #405B46;
+}
+
+.quiz-dropdown-menu button.dropdown-delete {
+    color: #dc2626;
+    margin-top: 5px;
+    border-top: 1px solid #f1eeee;
+    border-radius: 0 0 8px 8px;
+    padding-top: 13px;
+}
+
+.quiz-dropdown-menu button.dropdown-delete:hover {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+@media (max-width: 650px) {
+    .quiz-dropdown,
+    .quiz-dropdown-toggle {
+        width: 100%;
+    }
+
+    .quiz-dropdown-menu {
+        width: 100%;
+    }
+}
+
+/* TOMBOL AKSI KUIS */
+.quiz-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.quiz-action .btn-detail {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 11px 15px;
+    background: #CDE8D4;
+    color: #526B43;
+    border: 1px solid #BAD17A;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.quiz-action .btn-detail:hover {
+    background: #BAD17A;
+    transform: translateY(-1px);
+}
+
+.quiz-dropdown-toggle {
+    min-height: 39px;
+    background: #657E47;
+    color: white;
+    border: 1px solid #657E47;
+}
+
+.quiz-dropdown-toggle:hover {
+    background: #526B43;
+    border-color: #526B43;
+}
+
+@media (max-width: 650px) {
+    .quiz-action {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .quiz-action .btn-detail,
+    .quiz-dropdown,
+    .quiz-dropdown-toggle {
+        flex: 1;
+    }
+}
+
+
     </style>
 </head>
 
@@ -151,7 +470,7 @@
     <div class="menu-label second-label">LAINNYA</div>
 
     <nav class="navigation">
-        <a href="#" class="nav-item">
+        <a href="teacher-settings.html" class="nav-item">
             <span class="nav-icon">⚙</span>
             Pengaturan
         </a>
@@ -169,7 +488,7 @@
             <p>Bangun pengalaman belajar matematika yang menyenangkan.</p>
         </div>
 
-        <a href="#" class="logout" id="teacherLogout">
+        <a href="login.html" class="logout" id="teacherLogout">
             ↪ &nbsp; Keluar
         </a>
     </div>
@@ -223,6 +542,7 @@
 </div>
 <script type="module">
     import { supabase } from './supabase.js';
+import { initTeacherNotifications } from './js/notification.js';
 
     // Memeriksa akun yang sedang login
     const { data: { user }, error: userError } =
@@ -248,6 +568,8 @@
             document.getElementById('teacherName').textContent = name;
             document.getElementById('teacherAvatar').textContent =
                 name.charAt(0).toUpperCase();
+                // Inisialisasi sistem notifikasi guru
+await initTeacherNotifications(user);
         }
     }
 
@@ -298,112 +620,170 @@
         quizList.innerHTML = '';
 
         quizzes.forEach(quiz => {
-            const card = document.createElement('div');
-            card.className = 'quiz-card';
+           
+const card = document.createElement('div');
+card.className = 'quiz-card';
 
-            const statusText = {
-                draft: 'Draft',
-                published: 'Dipublikasikan'
-            };
+const statusText = {
+    draft: 'Draft',
+    published: 'Dipublikasikan'
+};
 
-            const statusClass = quiz.status === 'published'
-                ? 'published'
-                : 'draft';
+const statusClass = quiz.status === 'published'
+    ? 'published'
+    : 'draft';
 
-            const safeTitle = escapeHTML(quiz.title || 'Tanpa Judul');
-            const safeDescription = escapeHTML(
-                quiz.description || 'Belum ada deskripsi.'
-            );
+const safeTitle = escapeHTML(quiz.title || 'Tanpa Judul');
+const safeDescription = escapeHTML(
+    quiz.description || 'Belum ada deskripsi.'
+);
 
-            card.innerHTML = `
-                <span class="quiz-status ${statusClass}">
-                    ${statusText[quiz.status] || escapeHTML(quiz.status || 'Tidak diketahui')}
-                </span>
+// Informasi kuis
+const info = document.createElement('div');
+info.className = 'quiz-info';
 
-                <h3>${safeTitle}</h3>
-                <p>${safeDescription}</p>
-            `;
-
-            
-
-
-
-                        const actions = document.createElement('div');
-            actions.className = 'quiz-action';
-
-            // Tombol Edit
-            const editButton = document.createElement('button');
-            editButton.className = 'btn-detail';
-            editButton.textContent = 'Edit Kuis';
-
-            editButton.addEventListener('click', () => {
-                window.location.href =
-                    `quiz-editor.html?id=${encodeURIComponent(quiz.id)}`;
-            });
-
-            // Tombol Draft / Published
-            const statusButton = document.createElement('button');
-            statusButton.className = 'btn-detail';
-            statusButton.textContent =
-                quiz.status === 'published' ? 'Jadikan Draft' : 'Publish Kuis';
-
-            statusButton.addEventListener('click', async () => {
-                const newStatus =
-                    quiz.status === 'published' ? 'draft' : 'published';
-
-                if (!confirm(`Ubah status kuis menjadi ${newStatus.toUpperCase()}?`)) {
-                    return;
-                }
-
-                const { error } = await supabase
-                    .from('quizzes')
-                    .update({ status: newStatus })
-                    .eq('id', quiz.id);
-
-                if (error) {
-                    alert('Gagal mengubah status: ' + error.message);
-                    return;
-                }
-
-                alert('Status kuis berhasil diubah!');
-                loadQuizzes();
-            });
-
-            // Tombol Hapus
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'btn-detail';
-            deleteButton.textContent = 'Hapus Kuis';
-
-            deleteButton.addEventListener('click', async () => {
-                if (!confirm(
-                    `Yakin ingin menghapus kuis "${quiz.title}"?`
-                )) {
-                    return;
-                }
-
-                const { error } = await supabase
-                    .from('quizzes')
-                    .delete()
-                    .eq('id', quiz.id);
-
-                if (error) {
-                    alert('Gagal menghapus kuis: ' + error.message);
-                    return;
-                }
-
-                alert('Kuis berhasil dihapus!');
-                loadQuizzes();
-            });
-
-            actions.appendChild(editButton);
-            actions.appendChild(statusButton);
-            actions.appendChild(deleteButton);
-
-            card.appendChild(actions);
+info.innerHTML = `
+    <span class="quiz-status ${statusClass}">
+        ${statusText[quiz.status] || escapeHTML(quiz.status || 'Tidak diketahui')}
+    </span>
+    <h3>${safeTitle}</h3>
+    <p>${safeDescription}</p>
+`;
 
 
+// Area aksi
+const actions = document.createElement('div');
+actions.className = 'quiz-action';
 
-            quizList.appendChild(card);
+// Tombol Edit Kuis (terpisah dari dropdown)
+const editButton = document.createElement('button');
+editButton.className = 'btn-detail';
+editButton.innerHTML = '✎ Edit Kuis';
+
+editButton.addEventListener('click', () => {
+    window.location.href =
+        `quiz-editor.html?id=${encodeURIComponent(quiz.id)}`;
+});
+
+// Dropdown Kelola Kuis
+const dropdown = document.createElement('div');
+dropdown.className = 'quiz-dropdown';
+
+const dropdownButton = document.createElement('button');
+dropdownButton.className = 'quiz-dropdown-toggle';
+dropdownButton.innerHTML = `
+    Kelola Kuis
+    <span class="dropdown-arrow">⌄</span>
+`;
+
+const dropdownMenu = document.createElement('div');
+dropdownMenu.className = 'quiz-dropdown-menu';
+
+
+// Pilihan status kuis
+const publishButton = document.createElement('button');
+const draftButton = document.createElement('button');
+
+publishButton.innerHTML = quiz.status === 'published'
+    ? '✓ <span>Sudah Dipublikasikan</span>'
+    : '↑ <span>Publish Kuis</span>';
+
+draftButton.innerHTML = quiz.status === 'draft'
+    ? '✓ <span>Draft (Saat Ini)</span>'
+    : '▤ <span>Jadikan Draft</span>';
+
+// Tandai status yang sedang aktif
+publishButton.disabled = quiz.status === 'published';
+draftButton.disabled = quiz.status === 'draft';
+
+// Fungsi mengubah status kuis
+async function updateQuizStatus(newStatus) {
+    const label = newStatus === 'published'
+        ? 'mempublikasikan'
+        : 'menjadikan draft';
+
+    if (!confirm(`Yakin ingin ${label} kuis ini?`)) {
+        return;
+    }
+
+    const { error } = await supabase
+        .from('quizzes')
+        .update({ status: newStatus })
+        .eq('id', quiz.id);
+
+    if (error) {
+        alert('Gagal mengubah status: ' + error.message);
+        return;
+    }
+
+    alert('Status kuis berhasil diubah!');
+    loadQuizzes();
+}
+
+publishButton.addEventListener('click', () => {
+    updateQuizStatus('published');
+});
+
+draftButton.addEventListener('click', () => {
+    updateQuizStatus('draft');
+});
+
+// Hapus Kuis
+const deleteButton = document.createElement('button');
+deleteButton.className = 'dropdown-delete';
+deleteButton.innerHTML = '⌫ <span>Hapus Kuis</span>';
+
+deleteButton.addEventListener('click', async () => {
+    if (!confirm(`Yakin ingin menghapus kuis "${quiz.title}"?`)) {
+        return;
+    }
+
+    const { error } = await supabase
+        .from('quizzes')
+        .delete()
+        .eq('id', quiz.id);
+
+    if (error) {
+        alert('Gagal menghapus kuis: ' + error.message);
+        return;
+    }
+
+    alert('Kuis berhasil dihapus!');
+    loadQuizzes();
+});
+
+// Isi dropdown hanya dengan Publish/Draft dan Hapus
+dropdownMenu.appendChild(publishButton);
+dropdownMenu.appendChild(draftButton);
+dropdownMenu.appendChild(deleteButton);
+
+
+// Buka dan tutup dropdown
+dropdownButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+
+    document.querySelectorAll('.quiz-dropdown-menu.show').forEach(menu => {
+        if (menu !== dropdownMenu) {
+            menu.classList.remove('show');
+        }
+    });
+
+    dropdownMenu.classList.toggle('show');
+});
+
+dropdown.appendChild(dropdownButton);
+dropdown.appendChild(dropdownMenu);
+
+// Susun tombol aksi
+actions.appendChild(editButton);
+actions.appendChild(dropdown);
+
+// Gabungkan isi kartu
+card.appendChild(info);
+card.appendChild(actions);
+
+quizList.appendChild(card);
+
         });
     }
 
@@ -420,5 +800,6 @@
 
     loadQuizzes();
 </script>
+<script src="js/sidebar.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,907 @@
+/* =====================================
+   MATHCADEMY - RESPONSIVE FOUNDATION
+===================================== */
+
+/* Menghitung ukuran elemen lebih konsisten */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Mencegah halaman melebar karena elemen */
+html {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    min-width: 320px;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Media menyesuaikan container */
+img,
+video,
+iframe {
+    max-width: 100%;
+}
+
+/* Teks panjang tidak memaksa layout melebar */
+h1, h2, h3, h4, p, a, span {
+    overflow-wrap: break-word;
+}
+
+/* Form mengikuti lebar container */
+input,
+select,
+textarea {
+    max-width: 100%;
+}
+/* =========================================
+   MATHCADEMY WELCOME - VIBRANT NATURE
+========================================= */
+
+.student-dashboard .welcome-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    background: linear-gradient(
+        115deg,
+        #6C9B76 0%,
+        #85B58B 58%,
+        #BAD17A 100%
+    );
+
+    color: #ffffff;
+    border: none;
+    border-radius: 17px;
+    box-shadow: 0 9px 24px rgba(80, 120, 80, 0.15);
+}
+
+/* Ornamen simbol matematika */
+.student-dashboard .welcome-section::before {
+    content: "+     ×     ÷     =";
+    position: absolute;
+    z-index: -1;
+    right: 20px;
+    top: 12px;
+
+    color: rgba(255, 255, 255, 0.17);
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 12px;
+    transform: rotate(-12deg);
+    pointer-events: none;
+}
+
+.student-dashboard .welcome-section::after {
+    content: "x²       π       √";
+    position: absolute;
+    z-index: -1;
+    right: 25px;
+    bottom: 15px;
+
+    color: rgba(255, 255, 255, 0.19);
+    font-size: 29px;
+    font-weight: 700;
+    letter-spacing: 9px;
+    transform: rotate(8deg);
+    pointer-events: none;
+}
+
+/* Teks welcome */
+.student-dashboard .welcome-section h1,
+.student-dashboard .welcome-section p {
+    color: #ffffff;
+}
+
+.student-dashboard .welcome-section .eyebrow {
+    color: #F1F8ED;
+}
+
+/* Hilangkan ilustrasi buku */
+.student-dashboard .welcome-illustration {
+    display: none !important;
+}
+/* Nama murid pada welcome banner */
+.student-dashboard .welcome-section h1 {
+    color: #FFFFFF !important;
+    font-weight: 800;
+    text-shadow: 0 2px 5px rgba(42, 75, 48, 0.18);
+}
+
+/* Jika nama murid berada di dalam span */
+.student-dashboard .welcome-section h1 span {
+    color: #FFFFFF !important;
+    font-weight: 800;
+}
+
+/* Teks pendamping */
+.student-dashboard .welcome-section p {
+    color: #F7FFF5 !important;
+}
+/* =========================================
+   STUDENT DASHBOARD - STATISTIC CARDS
+========================================= */
+
+.student-dashboard .stat-card {
+    background: #FFFFFF;
+    border: 1px solid #E1ECE0;
+    border-radius: 15px;
+    box-shadow: 0 5px 16px rgba(65, 95, 66, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-dashboard .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 9px 22px rgba(65, 95, 66, 0.11);
+}
+
+/* Angka statistik */
+.student-dashboard .stat-card h2 {
+    color: #426749;
+    font-weight: 800;
+}
+
+/* Keterangan statistik */
+.student-dashboard .stat-card p {
+    color: #718273;
+    font-weight: 500;
+}
+
+/* Ikon statistik */
+.student-dashboard .stat-icon {
+    background: #E5F1E5;
+    color: #657E47;
+    border-radius: 12px;
+}
+/* =========================================
+   STUDENT DASHBOARD - COURSE CARDS
+========================================= */
+
+.student-dashboard .course-card {
+    background: #FFFFFF;
+    border: 1px solid #E1ECE0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 16px rgba(65, 95, 66, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.student-dashboard .course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(65, 95, 66, 0.12);
+}
+
+/* Area ilustrasi materi */
+.student-dashboard .course-art {
+    background: linear-gradient(
+        135deg,
+        #DCEEDC,
+        #A8CDAA
+    );
+    color: #426749;
+}
+
+/* Variasi warna antar kartu */
+.student-dashboard .course-card:nth-child(even) .course-art {
+    background: linear-gradient(
+        135deg,
+        #E7F0D7,
+        #BAD17A
+    );
+}
+
+/* Judul BAB */
+.student-dashboard .course-card h3 {
+    color: #365A3E;
+    font-weight: 750;
+}
+
+/* Deskripsi materi */
+.student-dashboard .course-card p {
+    color: #718273;
+    line-height: 1.6;
+}
+
+/* Tombol buka materi */
+.student-dashboard .course-button {
+    background: linear-gradient(
+        110deg,
+        #6C9B76,
+        #80A32F
+    );
+    color: #FFFFFF;
+    border: none;
+    border-radius: 9px;
+    font-weight: 650;
+}
+
+.student-dashboard .course-button:hover {
+    background: linear-gradient(
+        110deg,
+        #657E47,
+        #6C9B76
+    );
+}
+
+/* Progress materi */
+.student-dashboard .progress-fill {
+    background: linear-gradient(
+        90deg,
+        #6C9B76,
+        #97C49E
+    );
+}
+
+.student-dashboard .progress-track {
+    background: #E8F0E6;
+}
+/* =========================================
+   STUDENT DASHBOARD - SECTION HEADING
+========================================= */
+
+.student-dashboard .section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+/* Label kecil */
+.student-dashboard .section-heading .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #6C9B76;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 7px;
+}
+
+/* Aksen kecil di depan label */
+.student-dashboard .section-heading .eyebrow::before {
+    content: "";
+    width: 20px;
+    height: 3px;
+    border-radius: 10px;
+    background: #80A32F;
+}
+
+/* Judul utama */
+.student-dashboard .section-heading h2 {
+    color: #365A3E;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* Deskripsi */
+.student-dashboard .section-heading p {
+    color: #7A897B;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 6px 0 0;
+}
+
+/* Link lihat semua */
+.student-dashboard .section-heading a {
+    color: #657E47;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.student-dashboard .section-heading a:hover {
+    color: #80A32F;
+}
+
+/* Tampilan HP */
+@media (max-width: 480px) {
+    .student-dashboard .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 17px;
+    }
+
+    .student-dashboard .section-heading h2 {
+        font-size: 22px;
+    }
+
+    .student-dashboard .section-heading p {
+        font-size: 12px;
+    }
+}
+/* =========================================
+   STUDENT DASHBOARD - COURSE CARD CONTENT
+========================================= */
+
+/* Ruang isi kartu */
+.student-dashboard .course-card > div:not(.course-art) {
+    padding: 18px;
+}
+
+/* Label nomor BAB */
+.student-dashboard .course-card .chapter-number {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 7px;
+    background: #E7F1E6;
+    color: #526B43;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+}
+
+/* Judul materi */
+.student-dashboard .course-card h3 {
+    font-size: 17px;
+    line-height: 1.4;
+    margin: 10px 0 7px;
+    color: #365A3E;
+}
+
+/* Deskripsi materi */
+.student-dashboard .course-card p {
+    font-size: 12px;
+    line-height: 1.65;
+    color: #78877A;
+}
+
+/* Informasi progress */
+.student-dashboard .course-card .progress-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: #657E47;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+/* Track progress */
+.student-dashboard .course-card .progress-track {
+    height: 7px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #E8F0E6;
+}
+
+/* Isi progress */
+.student-dashboard .course-card .progress-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(
+        90deg,
+        #6C9B76,
+        #97C49E
+    );
+}
+
+/* Tombol */
+.student-dashboard .course-card .course-button {
+    width: 100%;
+    min-height: 40px;
+    margin-top: 15px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   STUDENT MATERIALS - PALET 2
+   VIBRANT NATURE
+========================================= */
+
+.materials-page {
+    --aquadulce: #6C9B76;
+    --aroma: #97C49E;
+    --winter: #CDE8D4;
+    --tarragon: #BAD17A;
+    --antique: #80A32F;
+    --ghalet: #657E47;
+
+    padding: 30px 32px;
+    background: transparent;
+}
+
+/* HEADER */
+.materials-page .materials-header {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    min-height: 205px;
+    padding: 38px 42px;
+    margin-bottom: 30px;
+    border: none;
+    border-radius: 22px;
+    background: linear-gradient(
+        115deg,
+        #6C9B76 0%,
+        #97C49E 58%,
+        #BAD17A 100%
+    );
+    box-shadow: 0 10px 25px rgba(65, 100, 67, .12);
+}
+
+.materials-page .materials-header-content {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+}
+
+.materials-page .materials-eyebrow {
+    display: inline-flex;
+    margin-bottom: 12px;
+    color: #F5FFF3;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.materials-page .materials-header h1 {
+    margin: 0 0 10px;
+    color: #FFFFFF;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -.7px;
+}
+
+.materials-page .materials-header p {
+    max-width: 530px;
+    margin: 0;
+    color: #F7FFF5;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.materials-page .materials-math-decoration {
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    right: 35px;
+    width: 230px;
+    height: 150px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.materials-page .materials-math-decoration span {
+    position: absolute;
+    color: rgba(255,255,255,.23);
+    font-weight: 800;
+}
+
+.materials-page .materials-math-decoration span:nth-child(1) {
+    top: 5px;
+    left: 20px;
+    font-size: 48px;
+}
+
+.materials-page .materials-math-decoration span:nth-child(2) {
+    top: 55px;
+    left: 95px;
+    font-size: 42px;
+}
+
+.materials-page .materials-math-decoration span:nth-child(3) {
+    top: 0;
+    right: 15px;
+    font-size: 38px;
+}
+
+.materials-page .materials-math-decoration span:nth-child(4) {
+    bottom: 0;
+    left: 35px;
+    font-size: 46px;
+}
+
+.materials-page .materials-math-decoration span:nth-child(5) {
+    right: 25px;
+    bottom: 8px;
+    font-size: 35px;
+}
+
+/* DAFTAR BAB */
+.materials-page .chapter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.materials-page .chapter-card {
+    padding: 27px;
+    background: #FFFFFF;
+    border: 1px solid #DCE9DC;
+    border-radius: 19px;
+    box-shadow: 0 5px 18px rgba(65, 100, 67, .06);
+    transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.materials-page .chapter-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 24px rgba(65, 100, 67, .10);
+}
+
+.materials-page .chapter-heading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #E8EFE6;
+}
+
+.materials-page .chapter-number {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #6C9B76, #97C49E);
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 800;
+    box-shadow: 0 5px 12px rgba(108, 155, 118, .18);
+}
+
+.materials-page .chapter-heading h2 {
+    margin: 0 0 5px;
+    color: #304D37;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.materials-page .chapter-heading p {
+    margin: 0;
+    color: #657E47;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* PROGRES BAB */
+.materials-page .chapter-progress {
+    padding: 19px 0 21px;
+    margin: 0 0 8px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #E8EFE6;
+    border-radius: 0;
+}
+
+.materials-page .chapter-progress .progress-info,
+.materials-page .subchapter-progress .progress-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 9px;
+}
+
+.materials-page .progress-label {
+    color: #657E47;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.materials-page .progress-count {
+    color: #426749;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.materials-page .progress-track {
+    height: 8px;
+    overflow: hidden;
+    background: #E8EFE5;
+    border-radius: 20px;
+}
+
+.materials-page .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6C9B76, #97C49E, #BAD17A);
+    border-radius: 20px;
+}
+
+/* DAFTAR SUBBAB */
+.materials-page .subchapter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-top: 13px;
+}
+
+.materials-page .subchapter-item {
+    padding: 20px;
+    background: #F7FAF6;
+    border: 1px solid #E1EBDE;
+    border-radius: 15px;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.materials-page .subchapter-item:hover {
+    background: #F1F7EF;
+    border-color: #BAD17A;
+}
+
+.materials-page .subchapter-item h3 {
+    margin: 0 0 7px;
+    color: #3D6245;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.materials-page .subchapter-item > p {
+    margin: 0 0 14px;
+    color: #657568;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* PROGRES SUBBAB */
+.materials-page .subchapter-progress {
+    padding-bottom: 15px;
+    margin: 15px 0 17px;
+    border-bottom: 1px solid #E3EBDF;
+}
+
+.materials-page .subchapter-progress .progress-track {
+    height: 7px;
+}
+
+/* DAFTAR AKTIVITAS */
+.materials-page .activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 16px;
+}
+
+.materials-page .activity-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 13px 15px;
+    background: #FFFFFF;
+    border: 1px solid #E2EADF;
+    border-radius: 11px;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.materials-page .activity-item:hover {
+    background: #FBFDF9;
+    border-color: #97C49E;
+}
+
+.materials-page .activity-item > span:first-child {
+    flex: 1;
+    min-width: 0;
+    color: #405B46;
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.6;
+}
+
+.materials-page .activity-status {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 11px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.materials-page .activity-status.completed {
+    color: #426749;
+    background: #E5F1E5;
+    border: 1px solid #CDE8D4;
+}
+
+.materials-page .activity-status.locked {
+    color: #657E47;
+    background: #F0F4E9;
+    border: 1px solid #E0E9D6;
+}
+
+.materials-page .activity-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    min-width: 105px;
+    min-height: 38px;
+    padding: 9px 15px;
+    border: none;
+    border-radius: 9px;
+    background: linear-gradient(110deg, #6C9B76, #80A32F);
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.materials-page .activity-button:hover {
+    background: linear-gradient(110deg, #657E47, #6C9B76);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 155, 118, .18);
+}
+
+/* PESAN KOSONG */
+.materials-page .empty-message,
+.materials-page .activity-list > p {
+    padding: 15px;
+    color: #526B43;
+    background: #F1F7EF;
+    border: 1px dashed #BAD17A;
+    border-radius: 11px;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* TOMBOL KEMBALI */
+.materials-page .back-to-chapters-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 42px;
+    margin-bottom: 22px;
+    padding: 10px 17px;
+    color: #426749;
+    background: #E5F1E5;
+    border: 1px solid #CDE8D4;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.materials-page .back-to-chapters-button:hover {
+    background: #CDE8D4;
+}
+
+.materials-page .back-to-chapters-button span {
+    font-size: 17px;
+    line-height: 1;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .materials-page {
+        padding: 24px;
+    }
+
+    .materials-page .materials-header {
+        padding: 30px;
+    }
+
+    .materials-page .chapter-card {
+        padding: 22px;
+    }
+}
+
+@media (max-width: 768px) {
+    .materials-page {
+        padding: 20px 16px;
+    }
+
+    .materials-page .materials-header {
+        min-height: 180px;
+        padding: 26px 24px;
+        border-radius: 17px;
+    }
+
+    .materials-page .materials-header h1 {
+        font-size: 26px;
+    }
+
+    .materials-page .materials-header p {
+        max-width: 90%;
+        font-size: 12px;
+    }
+
+    .materials-page .materials-math-decoration {
+        right: -75px;
+        opacity: .5;
+    }
+
+    .materials-page .chapter-card {
+        padding: 18px;
+    }
+
+    .materials-page .chapter-heading {
+        gap: 12px;
+    }
+
+    .materials-page .chapter-number {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        font-size: 15px;
+    }
+
+    .materials-page .chapter-heading h2 {
+        font-size: 17px;
+    }
+
+    .materials-page .subchapter-item {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .materials-page .materials-header {
+        min-height: 165px;
+        padding: 23px 19px;
+    }
+
+    .materials-page .materials-header h1 {
+        font-size: 22px;
+    }
+
+    .materials-page .materials-header p {
+        max-width: 100%;
+        font-size: 11px;
+    }
+
+    .materials-page .materials-eyebrow {
+        font-size: 9px;
+    }
+
+    .materials-page .chapter-heading h2 {
+        font-size: 15px;
+    }
+
+    .materials-page .chapter-card {
+        padding: 15px;
+    }
+
+    .materials-page .chapter-progress {
+        padding: 15px 0;
+    }
+
+    .materials-page .activity-item {
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 12px;
+    }
+
+    .materials-page .activity-item > span:first-child {
+        flex-basis: 100%;
+    }
+
+    .materials-page .activity-button {
+        min-height: 34px;
+        min-width: 95px;
+        padding: 7px 11px;
+        font-size: 11px;
+    }
+}

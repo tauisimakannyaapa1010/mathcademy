@@ -27,162 +27,271 @@
     <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
     <style>
-        body {
-            background: #f8fafc;
-        }
+    
+:root {
+    --aquadulce: #6C9B76;
+    --aroma: #97C49E;
+    --winter: #CDE8D4;
+    --tarragon: #BAD17A;
+    --antique: #80A32F;
+    --ghalet: #657E47;
+    --text-dark: #304D37;
+    --text-muted: #718273;
+    --surface: #FFFFFF;
+    --page-bg: #F5F9F4;
+}
 
-        .activity-page {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 35px 28px 60px;
-        }
+body {
+    background: var(--page-bg);
+    font-family: 'DM Sans', sans-serif;
+}
 
-        .activity-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+.activity-page {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 35px 60px;
+}
 
-        .back-link {
-            text-decoration: none;
-            color: #0f766e;
-            font-weight: 700;
-        }
+/* BAGIAN ATAS */
+.activity-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 24px;
+}
 
-        .activity-label {
-            color: #0f766e;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ghalet);
+    font-size: 13px;
+    font-weight: 750;
+    text-decoration: none;
+    transition: .2s ease;
+}
 
-        .activity-title {
-            margin: 10px 0;
-            font-size: 32px;
-            color: #1e293b;
-        }
+.back-link:hover {
+    color: var(--aquadulce);
+    transform: translateX(-3px);
+}
 
-        .activity-description {
-            color: #64748b;
-            line-height: 1.7;
-        }
+.activity-top .activity-label {
+    padding: 8px 13px;
+    color: var(--ghalet);
+    background: #EAF3E8;
+    border: 1px solid var(--winter);
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
 
-        .activity-content {
-            margin-top: 30px;
-        }
+/* HEADER AKTIVITAS */
+.activity-heading {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding: 34px 38px;
+    margin-bottom: 28px;
+    border-radius: 20px;
+    background: linear-gradient(
+        115deg,
+        #6C9B76 0%,
+        #97C49E 60%,
+        #BAD17A 100%
+    );
+    box-shadow: 0 9px 23px rgba(65, 100, 67, .12);
+}
 
-        .activity-loading,
-        .activity-error {
-            padding: 35px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            text-align: center;
-            color: #64748b;
-        }
+.activity-heading::after {
+    content: "x²   +   ÷   π";
+    position: absolute;
+    z-index: -1;
+    right: 20px;
+    bottom: 5px;
+    color: rgba(255,255,255,.18);
+    font-size: 43px;
+    font-weight: 800;
+    letter-spacing: 8px;
+    transform: rotate(-10deg);
+    pointer-events: none;
+}
 
-        .student-block {
-            padding: 24px;
-            margin-bottom: 20px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.025);
-        }
+.activity-heading .activity-label {
+    display: inline-flex;
+    margin: 0 0 10px;
+    color: #F3FFF2;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+}
 
-        .student-text-title {
-            margin: 0 0 16px;
-            color: #1e293b;
-            font-size: 21px;
-        }
+.activity-title {
+    margin: 0 0 10px;
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: -.5px;
+}
 
-        .student-text-content {
-            color: #334155;
-            line-height: 1.9;
-            overflow-wrap: anywhere;
-        }
+.activity-description {
+    max-width: 650px;
+    margin: 0;
+    color: #F5FFF3;
+    font-size: 14px;
+    line-height: 1.8;
+}
 
-        .student-text-content h1,
-        .student-text-content h2,
-        .student-text-content h3 {
-            color: #1e293b;
-            line-height: 1.4;
-        }
+#activity-message {
+    margin-top: 14px;
+}
 
-        .student-image {
-            display: block;
-            max-width: 100%;
-            max-height: 500px;
-            object-fit: contain;
-            margin: 15px auto;
-            border-radius: 10px;
-        }
+/* AREA KONTEN */
+.activity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 0;
+}
 
-        .image-caption {
-            color: #64748b;
-            text-align: center;
-            font-size: 13px;
-            margin-top: 10px;
-        }
+.activity-loading,
+.activity-error {
+    padding: 35px;
+    background: #FFFFFF;
+    border: 1px solid #E1EBDE;
+    border-radius: 16px;
+    text-align: center;
+    color: var(--text-muted);
+    box-shadow: 0 4px 15px rgba(65, 100, 67, .05);
+}
 
-        .math-display {
-            padding: 24px;
-            margin-top: 12px;
-            background: #f0fdfa;
-            border: 1px solid #ccfbf1;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 24px;
-            overflow-x: auto;
-        }
-
-        /* BLOK AKTIVITAS MURID */
+/* KARTU MATERI */
+.student-block,
 .student-activity-block {
-    padding: 24px;
-    margin-bottom: 20px;
-    background: white;
-    border: 1px solid #e2e8f0;
+    padding: 27px;
+    margin-bottom: 0;
+    background: var(--surface);
+    border: 1px solid #E1EBDE;
+    border-radius: 17px;
+    box-shadow: 0 4px 16px rgba(65, 100, 67, .055);
+}
+
+.student-text-title {
+    margin: 0 0 17px;
+    color: var(--text-dark);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.student-text-content {
+    color: #465B49;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.9;
+    overflow-wrap: anywhere;
+}
+
+.student-text-content h1,
+.student-text-content h2,
+.student-text-content h3 {
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+
+.student-text-content h2 {
+    font-size: 21px;
+}
+
+.student-text-content h3 {
+    font-size: 17px;
+}
+
+.student-text-content p {
+    margin: 10px 0;
+}
+
+.student-text-content ul,
+.student-text-content ol {
+    padding-left: 24px;
+}
+
+.student-text-content li {
+    margin-bottom: 7px;
+}
+
+/* GAMBAR */
+.student-material-image {
+    display: block;
+    width: auto;
+    max-width: 90%;
+    max-height: 350px;
+    object-fit: contain;
+    margin: 16px auto;
+    border-radius: 13px;
+}
+
+.image-caption {
+    margin-top: 10px;
+    color: var(--text-muted);
+    text-align: center;
+    font-size: 12px;
+}
+
+/* RUMUS MATEMATIKA */
+.math-display {
+    padding: 25px;
+    margin-top: 15px;
+    overflow-x: auto;
+    background: #F0F7EF;
+    border: 1px solid #DCEBDD;
     border-radius: 14px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.025);
+    color: var(--text-dark);
+    text-align: center;
+    font-size: 23px;
 }
 
 /* PILIHAN GANDA */
 .student-options {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
     margin-top: 20px;
 }
 
 .student-option {
-    padding: 16px 18px;
-    border: 1.5px solid #d8e9b9;
-    border-radius: 12px;
-    background: #f5f9ed;
-    color: #365314;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
+    min-height: 58px;
+    padding: 15px 18px;
+    background: #F7FAF6;
+    border: 1.5px solid #DCE9DC;
+    border-radius: 13px;
+    color: var(--text-dark);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.6;
     text-align: left;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: .2s ease;
 }
 
 .student-option:hover:not(:disabled) {
-    background: #ecfccb;
-    border-color: #84cc16;
+    background: #EDF5EB;
+    border-color: var(--aroma);
     transform: translateY(-2px);
+    box-shadow: 0 5px 13px rgba(65, 100, 67, .07);
 }
 
 .student-option.selected {
-    background: #84cc16;
-    border: 2px solid #65a30d;
-    color: #243b0b;
+    background: #E5F1E5;
+    border: 2px solid var(--aquadulce);
+    color: #365A3E;
     font-weight: 800;
-    box-shadow: 0 4px 12px rgba(132, 204, 22, 0.2);
+    box-shadow: 0 4px 12px rgba(108, 155, 118, .15);
 }
 
 .student-option:disabled {
@@ -192,114 +301,71 @@
 
 /* FEEDBACK JAWABAN */
 .answer-feedback {
-    margin-top: 18px;
-    padding: 14px 18px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.6;
     display: none;
+    padding: 15px 18px;
+    margin-top: 18px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.7;
 }
 
-/* JAWABAN BENAR */
 .answer-feedback.correct {
     display: block;
-    color: #365314;
-    background: #ecfccb;
-    border: 1px solid #a3d65c;
+    color: #426749;
+    background: #EAF4E8;
+    border: 1px solid #BAD9B9;
 }
 
-.answer-feedback.correct::before {
-    content: "✓ ";
-    font-size: 17px;
-    font-weight: 900;
-}
-
-/* JAWABAN SALAH */
 .answer-feedback.incorrect {
     display: block;
-    color: #b91c1c;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
+    color: #A33F3F;
+    background: #FFF2EF;
+    border: 1px solid #F0C9BF;
 }
 
 .answer-feedback.incorrect::before {
     content: "↻ ";
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 900;
 }
 
-@media (max-width: 600px) {
-    .student-options {
-        grid-template-columns: 1fr;
-    }
-}
-
-        .activity-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 35px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            gap: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .activity-page {
-                padding: 22px 15px 40px;
-            }
-
-            .activity-title {
-                font-size: 25px;
-            }
-
-            .student-block {
-                padding: 18px;
-            }
-
-            .activity-top {
-                align-items: flex-start;
-            }
-        }
-        /* DRAG AND DROP */
+/* DRAG AND DROP */
 .drag-cards {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
+    min-height: 90px;
     padding: 20px;
     margin-top: 20px;
-    min-height: 90px;
-    background: #f5f9ed;
-    border: 1px dashed #cbdcae;
-    border-radius: 16px;
+    background: #F5F9F4;
+    border: 1.5px dashed #A8CBA8;
+    border-radius: 15px;
 }
 
 .drag-card {
-    padding: 14px 22px;
-    border: 1.5px solid #d8e9b9;
-    border-radius: 12px;
-    background: white;
-    color: #365314;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
+    padding: 13px 20px;
+    background: #FFFFFF;
+    border: 1.5px solid #D5E6D3;
+    border-radius: 11px;
+    color: #426749;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 750;
     cursor: grab;
-    box-shadow: 0 3px 8px rgba(54, 83, 20, 0.06);
-    transition: 0.2s ease;
+    box-shadow: 0 3px 9px rgba(65, 100, 67, .06);
+    transition: .2s ease;
 }
 
 .drag-card:hover {
-    background: #f0f8df;
-    border-color: #84cc16;
-    transform: translateY(-3px);
+    background: #EDF5EB;
+    border-color: var(--aquadulce);
+    transform: translateY(-2px);
 }
 
 .drag-card:active {
     cursor: grabbing;
 }
-
-
 
 .drop-targets {
     display: grid;
@@ -311,24 +377,24 @@
 .drop-target {
     min-height: 135px;
     padding: 18px;
-    background: #f5f9ed;
-    border: 1.5px dashed #cbdcae;
-    border-radius: 16px;
-    color: #365314;
-    transition: 0.2s ease;
+    background: #F7FAF6;
+    border: 1.5px dashed #B6CFB1;
+    border-radius: 15px;
+    color: var(--text-dark);
+    transition: .2s ease;
 }
 
 .drop-target strong {
     display: block;
     margin-bottom: 14px;
-    color: #365314;
-    font-size: 15px;
+    color: #426749;
+    font-size: 14px;
     font-weight: 800;
 }
 
 .drop-target.drag-over {
-    background: #e8f7c9;
-    border: 2px solid #84cc16;
+    background: #EAF4E8;
+    border: 2px solid var(--aquadulce);
 }
 
 .drop-target-content {
@@ -339,53 +405,333 @@
 }
 
 .drop-target-content .drag-card {
-    background: #ecfccb;
-    border-color: #a3d65c;
+    background: #EAF4E8;
+    border-color: #BAD9B9;
 }
 
-@media (max-width: 600px) {
-    .drop-targets {
-        grid-template-columns: 1fr;
-    }
-}
-/* TOMBOL SELESAIKAN AKTIVITAS */
+/* TOMBOL SELESAIKAN */
 .complete-activity-btn {
     display: block;
     width: 100%;
+    min-height: 52px;
+    padding: 15px 24px;
     margin-top: 25px;
-    padding: 16px 24px;
+    background: linear-gradient(
+        110deg,
+        #6C9B76,
+        #80A32F
+    );
     border: none;
-    border-radius: 12px;
-    background: #84cc16;
-    color: #243b0b;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
+    border-radius: 13px;
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 14px;
     font-weight: 800;
     cursor: pointer;
-    transition: 0.2s ease;
+    box-shadow: 0 5px 14px rgba(108, 155, 118, .18);
+    transition: .2s ease;
 }
 
 .complete-activity-btn:hover:not(:disabled) {
-    background: #65a30d;
+    background: linear-gradient(110deg, #657E47, #6C9B76);
     transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(108, 155, 118, .22);
 }
 
 .complete-activity-btn:disabled {
-    background: #e2e8d5;
-    color: #94a38a;
+    background: #E4EDE1;
+    color: #91A18F;
+    box-shadow: none;
     cursor: not-allowed;
 }
 
+/* PESAN BERHASIL */
 .success-message {
+    padding: 17px 20px;
     margin-top: 18px;
-    padding: 16px 20px;
-    background: #ecfccb;
-    border: 1px solid #a3d65c;
-    border-radius: 12px;
-    color: #365314;
+    background: #EAF4E8;
+    border: 1px solid #BAD9B9;
+    border-radius: 13px;
+    color: #426749;
+    font-size: 14px;
     font-weight: 700;
-    line-height: 1.6;
+    line-height: 1.7;
 }
+
+/* BAGIAN BAWAH */
+.activity-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #DFE9DC;
+}
+
+/* FOKUS KEYBOARD */
+.student-option:focus-visible,
+.drag-card:focus-visible,
+.complete-activity-btn:focus-visible,
+.back-link:focus-visible {
+    outline: 3px solid #BAD17A;
+    outline-offset: 3px;
+}
+
+/* TABLET */
+@media (max-width: 768px) {
+    .activity-page {
+        padding: 24px 20px 45px;
+    }
+
+    .activity-heading {
+        padding: 28px;
+    }
+
+    .activity-title {
+        font-size: 25px;
+    }
+
+    .student-block,
+    .student-activity-block {
+        padding: 21px;
+    }
+}
+
+/* HP */
+@media (max-width: 600px) {
+    .activity-page {
+        padding: 20px 14px 35px;
+    }
+
+    .activity-top {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .activity-heading {
+        padding: 25px 21px;
+        border-radius: 16px;
+    }
+
+    .activity-heading::after {
+        right: -20px;
+        font-size: 30px;
+    }
+
+    .activity-title {
+        font-size: 22px;
+    }
+
+    .activity-description {
+        font-size: 12px;
+    }
+
+    .student-block,
+    .student-activity-block {
+        padding: 18px;
+        border-radius: 14px;
+    }
+
+    .student-text-title {
+        font-size: 18px;
+    }
+
+    .student-text-content {
+        font-size: 13px;
+    }
+
+    .student-options,
+    .drop-targets {
+        grid-template-columns: 1fr;
+    }
+
+    .student-option {
+        min-height: 52px;
+        font-size: 13px;
+    }
+
+    .math-display {
+        padding: 18px;
+        font-size: 19px;
+    }
+
+    .activity-footer {
+        flex-wrap: wrap;
+    }
+}
+
+/* =================================
+   PENYEMPURNAAN INTERAKSI AKTIVITAS
+================================= */
+
+/* Pilihan jawaban */
+.student-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 64px;
+    background: linear-gradient(135deg, #FFFFFF, #F6FAF5);
+}
+
+.student-option:hover:not(:disabled) {
+    background: linear-gradient(135deg, #EDF6EC, #F5F9E9);
+    border-color: var(--aquadulce);
+    box-shadow: 0 7px 17px rgba(108, 155, 118, .13);
+}
+
+.student-option.selected {
+    background: linear-gradient(135deg, #E6F2E5, #F0F6E5);
+    border: 2px solid var(--aquadulce);
+}
+
+/* Feedback jawaban */
+.answer-feedback {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 15px 18px;
+    border-radius: 14px;
+    line-height: 1.6;
+    font-size: 14px;
+    font-weight: 400;
+    animation: feedbackAppear .25s ease;
+}
+
+.answer-feedback.correct,
+.answer-feedback.incorrect {
+    display: flex;
+}
+
+.answer-feedback.correct {
+    background: linear-gradient(110deg, #EAF5E9, #F4F8E9);
+    border: 1px solid #B9D8B7;
+    color: #426749;
+}
+
+.answer-feedback.incorrect {
+    background: linear-gradient(110deg, #FFF3EF, #FFF8F3);
+    border: 1px solid #F0C9BF;
+    color: #A34D43;
+}
+
+/* Hilangkan ikon tambahan agar tidak dobel */
+.answer-feedback.correct::before,
+.answer-feedback.incorrect::before {
+    content: none !important;
+}
+
+/* Kartu drag-and-drop */
+.drag-cards {
+    background:
+        radial-gradient(circle at 10px 10px, #DCEBDD 1px, transparent 1.5px),
+        #F5F9F4;
+    background-size: 18px 18px;
+    border: 2px dashed #B4CEB1;
+    transition: .2s ease;
+}
+
+.drag-cards.drag-over {
+    background-color: #EAF4E8;
+    border-color: var(--aquadulce);
+}
+
+.drag-card {
+    min-height: 46px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(145deg, #FFFFFF, #F2F7EF);
+    border: 1.5px solid #C9DDC7;
+    box-shadow: 0 4px 9px rgba(65, 100, 67, .08);
+    cursor: grab;
+    user-select: none;
+}
+
+.drag-card:hover {
+    box-shadow: 0 7px 15px rgba(65, 100, 67, .13);
+}
+
+.drag-card.is-correct {
+    background: #E7F3E5;
+    border: 2px solid #6C9B76;
+    color: #426749;
+    cursor: default;
+}
+
+.drag-card.is-incorrect {
+    background: #FFF0ED;
+    border: 2px solid #E5A69A;
+    color: #A34D43;
+}
+
+/* Area tujuan */
+.drop-target {
+    background: linear-gradient(145deg, #FFFFFF, #F5F9F3);
+    border: 2px dashed #B8CEB2;
+}
+
+.drop-target.drag-over {
+    background: linear-gradient(145deg, #EAF5E9, #F1F7E8);
+    border-color: var(--aquadulce);
+    box-shadow: inset 0 0 0 2px rgba(108, 155, 118, .08);
+}
+
+.drop-target-content {
+    align-items: flex-start;
+}
+
+/* Tombol penyelesaian */
+.complete-activity-btn {
+    min-height: 56px;
+    letter-spacing: .2px;
+    background: linear-gradient(
+        110deg,
+        var(--aquadulce),
+        var(--antique)
+    );
+}
+
+.complete-activity-btn:not(:disabled) {
+    animation: buttonReady 2s ease-in-out infinite;
+}
+
+.complete-activity-btn:disabled {
+    background: #E8EFE5;
+    color: #899B86;
+}
+
+/* Animasi ringan */
+@keyframes feedbackAppear {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes buttonReady {
+    0%, 100% {
+        box-shadow: 0 5px 14px rgba(108, 155, 118, .16);
+    }
+    50% {
+        box-shadow: 0 7px 21px rgba(108, 155, 118, .28);
+    }
+}
+
+/* Kurangi animasi jika pengguna memilih preferensi ini */
+@media (prefers-reduced-motion: reduce) {
+    .answer-feedback,
+    .complete-activity-btn {
+        animation: none !important;
+    }
+}
+
 
     </style>
 </head>
