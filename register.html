@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Akun Murid | Mathcademy</title>
+    <title>Daftar Akun | Mathcademy</title>
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -17,7 +17,7 @@
             margin: 0;
             min-height: 100vh;
             font-family: Arial, sans-serif;
-            background: #F7FEE7;
+            background: linear-gradient(135deg, #F0F7F1, #E2F0E5);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,25 +26,25 @@
 
         .register-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             background: white;
             padding: 38px;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(54, 83, 20, 0.08);
+            border-radius: 22px;
+            box-shadow: 0 12px 35px rgba(54, 83, 20, 0.08);
         }
 
         .brand {
-            color: #65A30D;
-            font-size: 25px;
+            color: #6C9B76;
+            font-size: 27px;
             font-weight: bold;
             text-align: center;
             margin-bottom: 28px;
         }
 
-        .register-container h1 {
-            color: #365314;
+        h1 {
+            color: #365C43;
             font-size: 25px;
-            margin-bottom: 8px;
+            margin: 0 0 10px;
         }
 
         .description {
@@ -55,12 +55,12 @@
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 19px;
         }
 
         .form-group label {
             display: block;
-            color: #365314;
+            color: #365C43;
             font-weight: 600;
             font-size: 14px;
             margin-bottom: 8px;
@@ -69,29 +69,22 @@
         .form-group input {
             width: 100%;
             padding: 13px 14px;
-            border: 1px solid #D4D4D4;
+            border: 1px solid #D5E3D7;
             border-radius: 10px;
             font-size: 14px;
             outline: none;
         }
 
         .form-group input:focus {
-            border-color: #84CC16;
-            box-shadow: 0 0 0 3px #ECFCCB;
-        }
-
-        .password-note {
-            color: #737373;
-            font-size: 12px;
-            line-height: 1.5;
-            margin-top: 7px;
+            border-color: #6C9B76;
+            box-shadow: 0 0 0 3px #E7F2E9;
         }
 
         .submit-btn {
             width: 100%;
             padding: 14px;
-            background: #84CC16;
-            color: #365314;
+            background: #6C9B76;
+            color: white;
             border: none;
             border-radius: 10px;
             font-size: 15px;
@@ -101,25 +94,66 @@
         }
 
         .submit-btn:hover {
-            background: #A3E635;
+            background: #568361;
         }
 
-        .back-link {
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            padding: 12px;
+            border-radius: 9px;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .message.error {
             display: block;
-            text-align: center;
-            margin-top: 22px;
-            color: #65A30D;
-            text-decoration: none;
-            font-size: 14px;
+            background: #FEF2F2;
+            color: #B91C1C;
         }
 
-        .back-link:hover {
+        .message.success {
+            display: block;
+            background: #ECFDF5;
+            color: #166534;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 23px;
+            font-size: 14px;
+            color: #737373;
+        }
+
+        .login-link a {
+            color: #568361;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
             text-decoration: underline;
+        }
+
+        .approval-note {
+            margin-top: 22px;
+            padding: 13px;
+            background: #F0F7F1;
+            border-radius: 10px;
+            color: #52715A;
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: center;
         }
 
         @media (max-width: 500px) {
             .register-container {
-                padding: 26px 22px;
+                padding: 28px 22px;
             }
         }
     </style>
@@ -131,74 +165,154 @@
 
         <div class="brand">Mathcademy</div>
 
-        <h1>Tambah Akun Murid</h1>
+        <h1>Buat Akun Baru</h1>
 
         <p class="description">
-            Lengkapi informasi berikut untuk membuat akun
-            murid baru di Mathcademy.
+            Daftarkan dirimu untuk mulai belajar matematika
+            bersama Mathcademy.
         </p>
+
+        <div id="message" class="message"></div>
 
         <form id="registerForm">
 
             <div class="form-group">
-                <label for="nama">Nama Lengkap Murid</label>
+                <label for="nama">Nama Lengkap</label>
                 <input
                     type="text"
                     id="nama"
                     placeholder="Masukkan nama lengkap"
+                    autocomplete="name"
                     required
                 >
             </div>
 
             <div class="form-group">
-                <label for="email">Email Murid</label>
+                <label for="email">Email</label>
                 <input
                     type="email"
                     id="email"
                     placeholder="contoh@email.com"
+                    autocomplete="email"
                     required
                 >
             </div>
 
             <div class="form-group">
-                <label for="password">Kata Sandi Sementara</label>
+                <label for="password">Kata Sandi</label>
                 <input
                     type="password"
                     id="password"
-                    placeholder="Buat kata sandi sementara"
+                    placeholder="Minimal 8 karakter"
                     minlength="8"
+                    autocomplete="new-password"
                     required
                 >
-
-                <p class="password-note">
-                    Minimal 8 karakter. Murid dapat mengganti
-                    kata sandi setelah berhasil masuk.
-                </p>
             </div>
 
-            <button type="submit" class="submit-btn">
-                Buat Akun Murid
+            <div class="form-group">
+                <label for="confirmPassword">Konfirmasi Kata Sandi</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Ulangi kata sandi"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Daftar Sekarang
             </button>
 
         </form>
 
-        <a href="teacher.html" class="back-link">
-            ← Kembali ke Dashboard Guru
-        </a>
+        <div class="approval-note">
+            Setelah mendaftar, akunmu akan menunggu persetujuan
+            guru sebelum dapat digunakan untuk mengakses
+            pembelajaran Mathcademy.
+        </div>
+
+        <div class="login-link">
+            Sudah punya akun?
+            <a href="login.html">Masuk di sini</a>
+        </div>
 
     </div>
 
-    <script>
-        document.getElementById("registerForm")
-            .addEventListener("submit", function(event) {
-                event.preventDefault();
+    <script type="module">
+        import { supabase } from './supabase.js';
 
-                alert(
-                    "Tampilan registrasi berhasil! " +
-                    "Fitur pembuatan akun akan dihubungkan " +
-                    "ke Supabase pada tahap berikutnya."
+        const registerForm = document.getElementById('registerForm');
+        const message = document.getElementById('message');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = `message ${type}`;
+        }
+
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const fullName = document.getElementById('nama').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!fullName) {
+                showMessage('Nama lengkap harus diisi.', 'error');
+                return;
+            }
+
+            if (password.length < 8) {
+                showMessage('Kata sandi minimal 8 karakter.', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('Konfirmasi kata sandi tidak cocok.', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Memproses pendaftaran...';
+            message.className = 'message';
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: fullName
+                        }
+                    }
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                if (!data.user) {
+                    throw new Error('Pendaftaran belum berhasil. Silakan coba kembali.');
+                }
+
+                window.location.href = 'pending-approval.html';
+
+            } catch (error) {
+                console.error('Pendaftaran gagal:', error);
+
+                showMessage(
+                    error.message || 'Terjadi kesalahan saat mendaftar.',
+                    'error'
                 );
-            });
+
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Daftar Sekarang';
+            }
+        });
     </script>
 
 </body>

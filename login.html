@@ -492,6 +492,31 @@
                 font-size: 12px;
             }
         }
+        .register-link {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #E5EDE4;
+    text-align: center;
+}
+
+.register-link p {
+    margin-bottom: 8px;
+    color: #718675;
+    font-size: 13px;
+}
+
+.register-link a {
+    color: #6C9B76;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.register-link a:hover {
+    color: #486D4D;
+    text-decoration: underline;
+}
     </style>
 </head>
 
@@ -585,11 +610,10 @@
             </button>
 
         </form>
-
-        <p class="register-text">
-            Belum memiliki akun?
-            <span>Hubungi guru untuk mendapatkan akun.</span>
-        </p>
+        <div class="register-link">
+    <p>Belum punya akun?</p>
+    <a href="register.html">Daftar sebagai Murid</a>
+</div>
 
     </section>
 
@@ -625,17 +649,36 @@
                 throw new Error('Email atau kata sandi tidak sesuai.');
             }
 
-            const { data: profile, error: profileError } = await supabase
-                .from('profiles')
-                .select('full_name, role')
-                .eq('id', data.user.id)
-                .single();
+           const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('full_name, role, account_status')
+            .eq('id', data.user.id)
+            .single();
 
             if (profileError || !profile) {
                 await supabase.auth.signOut();
                 throw new Error('Profil pengguna tidak ditemukan.');
             }
+            // Periksa status persetujuan akun
+            if (profile.account_status === 'pending') {
+                await supabase.auth.signOut();
+                window.location.href = 'pending-approval.html';
+                return;
+            }
 
+            if (profile.account_status === 'rejected') {
+                await supabase.auth.signOut();
+                throw new Error(
+                    'Pendaftaran akunmu belum disetujui. Silakan hubungi guru.'
+                );
+            }
+
+            if (profile.account_status !== 'approved') {
+                await supabase.auth.signOut();
+                throw new Error(
+                    'Status akun tidak valid. Silakan hubungi guru.'
+                );
+            }
             if (profile.role !== selectedRole) {
                 await supabase.auth.signOut();
                 throw new Error(

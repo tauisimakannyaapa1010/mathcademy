@@ -433,10 +433,27 @@ function escapeHTML(text) {
     } else {
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('full_name, role')
+            .select('full_name, role, account_status')
             .eq('id', user.id)
             .single();
+// Memastikan akun sudah disetujui guru
+if (profileError || !profile) {
+    await supabase.auth.signOut();
+    window.location.href = 'login.html';
+    return;
+}
 
+if (profile.account_status === 'pending') {
+    await supabase.auth.signOut();
+    window.location.href = 'pending-approval.html';
+    return;
+}
+
+if (profile.account_status !== 'approved') {
+    await supabase.auth.signOut();
+    window.location.href = 'login.html';
+    return;
+}
         // Memastikan akun memiliki role murid
         if (profileError || !profile || profile.role !== 'student') {
             await supabase.auth.signOut();

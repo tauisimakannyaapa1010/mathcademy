@@ -956,8 +956,127 @@
 .recent-activity-card {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+/* PENDAFTARAN MURID BARU */
+.registration-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
 
+.registration-header h2 {
+    margin-bottom: 8px;
+}
 
+.registration-header p {
+    color: #718675;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.registration-count {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #E5F0E5;
+    color: #486D4D;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#pendingStudentList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.registration-empty {
+    padding: 28px 20px;
+    border: 1px dashed #C8D9C8;
+    border-radius: 14px;
+    background: #F8FBF7;
+    color: #718675;
+    text-align: center;
+    font-size: 13px;
+}
+.pending-student-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 18px 20px;
+    border: 1px solid #E1EAE0;
+    border-radius: 14px;
+    background: #FFFFFF;
+    transition: 0.2s ease;
+}
+
+.pending-student-card:hover {
+    border-color: #A8C9AA;
+    box-shadow: 0 4px 14px rgba(72, 109, 77, 0.07);
+}
+
+.pending-student-card strong {
+    display: block;
+    color: #405C45;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.pending-student-card p {
+    color: #718675;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.pending-student-card small {
+    color: #98A99A;
+    font-size: 11px;
+}
+
+.registration-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.registration-actions button {
+    border: none;
+    border-radius: 9px;
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.registration-actions button:first-child {
+    background: #6C9B76;
+    color: white;
+}
+
+.registration-actions button:first-child:hover {
+    background: #527F5C;
+}
+
+.registration-actions button:last-child {
+    background: #F9E9E7;
+    color: #B65F55;
+}
+
+.registration-actions button:last-child:hover {
+    background: #F2D8D4;
+}
+
+.registration-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
     </style>
 </head>
 
@@ -1095,6 +1214,27 @@
                 <h2 id="totalQuizzes">0</h2>
             </div>
         </section>
+
+<!-- PENDAFTARAN MURID BARU -->
+<section class="teacher-section" id="studentRegistrationSection">
+    <div class="registration-header">
+        <div>
+            <h2>Pendaftaran Murid Baru</h2>
+            <p>
+                Tinjau dan kelola akun murid yang menunggu persetujuan.
+            </p>
+        </div>
+
+        <span class="registration-count" id="pendingStudentCount">
+            0 Menunggu
+        </span>
+    </div>
+
+    <div id="pendingStudentList">
+        <p>Memuat pendaftaran murid...</p>
+    </div>
+</section>
+
 <!-- DISTRIBUSI PROGRES MURID -->
 <section class="teacher-section">
     <h2>Distribusi Progres Murid</h2>
@@ -1985,7 +2125,114 @@ function escapeHtml(value) {
         "'": '&#39;'
     })[char]);
 }
+async function loadPendingStudentRegistrations() {
+    const countEl = document.getElementById('pendingStudentCount');
+    const listEl = document.getElementById('pendingStudentList');
 
+    try {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('id, full_name, email, created_at')
+            .eq('role', 'student')
+            .eq('account_status', 'pending')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        countEl.textContent = `${data.length} Menunggu`;
+
+        if (data.length === 0) {
+            listEl.innerHTML = `
+                <div class="registration-empty">
+                    Belum ada pendaftaran murid yang menunggu persetujuan.
+                </div>
+            `;
+            return;
+        }
+
+        listEl.innerHTML = data.map(student => `
+            <div class="pending-student-card">
+                <div>
+                    <strong>${escapeHtml(student.full_name || 'Murid')}</strong>
+                    <p>${escapeHtml(student.email || '-')}</p>
+                    <small>
+                        Mendaftar:
+                        ${new Date(student.created_at).toLocaleString('id-ID')}
+                    </small>
+                </div>
+
+                <div class="registration-actions">
+                    <button
+                        type="button"
+                        data-registration-action="approved"
+                        data-student-id="${escapeHtml(student.id)}">
+                        Setujui
+                    </button>
+
+                    <button
+                        type="button"
+                        data-registration-action="rejected"
+                        data-student-id="${escapeHtml(student.id)}">
+                        Tolak
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        console.error('Gagal memuat pendaftaran:', error);
+
+        listEl.innerHTML = `
+            <div class="registration-empty">
+                Gagal memuat pendaftaran murid. Silakan coba lagi.
+            </div>
+        `;
+    }
+}
+const pendingStudentList = document.getElementById('pendingStudentList');
+
+pendingStudentList.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-registration-action]');
+
+    if (!button) return;
+
+    const studentId = button.dataset.studentId;
+    const decision = button.dataset.registrationAction;
+
+    const actionLabel = decision === 'approved'
+        ? 'menyetujui'
+        : 'menolak';
+
+    const confirmed = confirm(
+        `Yakin ingin ${actionLabel} pendaftaran murid ini?`
+    );
+
+    if (!confirmed) return;
+
+    button.disabled = true;
+
+    const { error } = await supabase.rpc(
+        'review_student_registration',
+        {
+            p_student_id: studentId,
+            p_decision: decision
+        }
+    );
+
+    if (error) {
+        alert('Gagal memproses pendaftaran: ' + error.message);
+        button.disabled = false;
+        return;
+    }
+
+    alert(
+        decision === 'approved'
+            ? 'Pendaftaran murid berhasil disetujui!'
+            : 'Pendaftaran murid berhasil ditolak.'
+    );
+
+    await loadPendingStudentRegistrations();
+});
 // ========================================
 // SISTEM NOTIFIKASI GURU
 // ========================================
@@ -2625,6 +2872,7 @@ if (window.MathJax && window.MathJax.typesetPromise) {
             document.getElementById('welcomeTeacherName').textContent = name;
            // Memuat sistem notifikasi guru
 await initTeacherNotifications(user);
+await loadPendingStudentRegistrations();
             await loadStudentProgress();
             await loadDashboardProgressSummary();
             await loadWeeklyActivityChart();

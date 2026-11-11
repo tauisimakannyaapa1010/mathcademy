@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menunggu Persetujuan | Mathcademy</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #F0F7F1, #E2F0E5);
+        }
+
+        .pending-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 42px 35px;
+            background: white;
+            border-radius: 22px;
+            text-align: center;
+            box-shadow: 0 12px 35px rgba(54, 83, 20, 0.08);
+        }
+
+        .brand {
+            color: #6C9B76;
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .status-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F0F7F1;
+            border-radius: 50%;
+            font-size: 42px;
+        }
+
+        h1 {
+            color: #365C43;
+            font-size: 25px;
+            margin: 0 0 14px;
+        }
+
+        .description {
+            color: #737373;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .status-label {
+            display: inline-block;
+            padding: 9px 16px;
+            border-radius: 30px;
+            background: #FFF7E6;
+            color: #A66A13;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        .info-box {
+            padding: 16px;
+            background: #F0F7F1;
+            border-radius: 12px;
+            color: #52715A;
+            font-size: 13px;
+            line-height: 1.7;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .login-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #6C9B76;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .login-btn:hover {
+            background: #568361;
+        }
+
+        .footer {
+            margin-top: 22px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media (max-width: 500px) {
+            .pending-container {
+                padding: 32px 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="pending-container">
+
+        <div class="brand">Mathcademy</div>
+
+        <div class="status-icon">⏳</div>
+
+        <h1>Pendaftaran Berhasil!</h1>
+
+        <div class="status-label">
+            Menunggu Persetujuan Guru
+        </div>
+
+        <p class="description">
+            Terima kasih sudah mendaftar di Mathcademy.
+            Akunmu sedang menunggu pemeriksaan dan
+            persetujuan dari guru.
+        </p>
+
+        <div class="info-box">
+            <strong>Apa selanjutnya?</strong>
+            <br>
+            Guru akan memeriksa pendaftaranmu.
+            Setelah akun disetujui, kamu bisa masuk
+            menggunakan email dan kata sandi yang
+            sudah didaftarkan.
+        </div>
+
+        <a href="login.html" class="login-btn">
+            Kembali ke Halaman Login
+        </a>
+
+        <div class="footer">
+            Mathcademy · Belajar Matematika Lebih Menyenangkan
+        </div>
+
+    </main>
+
+</body>
+</html>
