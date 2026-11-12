@@ -424,7 +424,7 @@ function escapeHTML(text) {
     })[character]);
 }
 
-
+async function initStudentDashboard() {
     // Mengambil data murid yang sedang login
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
@@ -471,8 +471,11 @@ await initStudentNotifications(user);
 
             await loadStudentStatistics(user.id);
             await loadChapterProgress(user.id);
-        }
+          }
     }
+}
+
+initStudentDashboard();
 
 </script>
 <script src="js/sidebar.js" defer></script>

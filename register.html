@@ -281,23 +281,26 @@
             message.className = 'message';
 
             try {
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: {
-                            full_name: fullName
-                        }
-                    }
-                });
+               const { data, error } = await supabase.functions.invoke(
+    'student-self-register',
+    {
+        body: {
+            full_name: fullName,
+            email: email,
+            password: password
+        }
+    }
+);
 
-                if (error) {
-                    throw error;
-                }
+if (error) {
+    throw error;
+}
 
-                if (!data.user) {
-                    throw new Error('Pendaftaran belum berhasil. Silakan coba kembali.');
-                }
+if (!data || !data.success) {
+    throw new Error(
+        data?.error || 'Pendaftaran belum berhasil. Silakan coba kembali.'
+    );
+}
 
                 window.location.href = 'pending-approval.html';
 
