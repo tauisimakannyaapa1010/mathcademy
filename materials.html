@@ -474,7 +474,8 @@
 }
 
 /* Tombol edit */
-#chapters-container .edit-subbab-btn {
+#chapters-container .edit-subbab-btn,
+#chapters-container .edit-chapter-btn {
     background: #eaf3e9 !important;
     color: #52785b !important;
     border: 1px solid #d5e6d5 !important;
@@ -482,6 +483,8 @@
     padding: 9px 13px !important;
     font-size: 12px !important;
     font-weight: 600 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 /* Tombol arsip */
@@ -503,7 +506,8 @@
     transform: translateY(-1px);
 }
 
-#chapters-container .edit-subbab-btn:hover {
+#chapters-container .edit-subbab-btn:hover,
+#chapters-container .edit-chapter-btn:hover {
     background: #dcebdc !important;
 }
 
@@ -544,23 +548,66 @@
     background: #ffffff;
     color: #526b43;
 }
-/* Tombol Buka Editor */
+/* =================================
+   TOMBOL AKSI AKTIVITAS
+================================= */
+
+#chapters-container .edit-activity-btn,
 #chapters-container .open-activity-editor-btn {
-    background: linear-gradient(135deg, #6C9B76, #97C49E) !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 9px !important;
-    padding: 8px 14px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    font-family: inherit !important;
     font-size: 12px !important;
-    font-weight: 600 !important;
+    font-weight: 650 !important;
+
+    padding: 9px 14px !important;
+    border-radius: 9px !important;
+    border: 1px solid transparent !important;
+
     cursor: pointer;
-    transition: all 0.2s ease;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+
+/* Edit Judul */
+#chapters-container .edit-activity-btn {
+    background: #eaf3e9 !important;
+    color: #52785b !important;
+    border-color: #d5e6d5 !important;
+}
+
+/* Buka Editor */
+#chapters-container .open-activity-editor-btn {
+    background: linear-gradient(
+        135deg,
+        #6C9B76,
+        #97C49E
+    ) !important;
+    color: #ffffff !important;
+}
+
+/* Hover */
+#chapters-container .edit-activity-btn:hover {
+    background: #dcebdc !important;
+    transform: translateY(-1px);
 }
 
 #chapters-container .open-activity-editor-btn:hover {
-    background: linear-gradient(135deg, #5d8967, #80b58b) !important;
+    background: linear-gradient(
+        135deg,
+        #5d8967,
+        #80b58b
+    ) !important;
     transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(108, 155, 118, 0.18);
+    box-shadow: 0 3px 8px rgba(108, 155, 118, .18);
+}
+
+#chapters-container .edit-activity-btn:active,
+#chapters-container .open-activity-editor-btn:active {
+    transform: scale(.98);
 }
 /* =================================
    HALAMAN ARSIP - PALET 2
@@ -1236,6 +1283,84 @@
 
 
 <!-- MODAL EDIT SUBBAB -->
+
+<!-- Modal Edit BAB -->
+<div class="modal-overlay" id="edit-chapter-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Edit BAB</h2>
+            <button type="button" id="close-edit-chapter">&times;</button>
+        </div>
+
+        <p class="modal-description">
+            Ubah nama atau deskripsi BAB.
+        </p>
+
+        <form id="edit-chapter-form">
+            <div class="form-group">
+                <label for="edit-chapter-title">Nama BAB</label>
+                <input
+                    type="text"
+                    id="edit-chapter-title"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="edit-chapter-description">Deskripsi BAB</label>
+                <textarea
+                    id="edit-chapter-description"
+                    rows="4"
+                    placeholder="Tuliskan deskripsi BAB..."
+                ></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" id="cancel-edit-chapter">
+                    Batal
+                </button>
+
+                <button type="submit" class="add-material-btn">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit Judul Aktivitas -->
+<div class="modal-overlay" id="edit-activity-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Edit Judul Aktivitas</h2>
+            <button type="button" id="close-edit-activity">&times;</button>
+        </div>
+
+        <p class="modal-description">
+            Ubah judul aktivitas pembelajaran.
+        </p>
+
+        <form id="edit-activity-form">
+            <div class="form-group">
+                <label for="edit-activity-title">Judul Aktivitas</label>
+                <input
+                    type="text"
+                    id="edit-activity-title"
+                    placeholder="Masukkan judul aktivitas"
+                    required
+                >
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" id="cancel-edit-activity">Batal</button>
+                <button type="submit" class="add-material-btn">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="modal-overlay" id="edit-subbab-modal">
 
     <div class="modal-content">

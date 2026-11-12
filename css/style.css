@@ -3790,3 +3790,51 @@ body:has(.quiz-player-container) {
     font-weight: 700;
     margin-left: 4px;
 }
+
+/* =================================
+   ACTION BUTTONS - MATERIALS
+================================= */
+
+.edit-activity-btn,
+.open-activity-editor-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.edit-activity-btn {
+    background: #e8f2e9;
+    color: #477653;
+    border-color: #d5e7d7;
+}
+
+.edit-activity-btn:hover {
+    background: #d9eadb;
+    transform: translateY(-1px);
+}
+
+.open-activity-editor-btn {
+    background: #e8f0eb;
+    color: #527b60;
+    border-color: #d8e5db;
+}
+
+.open-activity-editor-btn:hover {
+    background: #dce9df;
+    transform: translateY(-1px);
+}
+
+.edit-activity-btn:active,
+.open-activity-editor-btn:active {
+    transform: scale(0.97);
+}

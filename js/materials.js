@@ -547,6 +547,12 @@ async function loadMaterials() {
 </div>
 
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="edit-chapter-btn"
+    data-id="${chapter.id}"
+    data-title="${escapeHTML(chapter.title)}"
+    data-description="${escapeHTML(chapter.description || '')}">
+    Edit BAB
+</button>
 
                         <button
                             class="add-subbab-btn"
@@ -678,13 +684,20 @@ async function loadMaterials() {
                                                             ${escapeHTML(activity.title)}
                                                         </span>
 
-                                                        <button
-                                                            class="open-activity-editor-btn"
-                                                            data-id="${activity.id}"
-                                                            style="padding: 7px 12px; border: none; border-radius: 8px; background: #e0f2fe; color: #075985; cursor: pointer;"
-                                                        >
-                                                            <i class="fas fa-edit"></i> Buka Editor
-                                                        </button>
+<button
+    class="edit-activity-btn"
+    data-id="${activity.id}"
+    data-title="${escapeHTML(activity.title)}"
+>
+    <i class="fas fa-pen"></i> Edit Judul
+</button>
+
+<button
+    class="open-activity-editor-btn"
+    data-id="${activity.id}"
+>
+    <i class="fas fa-edit"></i> Buka Editor
+</button>
                                                         
                                                     </div>
 
@@ -922,7 +935,98 @@ async function saveActivity(event) {
 
 // Menyimpan ID subbab yang sedang diedit
 let selectedSubbabId = null;
+let selectedActivityToEditId = null;
 
+// Membuka modal Edit Judul Aktivitas
+function openEditActivity(activity) {
+    selectedActivityToEditId = activity.id;
+
+    document.getElementById('edit-activity-title').value =
+        activity.title || '';
+
+    document.getElementById('edit-activity-modal').classList.add('active');
+}
+
+// Menyimpan perubahan judul aktivitas
+async function updateActivity(event) {
+    event.preventDefault();
+
+    const title = document.getElementById('edit-activity-title').value.trim();
+
+    if (!title) {
+        alert('Judul aktivitas tidak boleh kosong!');
+        return;
+    }
+
+    if (!selectedActivityToEditId) return;
+
+    const { error } = await supabase
+        .from('material_activities')
+        .update({
+            title: title,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', selectedActivityToEditId);
+
+    if (error) {
+        console.error('Gagal memperbarui aktivitas:', error);
+        alert('Gagal memperbarui judul aktivitas: ' + error.message);
+        return;
+    }
+
+    selectedActivityToEditId = null;
+
+    document.getElementById('edit-activity-form').reset();
+    document.getElementById('edit-activity-modal').classList.remove('active');
+
+    await loadMaterials();
+
+    alert('Judul aktivitas berhasil diperbarui!');
+}
+let selectedChapterToEditId = null;
+function openEditChapter(chapter) {
+    selectedChapterToEditId = chapter.id;
+
+    document.getElementById('edit-chapter-title').value = chapter.title || '';
+    document.getElementById('edit-chapter-description').value = chapter.description || '';
+
+    document.getElementById('edit-chapter-modal').classList.add('active');
+}
+
+async function updateChapter(event) {
+    event.preventDefault();
+
+    const title = document.getElementById('edit-chapter-title').value.trim();
+    const description = document.getElementById('edit-chapter-description').value.trim();
+
+    if (!title) {
+        alert('Nama BAB tidak boleh kosong!');
+        return;
+    }
+
+    const { error } = await supabase
+        .from('chapters')
+        .update({
+            title: title,
+            description: description || null,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', selectedChapterToEditId);
+
+    if (error) {
+        console.error('Gagal memperbarui BAB:', error);
+        alert('Gagal memperbarui BAB: ' + error.message);
+        return;
+    }
+
+    selectedChapterToEditId = null;
+    document.getElementById('edit-chapter-form').reset();
+    document.getElementById('edit-chapter-modal').classList.remove('active');
+
+    await loadMaterials();
+
+    alert('BAB berhasil diperbarui!');
+}
 // Membuka formulir Edit Subbab
 function openEditSubbab(material) {
     selectedSubbabId = material.id;
@@ -1413,6 +1517,70 @@ chaptersContainer.addEventListener('click', (event) => {
         .classList.add('active');
 
 });
+// Edit BAB
+chaptersContainer.addEventListener('click', (event) => {
+    const button = event.target.closest('.edit-chapter-btn');
+    if (!button) return;
+
+    const chapter = {
+        id: button.dataset.id,
+        title: button.dataset.title,
+        description: button.dataset.description
+    };
+
+    openEditChapter(chapter);
+});
+// Edit Judul Aktivitas
+chaptersContainer.addEventListener('click', (event) => {
+    const button = event.target.closest('.edit-activity-btn');
+    if (!button) return;
+
+    const activity = {
+        id: button.dataset.id,
+        title: button.dataset.title
+    };
+
+    openEditActivity(activity);
+});
+
+// Tombol tutup modal Edit Aktivitas
+document.getElementById('close-edit-activity').addEventListener('click', () => {
+    document.getElementById('edit-activity-modal').classList.remove('active');
+});
+
+// Tombol batal Edit Aktivitas
+document.getElementById('cancel-edit-activity').addEventListener('click', () => {
+    document.getElementById('edit-activity-modal').classList.remove('active');
+});
+
+// Tutup modal jika area luar diklik
+document.getElementById('edit-activity-modal').addEventListener('click', (event) => {
+    if (event.target.id === 'edit-activity-modal') {
+        event.target.classList.remove('active');
+    }
+});
+
+// Simpan perubahan judul aktivitas
+document.getElementById('edit-activity-form').addEventListener('submit', updateActivity);
+
+// Tutup modal Edit BAB
+document.getElementById('close-edit-chapter').addEventListener('click', () => {
+    document.getElementById('edit-chapter-modal').classList.remove('active');
+});
+
+document.getElementById('cancel-edit-chapter').addEventListener('click', () => {
+    document.getElementById('edit-chapter-modal').classList.remove('active');
+});
+
+// Tutup modal saat area luar diklik
+document.getElementById('edit-chapter-modal').addEventListener('click', (event) => {
+    if (event.target.id === 'edit-chapter-modal') {
+        event.target.classList.remove('active');
+    }
+});
+
+// Simpan perubahan BAB
+document.getElementById('edit-chapter-form').addEventListener('submit', updateChapter);
 
 // Membuka modal Tambah Aktivitas
 chaptersContainer.addEventListener('click', (event) => {
