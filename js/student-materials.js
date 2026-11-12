@@ -251,9 +251,15 @@ const previousActivity = globalActivityIndex > 0
     : null;
 
 // Aktivitas pertama BAB terbuka.
-// Aktivitas berikutnya menunggu seluruh mini kuis sebelumnya benar.
+// Aktivitas berikutnya hanya terbuka jika aktivitas sebelumnya
+// sudah diselesaikan melalui tombol "Selesaikan Aktivitas"
+// dan seluruh mini kuisnya sudah dijawab benar.
 const isUnlocked = globalActivityIndex === 0 ||
-    (previousActivity && hasPassedActivityQuizzes(previousActivity));
+    (
+        previousActivity &&
+        completedActivityIds.has(previousActivity.id) &&
+        hasPassedActivityQuizzes(previousActivity)
+    );
 
         let buttonHTML = '';
 

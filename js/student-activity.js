@@ -201,40 +201,45 @@ const orderedActivities = chapterMaterials.flatMap(material =>
     )
 );
 
+
 // Menentukan posisi aktivitas saat ini
 const currentIndex = orderedActivities.findIndex(
     activity => activity.id === activityId
 );
 
-// Memeriksa aktivitas sebelumnya
+// Memeriksa apakah aktivitas sebelumnya sudah diselesaikan
 if (currentIndex > 0) {
     const previousActivity = orderedActivities[currentIndex - 1];
 
-    let previousBlocks = previousActivity.content;
+    // Mengambil blok kuis dari aktivitas sebelumnya
+    let previousBlocks = [];
 
-    if (typeof previousBlocks === 'string') {
-        try {
-            previousBlocks = JSON.parse(previousBlocks);
-        } catch {
-            previousBlocks = [];
-        }
+    if (Array.isArray(previousActivity.content)) {
+        previousBlocks = previousActivity.content;
+    } else if (
+        previousActivity.content &&
+        Array.isArray(previousActivity.content.blocks)
+    ) {
+        previousBlocks = previousActivity.content.blocks;
     }
 
-    if (!Array.isArray(previousBlocks)) {
-        previousBlocks = previousBlocks?.blocks || [];
+    const quizBlocks = previousBlocks.filter(block =>
+        ['multiple-choice', 'short-answer', 'drag-drop'].includes(block.type)
+    );
+
+    // Memeriksa progres penyelesaian aktivitas sebelumnya
+    const { data: previousProgress, error: previousProgressError } =
+        await supabase
+            .from('student_activity_progress')
+            .select('activity_id')
+            .eq('student_id', currentUser.id)
+            .eq('material_id', previousActivity.material_id)
+            .eq('activity_id', previousActivity.id)
+            .maybeSingle();
+
+    if (previousProgressError) {
+        throw previousProgressError;
     }
-
-    const quizBlocks = previousBlocks
-        .map((block, index) => ({
-            ...block,
-            id: block.id || `block-${index}`
-        }))
-        .filter(block =>
-            ['multiple-choice', 'short-answer', 'drag-drop']
-                .includes(block.type)
-        );
-
-    let previousActivityPassed = false;
 
     if (quizBlocks.length > 0) {
         const { data: previousAnswers, error: previousAnswersError } =
@@ -254,35 +259,16 @@ if (currentIndex > 0) {
                 .map(answer => answer.block_id)
         );
 
-        previousActivityPassed = quizBlocks.every(block =>
-            correctBlockIds.has(block.id)
-        );
+        const previousActivityPassed =
+            !!previousProgress &&
+            quizBlocks.every(block => correctBlockIds.has(block.id));
 
-    } else {
-        const { data: previousProgress, error: previousProgressError } =
-            await supabase
-                .from('student_activity_progress')
-                .select('activity_id')
-                .eq('student_id', currentUser.id)
-                .eq('material_id', previousActivity.material_id)
-                .eq('activity_id', previousActivity.id)
-                .maybeSingle();
-
-        if (previousProgressError) {
-            throw previousProgressError;
+        if (!previousActivityPassed) {
+            showMessage('Selesaikan aktivitas sebelumnya terlebih dahulu.');
+            return;
         }
-
-        previousActivityPassed = !!previousProgress;
-    }
-
-    if (!previousActivityPassed) {
-        activityContent.innerHTML = '';
-        completeButton.style.display = 'none';
-
-        showMessage(
-            '🔒 Aktivitas ini masih terkunci. Jawab seluruh mini kuis pada aktivitas sebelumnya dengan benar terlebih dahulu, ya!'
-        );
-
+    } else if (!previousProgress) {
+        showMessage('Selesaikan aktivitas sebelumnya terlebih dahulu.');
         return;
     }
 }
@@ -530,8 +516,8 @@ else if (block.type === 'short-answer') {
     renderShortAnswer(block, wrapper);
 }
 // BLOK EMBED CODE
-else if (block.type === 'embed') {
 
+else if (block.type === 'embed') {
     const embedFrame = document.createElement('iframe');
 
     embedFrame.className = 'student-embed-frame';
@@ -540,23 +526,105 @@ else if (block.type === 'embed') {
     embedFrame.style.cssText = `
         display: block;
         width: 100%;
-        min-height: 450px;
+        height: 450px;
         border: 1px solid #d9e8e3;
         border-radius: 12px;
         background: white;
+        overflow: hidden;
     `;
 
-    // Menjalankan kode HTML, CSS, dan JavaScript
-    // dalam iframe terisolasi
-    embedFrame.setAttribute(
-        'sandbox',
-        'allow-scripts allow-forms'
-    );
+    embedFrame.setAttribute('sandbox', 'allow-scripts allow-forms');
 
-    embedFrame.srcdoc = block.code || '';
+    // Menerima informasi tinggi dari dalam iframe
+    window.addEventListener('message', function(event) {
+        if (event.source !== embedFrame.contentWindow) return;
+
+        if (
+            !event.data ||
+            event.data.type !== 'mathcademy-embed-height'
+        ) return;
+
+        const newHeight = Number(event.data.height);
+
+        if (!Number.isFinite(newHeight) || newHeight <= 0) return;
+
+        embedFrame.style.height = Math.max(200, Math.ceil(newHeight)) + 'px';
+    });
+
+    // Script untuk mengukur tinggi isi widget
+    const resizeScript = `
+        <script>
+        document.documentElement.style.overflow = 'hidden';
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.overflow = 'hidden';
+    document.body.style.margin = '0';
+    document.body.style.width = '100%';
+});
+        (() => {
+            function sendHeight() {
+                const body = document.body;
+                const html = document.documentElement;
+
+                const height = Math.max(
+                    body ? body.scrollHeight : 0,
+                    body ? body.offsetHeight : 0,
+                    html.scrollHeight,
+                    html.offsetHeight
+                );
+
+                window.parent.postMessage({
+                    type: 'mathcademy-embed-height',
+                    height: height
+                }, '*');
+            }
+
+            const observer = new ResizeObserver(sendHeight);
+
+            observer.observe(document.documentElement);
+
+            if (document.body) {
+                observer.observe(document.body);
+            }
+
+            const mutationObserver = new MutationObserver(sendHeight);
+
+            mutationObserver.observe(document.documentElement, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                characterData: true
+            });
+
+            window.addEventListener('load', sendHeight);
+            window.addEventListener('resize', sendHeight);
+
+            sendHeight();
+
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(sendHeight);
+            }
+        })();
+        <\/script>
+    `;
+
+    // Sisipkan script pengukur ke dalam kode widget
+    let embedCode = block.code || '';
+
+    if (/<\/body>/i.test(embedCode)) {
+        embedCode = embedCode.replace(
+            /<\/body>/i,
+            resizeScript + '</body>'
+        );
+    } else {
+        embedCode += resizeScript;
+    }
+
+    embedFrame.srcdoc = embedCode;
 
     wrapper.appendChild(embedFrame);
 }
+
 else {
     console.warn('Tipe blok belum didukung:', block.type);
     return;

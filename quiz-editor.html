@@ -1116,41 +1116,56 @@ if (explanationEditor) {
 }
 
 
-    // Mengambil isi teks dan rumus dari editor
-    // Mengambil isi teks dan rumus dari editor
+// Mengambil isi teks dan rumus dari editor
 function getEditorContent(editor) {
     const content = [];
 
-    editor.childNodes.forEach(node => {
-        if (
-            node.nodeType === Node.ELEMENT_NODE &&
-            node.classList.contains('equation-wrapper')
-        ) {
-            const mathField = node.querySelector('math-field');
+    function readNode(node) {
+        // Membaca teks biasa
+        if (node.nodeType === Node.TEXT_NODE) {
+            const value = node.textContent.replace(/\u200B/g, '');
 
-            content.push({
-                type: 'equation',
-                value: mathField ? mathField.value : ''
-            });
-
-        } else if (node.nodeType === Node.TEXT_NODE) {
-            if (node.textContent) {
+            if (value) {
                 content.push({
                     type: 'text',
-                    value: node.textContent.replace(/\u200B/g, '')
+                    value: value
                 });
             }
 
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            content.push({
-                type: 'text',
-                value: node.innerText || ''
-            });
+            return;
         }
+
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+
+        // Membaca equation
+        if (node.classList.contains('equation-wrapper')) {
+            const mathField = node.querySelector('math-field');
+
+            if (mathField) {
+                content.push({
+                    type: 'equation',
+                    value: mathField.value || ''
+                });
+            }
+
+            return;
+        }
+
+        // Membaca isi elemen secara bertingkat
+        node.childNodes.forEach(child => {
+            readNode(child);
+        });
+    }
+
+    editor.childNodes.forEach(node => {
+        readNode(node);
     });
 
     return content;
 }
+
 // Mengembalikan teks dan rumus ke dalam editor
 function setEditorContent(editor, content) {
     editor.innerHTML = '';
@@ -2813,6 +2828,20 @@ async function createNewQuiz() {
 }
 // Memulai editor setelah menentukan mode kuis
 async function initializeQuizEditor() {
+    const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+
+    const { data: teacherStatus, error: teacherError } =
+        await supabase.rpc('is_teacher');
+
+    console.log('CEK SESI GURU:', {
+        email: userData?.user?.email,
+        userId: userData?.user?.id,
+        userError,
+        teacherStatus,
+        teacherError
+    });
+
     const mode = await selectQuiz();
 
     // Jika sedang membuat kuis baru
