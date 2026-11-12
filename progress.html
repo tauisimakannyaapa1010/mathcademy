@@ -1776,12 +1776,13 @@ async function loadProgressData() {
             return;
         }
 
-        // 3. Ambil seluruh murid
-        const { data: students, error: studentError } = await supabase
-            .from('profiles')
-            .select('id, full_name')
-            .eq('role', 'student')
-            .order('full_name');
+// 3. Ambil murid yang sudah disetujui guru
+const { data: students, error: studentError } = await supabase
+    .from('profiles')
+    .select('id, full_name')
+    .eq('role', 'student')
+    .eq('account_status', 'approved')
+    .order('full_name');
 
         if (studentError) throw studentError;
 
@@ -1839,13 +1840,20 @@ async function loadProgressData() {
         }
 
         // 7. Ambil percobaan kuis yang sudah dikumpulkan
-        const { data: attempts, error: attemptError } = await supabase
-            .from('quiz_attempts')
-            .select('student_id, score, total_points, submitted_at')
-            .not('submitted_at', 'is', null)
-            .order('submitted_at', { ascending: false });
+let attempts = [];
 
-        if (attemptError) throw attemptError;
+if (students.length > 0) {
+    const { data, error } = await supabase
+        .from('quiz_attempts')
+        .select('student_id, score, total_points, submitted_at')
+        .in('student_id', students.map(student => student.id))
+        .not('submitted_at', 'is', null)
+        .order('submitted_at', { ascending: false });
+
+    if (error) throw error;
+    attempts = data || [];
+}
+
 
         // 8. Susun data setiap murid
         let totalProgress = 0;
@@ -2524,28 +2532,44 @@ async function loadEvaluationAnalysis() {
         `;
 
         // 2. Ambil percobaan evaluasi akhir yang sudah dinilai
-        const { data: attempts, error: attemptError } = await supabase
-            .from('quiz_attempts')
-            .select(`
-                id,
-                student_id,
-                quiz_id,
-                score,
-                total_points,
-                submitted_at,
-                quizzes!inner (
-                    id,
-                    title,
-                    quiz_type,
-                    chapter_id
-                )
-            `)
-            .eq('status', 'graded')
-            .not('submitted_at', 'is', null)
-            .eq('quizzes.quiz_type', 'final')
-            .order('submitted_at', { ascending: false });
+const { data: approvedStudents, error: approvedStudentError } = await supabase
+    .from('profiles')
+    .select('id, full_name')
+    .eq('role', 'student')
+    .eq('account_status', 'approved');
 
-        if (attemptError) throw attemptError;
+if (approvedStudentError) throw approvedStudentError;
+
+const approvedStudentIds = (approvedStudents || []).map(student => student.id);
+
+let attempts = [];
+
+if (approvedStudentIds.length > 0) {
+    const { data, error } = await supabase
+        .from('quiz_attempts')
+        .select(`
+            id,
+            student_id,
+            quiz_id,
+            score,
+            total_points,
+            submitted_at,
+            quizzes!inner (
+                id,
+                title,
+                quiz_type,
+                chapter_id
+            )
+        `)
+        .in('student_id', approvedStudentIds)
+        .eq('status', 'graded')
+        .not('submitted_at', 'is', null)
+        .eq('quizzes.quiz_type', 'final')
+        .order('submitted_at', { ascending: false });
+
+    if (error) throw error;
+    attempts = data || [];
+}
 
         // 3. Ambil percobaan terakhir setiap murid untuk setiap BAB
         const latestAttempts = new Map();

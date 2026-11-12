@@ -2881,10 +2881,11 @@ await loadPendingStudentRegistrations();
             await loadDashboardRecentActivities();
 
             // Menghitung seluruh akun murid
-            const { count, error: countError } = await supabase
-                .from('profiles')
-                .select('id', { count: 'exact', head: true })
-                .eq('role', 'student');
+const { count, error: countError } = await supabase
+    .from('profiles')
+    .select('id', { count: 'exact', head: true })
+    .eq('role', 'student')
+    .eq('account_status', 'approved');
 
             if (countError) {
                 console.error('Gagal menghitung murid:', countError);

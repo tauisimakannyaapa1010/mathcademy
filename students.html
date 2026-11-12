@@ -565,11 +565,12 @@ teacherLogout.addEventListener('click', async function(event) {
             </tr>
         `;
 
-        const { data: students, error } = await supabase
-            .from('profiles')
-            .select('id, full_name, email, created_at')
-            .eq('role', 'student')
-            .order('created_at', { ascending: false });
+const { data: students, error } = await supabase
+    .from('profiles')
+    .select('id, full_name, email, created_at')
+    .eq('role', 'student')
+    .eq('account_status', 'approved')
+    .order('created_at', { ascending: false });
 
         if (error) {
             console.error(error);
