@@ -1,0 +1,1044 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mathcademy — Explore Mathematics</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --aquadulce: #6C9B76;
+      --aroma: #97C49E;
+      --mist: #CDE8D4;
+      --tarragon: #BAD17A;
+      --moss: #80A32F;
+      --chalet: #657E47;
+      --ink: #26372A;
+      --muted: #718071;
+      --white: #FFFFFF;
+      --surface: #F8FAF6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      background: var(--surface);
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: min(1160px, 90%);
+      margin: auto;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(101,126,71,.12);
+    }
+
+    .nav-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .brand-icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 28px;
+      border-radius: 14px;
+      background: linear-gradient(
+  135deg,
+  #BAD17A 0%,
+  #97C49E 45%,
+  #80A32F 100%
+);
+      box-shadow: 0 5px 15px rgba(101,126,71,.28),
+                  inset 0 1px 2px rgba(255,255,255,.65);
+    }
+
+    .brand span {
+      color: var(--chalet);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #657366;
+    }
+
+    .nav-links a:hover {
+      color: var(--moss);
+    }
+
+    .nav-login {
+      padding: 12px 23px;
+      border-radius: 30px;
+      color: white !important;
+      background: linear-gradient(110deg, #657E47, #6C9B76, #97C49E);
+      box-shadow: 0 5px 14px rgba(101,126,71,.2),
+                  inset 0 1px 2px rgba(255,255,255,.45);
+      transition: .25s;
+    }
+
+    .nav-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(101,126,71,.3);
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 85px 0 100px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 85% 10%, rgba(205,232,212,.65), transparent 35%),
+        radial-gradient(ellipse at 5% 85%, rgba(186,209,122,.22), transparent 35%),
+        #F8FAF6;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(151,196,158,.17), rgba(205,232,212,.05));
+      top: -220px;
+      right: -100px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 65px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 15px;
+      border-radius: 30px;
+      background: #EDF5E9;
+      color: var(--chalet);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .7px;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--moss);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(128,163,47,.13);
+    }
+
+    .hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(43px, 5.5vw, 67px);
+      line-height: 1.13;
+      letter-spacing: -3px;
+      font-weight: 800;
+      margin-bottom: 23px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(100deg, #657E47, #6C9B76 45%, #80A32F);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-description {
+      max-width: 490px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 25px;
+      border-radius: 13px;
+      color: white;
+      font-weight: 700;
+      background: linear-gradient(110deg, #657E47 0%, #6C9B76 55%, #97C49E 100%);
+      box-shadow: 0 8px 20px rgba(101,126,71,.24),
+                  inset 0 1px 2px rgba(255,255,255,.55);
+      transition: .25s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(101,126,71,.3);
+    }
+
+    .btn-secondary {
+      padding: 14px 22px;
+      border: 1px solid #DCE6D8;
+      border-radius: 13px;
+      color: var(--chalet);
+      font-weight: 700;
+      background: white;
+      transition: .25s;
+    }
+
+    .btn-secondary:hover {
+      background: #F0F6ED;
+    }
+
+    /* HERO VISUAL */
+
+    .hero-visual {
+      position: relative;
+      min-height: 390px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .visual-glow {
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #CDE8D4, #BAD17A);
+      filter: blur(1px);
+      opacity: .65;
+    }
+
+    .math-card {
+      position: relative;
+      width: 100%;
+      max-width: 410px;
+      padding: 30px;
+      border-radius: 25px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(255,255,255,.95);
+      box-shadow: 0 22px 60px rgba(83,112,70,.15),
+                  0 3px 12px rgba(83,112,70,.06);
+      transform: rotate(-2deg);
+    }
+
+    .math-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .card-tag {
+      color: var(--chalet);
+      font-size: 12px;
+      font-weight: 800;
+      background: #EDF5E9;
+      padding: 8px 12px;
+      border-radius: 20px;
+    }
+
+    .card-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .card-dots i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--mist);
+    }
+
+    .math-card h3 {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 15px;
+    }
+
+    .equation {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(27px, 4vw, 39px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-align: center;
+      padding: 22px 10px;
+      color: var(--chalet);
+      border-radius: 16px;
+      background: linear-gradient(120deg, #F0F6ED, #E5F2E5, #F6F8E9);
+      margin-bottom: 20px;
+    }
+
+    .answer-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .answer-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F8FAF6;
+      padding: 13px 15px;
+      border-radius: 12px;
+      border: 1px solid #E7EDE2;
+      font-weight: 700;
+      color: var(--chalet);
+    }
+
+    .check {
+      display: grid;
+      place-items: center;
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      color: white;
+      background: linear-gradient(135deg, #6C9B76, #97C49E);
+    }
+
+    .floating-note {
+      position: absolute;
+      right: -8px;
+      bottom: 25px;
+      padding: 15px 20px;
+      border-radius: 16px;
+      background: linear-gradient(120deg, #BAD17A, #CDE8D4);
+      color: #354A2D;
+      font-weight: 800;
+      font-size: 13px;
+      box-shadow: 0 10px 25px rgba(101,126,71,.16);
+      transform: rotate(4deg);
+    }
+
+    /* GENERAL SECTION */
+
+    section {
+      padding: 90px 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      max-width: 620px;
+      margin: 0 auto 48px;
+    }
+
+    .section-label {
+      color: var(--moss);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin-bottom: 13px;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(29px, 4vw, 41px);
+      letter-spacing: -1.5px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* FEATURES */
+
+    .features {
+      background: white;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .feature-card {
+      padding: 30px;
+      border: 1px solid #EDF1E9;
+      border-radius: 20px;
+      background: white;
+      transition: .3s;
+      box-shadow: 0 5px 20px rgba(53,78,43,.035);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 15px 35px rgba(53,78,43,.09);
+      border-color: var(--mist);
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      border-radius: 15px;
+      margin-bottom: 23px;
+      background: linear-gradient(135deg, #E4F1E4, #CDE8D4);
+    }
+
+    .feature-card:nth-child(2) .feature-icon {
+      background: linear-gradient(135deg, #E8F0D4, #BAD17A);
+    }
+
+    .feature-card:nth-child(3) .feature-icon {
+      background: linear-gradient(135deg, #DCEBDD, #97C49E);
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    /* TOPICS */
+
+    .topics {
+      background: #F8FAF6;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .topic-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      min-height: 230px;
+      border-radius: 21px;
+      background: white;
+      border: 1px solid #EDF1E9;
+      box-shadow: 0 7px 22px rgba(53,78,43,.04);
+      transition: .3s;
+    }
+
+    .topic-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 30px rgba(53,78,43,.1);
+    }
+
+    .topic-number {
+      font-size: 12px;
+      color: var(--moss);
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+    }
+
+    .topic-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .topic-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 250px;
+    }
+
+    .topic-symbol {
+      position: absolute;
+      right: 20px;
+      bottom: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 76px;
+      font-weight: 800;
+      color: rgba(151,196,158,.2);
+    }
+
+    /* TEAM */
+
+    .team {
+      background: white;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 17px;
+    }
+
+    .team-card {
+      text-align: center;
+      padding: 25px 12px;
+      border-radius: 19px;
+      background: #FAFCF8;
+      border: 1px solid #EDF1E9;
+      transition: .3s;
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(53,78,43,.08);
+    }
+
+    .team-avatar {
+      width: 65px;
+      height: 65px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 17px;
+      border-radius: 50%;
+      color: white;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 21px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #657E47, #6C9B76 55%, #97C49E);
+      box-shadow: 0 5px 14px rgba(101,126,71,.2),
+                  inset 0 1px 2px rgba(255,255,255,.45);
+    }
+
+    .team-card h3 {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .team-card p {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* CTA */
+
+    .cta {
+      padding: 35px 0 95px;
+      background: white;
+    }
+
+    .cta-inner {
+      position: relative;
+      overflow: hidden;
+      padding: 65px 30px;
+      text-align: center;
+      border-radius: 27px;
+      color: white;
+      background: linear-gradient(115deg, #657E47 0%, #6C9B76 48%, #97C49E 100%);
+      box-shadow: 0 15px 35px rgba(101,126,71,.2),
+                  inset 0 1px 2px rgba(255,255,255,.4);
+    }
+
+    .cta-inner::before {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.11);
+      top: -160px;
+      right: -50px;
+    }
+
+    .cta-inner::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(205,232,212,.15);
+      bottom: -150px;
+      left: -40px;
+    }
+
+    .cta-inner h2 {
+      position: relative;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(28px, 4vw, 39px);
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+
+    .cta-inner p {
+      position: relative;
+      color: rgba(255,255,255,.9);
+      margin-bottom: 27px;
+      font-size: 15px;
+    }
+
+    .cta-inner .btn {
+      position: relative;
+      display: inline-block;
+      padding: 14px 27px;
+      border-radius: 12px;
+      background: linear-gradient(110deg, #BAD17A, #CDE8D4);
+      color: #354A2D;
+      font-weight: 800;
+      box-shadow: 0 6px 15px rgba(36,56,43,.12),
+                  inset 0 1px 2px rgba(255,255,255,.7);
+      transition: .25s;
+    }
+
+    .cta-inner .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    /* FOOTER */
+
+    footer {
+      padding: 30px 0;
+      background: #F5F8F2;
+      border-top: 1px solid #E9EFE4;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      font-weight: 800;
+      color: var(--chalet);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    footer p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 850px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .hero-content {
+        text-align: center;
+      }
+
+      .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hero-visual {
+        min-height: 350px;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .nav-links {
+        gap: 12px;
+        font-size: 12px;
+      }
+
+      .nav-links a:not(.nav-login) {
+        display: none;
+      }
+
+      .brand {
+        font-size: 19px;
+      }
+
+      .brand-icon {
+        width: 38px;
+        height: 38px;
+      }
+
+      .hero {
+        padding: 65px 0 70px;
+      }
+
+      .feature-grid,
+      .topic-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 70px 0;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .math-card {
+        padding: 22px;
+      }
+
+      .floating-note {
+        right: 0;
+      }
+
+      .cta-inner {
+        padding: 50px 22px;
+      }
+    }
+    
+@media (max-width: 650px) {
+  .hero::after {
+    font-size: 34px;
+    letter-spacing: 7px;
+    right: -65px;
+    top: 65px;
+  }
+
+  .features::before {
+    width: 150px;
+    height: 150px;
+  }
+
+  .topics::before {
+    width: 110px;
+    height: 110px;
+    right: -65px;
+  }
+
+  .team::after {
+    font-size: 90px;
+    right: 2%;
+    top: 25px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">∑</div>
+        <div>mathcademy<span>.</span></div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#features">Keunggulan</a>
+        <a href="#topics">Materi</a>
+        <a href="#team">Tim Kami</a>
+        <a href="login.html" class="nav-login">Masuk ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div class="hero-content">
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            A NEW WAY TO LEARN MATHEMATICS
+          </div>
+
+          <h1>
+            Explore Math.<br>
+            <span class="gradient-text">Discover More.</span>
+          </h1>
+
+          <p class="hero-description">
+            Belajar matematika dengan cara yang lebih interaktif.
+            Eksplorasi konsep, selesaikan tantangan, dan temukan
+            pengalaman belajar yang menyenangkan bersama Mathcademy.
+          </p>
+
+          <div class="hero-actions">
+            <a href="login.html" class="btn-primary">
+              Mulai Belajar <span>↗</span>
+            </a>
+            <a href="#features" class="btn-secondary">
+              Kenali Mathcademy
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="visual-glow"></div>
+
+          <div class="math-card">
+            <div class="math-card-top">
+              <span class="card-tag">ALGEBRA CHALLENGE</span>
+              <div class="card-dots">
+                <i></i><i></i><i></i>
+              </div>
+            </div>
+
+            <h3>Find the correct expression!</h3>
+
+            <div class="equation">
+              (x + 2)(x + 3)
+            </div>
+
+            <div class="answer-label">Simplified expression</div>
+
+            <div class="answer-box">
+              x² + 5x + 6
+              <span class="check">✓</span>
+            </div>
+          </div>
+
+          <div class="floating-note">
+            ✦ Learn by exploring!
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+      <div class="container">
+
+        <div class="section-heading">
+          <div class="section-label">WHY MATHCADEMY?</div>
+          <h2>Learning Beyond the Ordinary.</h2>
+          <p>
+            Bukan sekadar membaca dan menghafal.
+            Bangun pemahaman matematika melalui pengalaman belajar interaktif.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+
+          <div class="feature-card">
+            <div class="feature-icon">✦</div>
+            <h3>Interactive Learning</h3>
+            <p>
+              Eksplorasi konsep matematika melalui aktivitas
+              interaktif dan manipulasi objek.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">◇</div>
+            <h3>Progressive Challenges</h3>
+            <p>
+              Tantangan belajar disusun secara bertahap
+              untuk membantu membangun pemahaman.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">↗</div>
+            <h3>Learning Progress</h3>
+            <p>
+              Pantau perkembangan belajar dan lihat
+              pencapaianmu selama menggunakan Mathcademy.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    
+<!-- TOPICS -->
+<section class="topics" id="topics">
+  <div class="container">
+
+    <div class="section-heading">
+      <div class="section-label">EXPLORE THE MATERIALS</div>
+      <h2>Explore the World of Algebra.</h2>
+      <p>
+        Pelajari Bentuk Aljabar secara bertahap melalui
+        materi interaktif, eksplorasi, dan tantangan matematika.
+      </p>
+    </div>
+
+    <div class="topic-grid">
+
+      <div class="topic-card">
+        <div class="topic-number">01 / INTRODUCTION</div>
+        <h3>Pengenalan Bentuk Aljabar</h3>
+        <p>Mengenal variabel, koefisien, konstanta, dan suku.</p>
+        <div class="topic-symbol">x</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-number">02 / ADDITION & SUBTRACTION</div>
+        <h3>Penjumlahan dan Pengurangan</h3>
+        <p>Memahami operasi penjumlahan dan pengurangan bentuk aljabar.</p>
+        <div class="topic-symbol">±</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-number">03 / MULTIPLICATION</div>
+        <h3>Perkalian Bentuk Aljabar</h3>
+        <p>Mengeksplorasi perkalian variabel, pangkat, dan antarbentuk aljabar.</p>
+        <div class="topic-symbol">×</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-number">04 / DIVISION</div>
+        <h3>Pembagian Bentuk Aljabar</h3>
+        <p>Memahami konsep dan penyelesaian pembagian bentuk aljabar.</p>
+        <div class="topic-symbol">÷</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-number">05 / ALGEBRAIC FRACTIONS</div>
+        <h3>Pecahan Bentuk Aljabar</h3>
+        <p>Mengenal dan menyelesaikan operasi pada pecahan bentuk aljabar.</p>
+        <div class="topic-symbol">½</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+    <!-- TEAM -->
+    <section class="team" id="team">
+      <div class="container">
+
+        <div class="section-heading">
+          <div class="section-label">THE PEOPLE BEHIND IT</div>
+          <h2>Meet Our Team.</h2>
+          <p>
+            Kenali tim di balik pengembangan Mathcademy.
+          </p>
+        </div>
+
+        <div class="team-grid">
+
+          <div class="team-card">
+            <div class="team-avatar">01</div>
+            <h3>Sabrina Putri A</h3>
+            <p>Anggota</p>
+          </div>
+
+          <div class="team-card">
+            <div class="team-avatar">02</div>
+            <h3>Nayla Rafalia N</h3>
+            <p>Anggota</p>
+          </div>
+
+          <div class="team-card">
+            <div class="team-avatar">03</div>
+            <h3>Davina Alvariza</h3>
+            <p>Anggota</p>
+          </div>
+
+          <div class="team-card">
+            <div class="team-avatar">04</div>
+            <h3>Nur Arifa Aini</h3>
+            <p>Anggota</p>
+          </div>
+
+          <div class="team-card">
+            <div class="team-avatar">05</div>
+            <h3>Nawfal Farrukh H</h3>
+            <p>Anggota</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="container">
+        <div class="cta-inner">
+          <h2>Ready to Explore Mathematics?</h2>
+          <p>
+            Mulai perjalanan belajarmu bersama Mathcademy.
+          </p>
+          <a href="login.html" class="btn">
+            Get Started ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">∑ mathcademy.</div>
+      <p>© 2026 Mathcademy. Learn, Explore, and Discover.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
