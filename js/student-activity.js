@@ -7,6 +7,9 @@ const activityMessage = document.getElementById('activity-message');
 const activityContent = document.getElementById('activity-content');
 const completeButton = document.getElementById('complete-activity-btn');
 
+const studentAvatar = document.getElementById('studentAvatar');
+const studentName = document.getElementById('studentName');
+
 // Ambil ID aktivitas dari URL
 const params = new URLSearchParams(window.location.search);
 const activityId = params.get('activityId');
@@ -53,6 +56,29 @@ async function getCurrentUser() {
     }
 
     currentUser = data.user;
+
+    // Ambil profil murid
+    const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('full_name, role')
+        .eq('id', currentUser.id)
+        .single();
+
+    if (profileError) {
+        throw profileError;
+    }
+
+    // Tampilkan nama dan inisial avatar
+    const name = profile.full_name || 'Murid';
+
+    if (studentName) {
+        studentName.textContent = name;
+    }
+
+    if (studentAvatar) {
+        studentAvatar.textContent =
+            name.trim().charAt(0).toUpperCase() || 'M';
+    }
 }
 
 // Tampilkan pesan
