@@ -905,3 +905,138 @@ textarea {
         font-size: 11px;
     }
 }
+/* =========================================
+   QUIZ PLAYER - RESPONSIVE
+========================================= */
+
+.quiz-player-page {
+    width: 100%;
+    min-width: 320px;
+    overflow-x: hidden;
+}
+
+.quiz-player-page .quiz-player-container {
+    width: 100%;
+    max-width: 900px;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.quiz-player-page .quiz-header,
+.quiz-player-page #quizContent,
+.quiz-player-page #questionList {
+    width: 100%;
+    min-width: 0;
+}
+
+.quiz-player-page .quiz-question-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.quiz-player-page .quiz-question-text,
+.quiz-player-page .quiz-option-content,
+.quiz-player-page .quiz-review-answer-content,
+.quiz-player-page .quiz-review-explanation {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.quiz-player-page .quiz-options {
+    width: 100%;
+    min-width: 0;
+}
+
+.quiz-player-page .quiz-option {
+    max-width: 100%;
+    min-width: 0;
+}
+
+.quiz-player-page math-field {
+    max-width: 100%;
+}
+
+/* TABLET */
+@media (max-width: 768px) {
+    .quiz-player-page .quiz-player-container {
+        padding: 20px;
+    }
+
+    .quiz-player-page .quiz-header {
+        padding: 26px;
+    }
+
+    .quiz-player-page .quiz-header h1 {
+        font-size: 25px;
+    }
+
+    .quiz-player-page .quiz-question-card {
+        padding: 20px;
+    }
+}
+
+/* HP */
+@media (max-width: 480px) {
+    .quiz-player-page .quiz-player-container {
+        padding: 14px 12px;
+    }
+
+    .quiz-player-page .quiz-header {
+        padding: 22px 18px;
+        border-radius: 15px;
+    }
+
+    .quiz-player-page .quiz-header h1 {
+        font-size: 21px;
+        line-height: 1.4;
+    }
+
+    .quiz-player-page .quiz-header p {
+        font-size: 12px;
+    }
+
+    .quiz-player-page .quiz-question-card {
+        padding: 16px 13px;
+        border-radius: 13px;
+    }
+
+    .quiz-player-page .quiz-question-text {
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .quiz-player-page .quiz-option {
+        gap: 8px;
+        padding: 11px;
+    }
+
+    .quiz-player-page .quiz-option-content {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .quiz-player-page .quiz-submit-section {
+        width: 100%;
+        padding: 15px 0;
+    }
+
+    .quiz-player-page #submitQuizBtn {
+        width: 100%;
+    }
+
+    .quiz-player-page .quiz-result-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .quiz-player-page .quiz-review-answer,
+    .quiz-player-page .quiz-question-review {
+        padding: 13px;
+    }
+
+    .quiz-player-page .quiz-drag-drop-groups {
+        grid-template-columns: 1fr;
+    }
+}

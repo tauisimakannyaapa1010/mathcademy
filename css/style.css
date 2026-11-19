@@ -3838,3 +3838,39 @@ body:has(.quiz-player-container) {
 .open-activity-editor-btn:active {
     transform: scale(0.97);
 }
+/* =====================================
+   RESPONSIVE - STUDENT ACTIVITY
+===================================== */
+
+@media (max-width: 600px) {
+    .student-activity-block,
+    .student-text-content,
+    .answer-feedback,
+    .feedback-explanation {
+        box-sizing: border-box;
+        max-width: 100%;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .student-activity-block img,
+    .student-activity-block iframe {
+        max-width: 100%;
+    }
+
+    .student-activity-block mjx-container {
+        max-width: 100%;
+    }
+
+    .student-activity-block mjx-container[display="true"] {
+        display: block;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .student-activity-block mjx-container:not([display="true"]) {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}
