@@ -1093,6 +1093,12 @@ button {
     font-size: 16px;
     line-height: 1.8;
     margin-bottom: 14px;
+    white-space: pre-wrap;
+    min-width: 0;
+max-width: 100%;
+overflow-x: auto;
+overflow-y: hidden;
+overflow-wrap: normal;
 }
 
 .quiz-question-card small {
@@ -1465,7 +1471,12 @@ button {
     color: #65715c;
     font-size: 13px;
     line-height: 1.8;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+min-width: 0;
+max-width: 100%;
+overflow-x: auto;
+overflow-y: hidden;
+    white-space: pre-wrap;
 }
 
 /* Kotak jawaban benar */
@@ -1490,7 +1501,11 @@ button {
     margin-top: 10px;
     color: #354c24;
     font-size: 14px;
+    min-width: 0;
+    max-width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
+
 }
 
 .review-math-field {
@@ -3026,6 +3041,7 @@ body:has(.quiz-player-container) {
     font-size: 15px;
     line-height: 1.8;
     margin-bottom: 16px;
+    white-space: pre-wrap;
 }
 
 .quiz-player-page .quiz-question-card > small {
@@ -3873,4 +3889,388 @@ body:has(.quiz-player-container) {
         max-width: 100%;
         overflow-x: auto;
     }
+}
+
+/* =========================================
+   QUIZ PLAYER - RESPONSIVE FIX
+========================================= */
+
+/* Mencegah halaman melebar */
+.quiz-player-page {
+    width: 100%;
+    min-width: 320px;
+    overflow-x: hidden;
+}
+
+/* Lebar utama halaman kuis */
+.quiz-player-page .quiz-player-container {
+    width: min(100% - 40px, 1100px);
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+/* Semua bagian mengikuti lebar container */
+.quiz-player-page .quiz-header,
+.quiz-player-page #quizContent,
+.quiz-player-page #questionList,
+.quiz-player-page .quiz-question-card,
+.quiz-player-page .quiz-answer-area {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Kartu soal */
+.quiz-player-page .quiz-question-card {
+    overflow: hidden;
+}
+
+/* Teks soal, opsi, dan pembahasan */
+.quiz-player-page .quiz-question-text,
+.quiz-player-page .quiz-option-content,
+.quiz-player-page .quiz-review-answer-content,
+.quiz-player-page .quiz-review-explanation,
+.quiz-player-page .quiz-drop-group-title,
+.quiz-player-page .quiz-drag-card {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    box-sizing: border-box;
+}
+
+/* Opsi jawaban */
+.quiz-player-page .quiz-option {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.quiz-player-page .quiz-option-content {
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+     white-space: pre-wrap;
+}
+
+/* Rumus matematika yang terlalu panjang */
+.quiz-player-page math-field,
+.quiz-player-page .review-math-field {
+    display: inline-block;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+/* Area drag and drop */
+.quiz-player-page .quiz-drag-drop,
+.quiz-player-page .quiz-drag-drop-cards,
+.quiz-player-page .quiz-drag-drop-groups,
+.quiz-player-page .quiz-drop-group,
+.quiz-player-page .quiz-drop-zone {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.quiz-player-page .quiz-drag-card {
+    overflow-x: auto;
+}
+
+/* Pembahasan dan jawaban benar */
+.quiz-player-page .quiz-question-review,
+.quiz-player-page .quiz-review-answer {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Ringkasan hasil kuis */
+.quiz-player-page .quiz-result-summary,
+.quiz-player-page .quiz-result-cards,
+.quiz-player-page .quiz-result-card {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+@media (max-width: 768px) {
+    .quiz-player-page .quiz-player-container {
+        width: calc(100% - 28px);
+        margin: 14px auto;
+        padding: 22px;
+    }
+
+    .quiz-player-page .quiz-question-card {
+        padding: 20px;
+    }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+@media (max-width: 480px) {
+    .quiz-player-page .quiz-player-container {
+        width: calc(100% - 20px);
+        margin: 10px auto;
+        padding: 15px;
+        border-radius: 14px;
+    }
+
+    .quiz-player-page .quiz-header h1 {
+        font-size: 21px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
+    .quiz-player-page .quiz-header p {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .quiz-player-page .quiz-question-card {
+        width: 100%;
+        padding: 15px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .quiz-player-page .quiz-question-card h3 {
+        font-size: 17px;
+    }
+
+    .quiz-player-page .quiz-question-text,
+    .quiz-player-page .quiz-option-content,
+    .quiz-player-page .quiz-review-explanation,
+    .quiz-player-page .quiz-review-answer-content {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .quiz-player-page .quiz-option {
+        gap: 9px;
+        padding: 12px;
+    }
+
+    .quiz-player-page .quiz-short-answer-input {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .quiz-player-page .quiz-submit-section {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .quiz-player-page #submitQuizBtn {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .quiz-player-page .quiz-result-cards {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+/* =====================================
+   PERAPIAN KARTU DRAG-DROP SAAT REVIEW
+===================================== */
+
+.quiz-player-page .drag-review-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.quiz-player-page .drag-review-zone .quiz-drag-card {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    white-space: normal;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.quiz-player-page .drag-review-zone .review-math-field {
+    vertical-align: middle;
+    max-width: 100%;
+}
+/* =========================================
+   QUIZ PLAYER - HORIZONTAL CONTENT SCROLL
+========================================= */
+
+/* Area konten yang boleh digeser horizontal */
+.quiz-player-page .quiz-question-text,
+.quiz-player-page .quiz-option-content,
+.quiz-player-page .quiz-review-answer,
+.quiz-player-page .quiz-review-answer-content,
+.quiz-player-page .quiz-review-explanation,
+.quiz-player-page .quiz-drag-card,
+.quiz-player-page .quiz-drop-group-title,
+.quiz-player-page .review-math-field {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: normal;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+}
+
+/* Mencegah opsi jawaban melewati kartu */
+.quiz-player-page .quiz-option {
+    min-width: 0;
+    max-width: 100%;
+}
+
+/* Mencegah area review terpotong */
+.quiz-player-page .quiz-review-answer {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* Area drag and drop */
+.quiz-player-page .drag-review-zone,
+.quiz-player-page .quiz-drop-zone {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+/* Membuka scroll horizontal pada kartu soal dan review */
+.quiz-player-page .quiz-question-card,
+.quiz-player-page .quiz-question-review {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: visible;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+}
+.quiz-option-content {
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    color: #31574b;
+    line-height: 1.6;
+}
+/* Scroll horizontal untuk area drag-and-drop */
+.quiz-player-page .quiz-drag-drop-cards,
+.quiz-player-page .quiz-drop-zone,
+.quiz-player-page .drag-review-zone {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+}
+.quiz-player-page .quiz-horizontal-scroll {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.quiz-player-page .quiz-horizontal-scroll .review-math-field {
+    max-width: none;
+    flex-shrink: 0;
+}
+/* =====================================
+   HORIZONTAL SCROLL - SELURUH ISI KUIS
+===================================== */
+
+.quiz-player-page .quiz-question-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: auto !important;
+    overflow-y: visible;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+/* Anak elemen tidak boleh memaksa kartu melebar */
+.quiz-player-page .quiz-question-card > * {
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Teks tetap bisa turun baris */
+.quiz-player-page .quiz-question-text,
+.quiz-player-page .quiz-option-content,
+.quiz-player-page .quiz-review-explanation,
+.quiz-player-page .quiz-review-answer-content,
+.quiz-player-page .quiz-drop-group-title {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* Konten yang memang memiliki lebar berlebih */
+.quiz-player-page .quiz-question-card table,
+.quiz-player-page .quiz-question-card pre,
+.quiz-player-page .quiz-question-card img,
+.quiz-player-page .quiz-question-card video,
+.quiz-player-page .quiz-question-card iframe,
+.quiz-player-page .quiz-question-card math-field {
+    flex-shrink: 0;
+}
+
+/* Area pilihan jawaban */
+.quiz-player-page .quiz-option {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.quiz-player-page .quiz-option-content {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Area drag and drop */
+.quiz-player-page .quiz-drag-drop,
+.quiz-player-page .quiz-drag-drop-cards,
+.quiz-player-page .quiz-drag-drop-groups,
+.quiz-player-page .quiz-drop-group,
+.quiz-player-page .quiz-drop-zone,
+.quiz-player-page .drag-review-zone {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+/* Area geser horizontal seluruh isi soal */
+.quiz-player-page .quiz-question-scroll {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
 }

@@ -157,6 +157,24 @@ body {
     gap: 18px;
     margin-top: 0;
 }
+/* Area geser horizontal aktivitas murid */
+.activity-content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+.student-activity-block,
+.student-block {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
 
 .activity-loading,
 .activity-error {

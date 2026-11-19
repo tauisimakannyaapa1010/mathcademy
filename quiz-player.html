@@ -93,6 +93,9 @@ async function checkStudentAccess() {
 // Menampilkan teks dan rumus matematika
 // Membuat tampilan rumus menggunakan MathLive
 function appendMathField(container, latex) {
+    const wrapper = document.createElement('span');
+    wrapper.className = 'quiz-horizontal-scroll';
+
     const mathField = document.createElement('math-field');
 
     mathField.value = String(latex ?? '');
@@ -100,7 +103,8 @@ function appendMathField(container, latex) {
     mathField.virtualKeyboardMode = 'off';
     mathField.classList.add('review-math-field');
 
-    container.appendChild(mathField);
+    wrapper.appendChild(mathField);
+    container.appendChild(wrapper);
 }
 
 // Menampilkan teks yang mungkin mengandung rumus
@@ -655,6 +659,10 @@ async function loadQuestions() {
     questions.forEach((question, index) => {
         const card = document.createElement('article');
         card.className = 'quiz-question-card';
+        const contentWrapper = document.createElement('div');
+contentWrapper.className = 'quiz-question-scroll';
+card.appendChild(contentWrapper);
+
 
         const number = document.createElement('h3');
         number.textContent = `Soal ${index + 1}`;
@@ -915,10 +923,10 @@ if (question.question_type === 'drag_drop') {
 
     answerArea.appendChild(dragDropArea);
 }
-card.appendChild(number);
-card.appendChild(text);
-card.appendChild(points);
-card.appendChild(answerArea);
+contentWrapper.appendChild(number);
+contentWrapper.appendChild(text);
+contentWrapper.appendChild(points);
+contentWrapper.appendChild(answerArea);
 
 questionList.appendChild(card);
     });

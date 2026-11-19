@@ -188,6 +188,7 @@ math-field:focus-within {
     line-height: 1.8;
     color: #344b40;
     transition: 0.2s ease;
+    white-space: pre-wrap;
 }
 
 .question-text-editor:focus {
@@ -390,6 +391,7 @@ math-field:focus-within {
     font-size: 15px;
     line-height: 1.9;
     overflow-wrap: anywhere;
+    white-space: pre-wrap;
 }
 
 .question-preview-option {
@@ -1124,29 +1126,38 @@ if (explanationEditor) {
 
 
 // Mengambil isi teks dan rumus dari editor
+
 function getEditorContent(editor) {
     const content = [];
 
+    function addText(value) {
+        if (!value) return;
+
+        const lastItem = content[content.length - 1];
+
+        if (lastItem && lastItem.type === 'text') {
+            lastItem.value += value;
+        } else {
+            content.push({
+                type: 'text',
+                value: value
+            });
+        }
+    }
+
     function readNode(node) {
-        // Membaca teks biasa
         if (node.nodeType === Node.TEXT_NODE) {
-            const value = node.textContent.replace(/\u200B/g, '');
-
-            if (value) {
-                content.push({
-                    type: 'text',
-                    value: value
-                });
-            }
-
+            addText(node.textContent.replace(/\u200B/g, ''));
             return;
         }
 
-        if (node.nodeType !== Node.ELEMENT_NODE) {
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+
+        if (node.tagName === 'BR') {
+            addText('\n');
             return;
         }
 
-        // Membaca equation
         if (node.classList.contains('equation-wrapper')) {
             const mathField = node.querySelector('math-field');
 
@@ -1156,22 +1167,42 @@ function getEditorContent(editor) {
                     value: mathField.value || ''
                 });
             }
-
             return;
         }
 
-        // Membaca isi elemen secara bertingkat
-        node.childNodes.forEach(child => {
-            readNode(child);
-        });
+        const isBlock = ['DIV', 'P', 'LI'].includes(node.tagName);
+
+        if (
+            isBlock &&
+            content.length > 0 &&
+            !(
+                content[content.length - 1].type === 'text' &&
+                content[content.length - 1].value.endsWith('\n')
+            )
+        ) {
+            addText('\n');
+        }
+
+        node.childNodes.forEach(child => readNode(child));
+
+        if (
+            isBlock &&
+            node.nextSibling &&
+            !(
+                content.length > 0 &&
+                content[content.length - 1].type === 'text' &&
+                content[content.length - 1].value.endsWith('\n')
+            )
+        ) {
+            addText('\n');
+        }
     }
 
-    editor.childNodes.forEach(node => {
-        readNode(node);
-    });
+    editor.childNodes.forEach(node => readNode(node));
 
     return content;
 }
+
 
 // Mengembalikan teks dan rumus ke dalam editor
 function setEditorContent(editor, content) {
@@ -1315,6 +1346,7 @@ imageInput.value = '';
 
     const editor = document.createElement('div');
     editor.className = 'question-text-editor';
+    
     editor.contentEditable = 'true';
     editor.setAttribute('data-placeholder', placeholder);
 
